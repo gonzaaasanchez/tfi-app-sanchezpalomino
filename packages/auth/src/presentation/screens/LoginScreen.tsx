@@ -29,13 +29,22 @@ const LoginScreen: FC<Props> = () => {
 
   useEffect(() => {
     if (state.error === 'login-invalid-email') {
-      Alert.alert(t('loginScreen.error.title'), t('loginScreen.error.emailMessage'))
+      Alert.alert(
+        t('loginScreen.error.title'),
+        t('loginScreen.error.emailMessage')
+      )
       return
     } else if (state.error === 'login-invalid-password') {
-      Alert.alert(t('loginScreen.error.title'), t('loginScreen.error.passwordMessage'))
+      Alert.alert(
+        t('loginScreen.error.title'),
+        t('loginScreen.error.passwordMessage')
+      )
       return
     } else if (state.error === 'login-missing-fields') {
-      Alert.alert(t('loginScreen.error.title'), t('loginScreen.error.generalMessage'))
+      Alert.alert(
+        t('loginScreen.error.title'),
+        t('loginScreen.error.generalMessage')
+      )
       return
     } else if (state.error !== null) {
       Alert.alert(t('loginScreen.error.title'), state.error)
@@ -130,7 +139,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: Color.background,
+    backgroundColor: Color.brand2[200],
   },
   inner: {
     paddingHorizontal: 24,
@@ -145,15 +154,16 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 48,
-    borderColor: Color.brand1[100],
-    borderWidth: 1,
     borderRadius: 16,
     paddingHorizontal: 16,
     marginBottom: 16,
-    backgroundColor: 'white',
+    backgroundColor: Color.brand2[50],
+    // borderColor: Color.brand2[200],
+    // borderWidth: 1,
+    // backgroundColor: 'white',
   },
   linkContainer: {
-    marginTop: 24,
+    marginTop: 30,
     alignItems: 'center',
   },
   linkText: {

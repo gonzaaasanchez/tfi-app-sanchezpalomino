@@ -14,7 +14,7 @@
       }
     },
     "registerScreen": {
-      "title": "Register",
+      "title": "Registrarme",
       "name": "Nombre",
       "email": "Email",
       "password": "Contraseña",
@@ -31,15 +31,16 @@
       }
     },
     "forgotPasswordScreen": {
+      "title": "Olvidé mi contraseña",
       "email": "Email",
-      "forgotPassword": "Enviar link para recuperar contraseña",
+      "forgotPassword": "Ingresá el email con el que te registraste y te enviaremos un link para recuperar tu contraseña",
       "error": {
         "title": "Error",
-        "message": "Por favor, ingresá tu email"
+        "message": "Por favor, ingresá tu email."
       },
       "success": {
-        "title": "Reseteo de contraseña",
-        "message": "Las instrucciones se enviaron a {{email}}"
+        "title": "Restablecimiento de contraseña",
+        "message": "Las instrucciones se enviaron a {{email}}. Por favor, revisá tu correo."
       }
     },
     "dashboardScreen": {

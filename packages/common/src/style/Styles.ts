@@ -23,11 +23,6 @@ const LabelStyle = StyleSheet.create({
     fontSize: 18,
     textAlign: 'left',
   },
-  headline: {
-    fontWeight: 400,
-    fontSize: 16,
-    textAlign: 'left',
-  },
   body: {
     fontWeight: 400,
     fontSize: 16,
@@ -78,7 +73,7 @@ const LabelStyle = StyleSheet.create({
 const ContainerStyle = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Color.background,
+    backgroundColor: Color.brand1[700],
   },
   topBar: {
     top: 0,
@@ -89,7 +84,7 @@ const ContainerStyle = StyleSheet.create({
     width: '100%',
     paddingBottom: 20,
     paddingHorizontal: 22,
-    backgroundColor: Color.brand1[500],
+    backgroundColor: Color.brand1[200],
     borderBottomLeftRadius: 16,
     borderBottomRightRadius: 16,
   },
@@ -116,8 +111,7 @@ const LightTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: Color.background,
-    // text: TextColor.body.primary,
+    backgroundColor: Color.brand1[200],
   },
 };
 

@@ -12,18 +12,10 @@ import {
 import { ParamList } from '../AuthStack'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useForgotPasswordViewModel } from '../viewModels/ForgotPasswordViewModel'
-import { useI18n } from '@app/common'
+import { Button, Color, LabelStyle, useI18n } from '@app/common'
 
 type Props = NativeStackScreenProps<ParamList, 'forgotPasswordScreen'>
 
-/**
- * Forgot Password Screen component.
- *
- * This component allows users to request a password reset link via email.
- *
- * @param {Props} props - Component props.
- * @returns {JSX.Element} Forgot Password Screen component.
- */
 const ForgotPasswordScreen = ({ route }: Props): JSX.Element => {
   const { state, forgotPassword, setEmail } = useForgotPasswordViewModel()
   const { email } = route.params
@@ -52,13 +44,6 @@ const ForgotPasswordScreen = ({ route }: Props): JSX.Element => {
     )
   }
 
-  /**
-   * Handles the password reset request.
-   *
-   * Calls the `forgotPassword` action and displays a success alert if the action is successful.
-   *
-   * @returns {Promise<void>}
-   */
   const handlePasswordReset: () => Promise<void> = async () => {
     if (await forgotPassword()) {
       Alert.alert(
@@ -74,32 +59,26 @@ const ForgotPasswordScreen = ({ route }: Props): JSX.Element => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.inner} accessible={false}>
-        <Text style={styles.title} testID="forgotPasswordScreen.title">
-          {t('forgotPasswordScreen.title')}
+        <Text style={{ ...LabelStyle.body2, ...styles.title }}>
+          {t('forgotPasswordScreen.forgotPassword')}
         </Text>
 
         <TextInput
           style={styles.input}
           placeholder={t('forgotPasswordScreen.email')}
-          placeholderTextColor="#aaa"
+          placeholderTextColor={Color.black[400]}
           keyboardType="email-address"
           value={state.email}
           onChangeText={setEmail}
           autoCapitalize="none"
           autoCorrect={false}
           textContentType="emailAddress"
-          testID="forgotPasswordScreen.email"
         />
 
-        <TouchableOpacity
-          style={styles.button}
+        <Button.Primary
+          title={t('loginScreen.login')}
           onPress={handlePasswordReset}
-          testID="forgotPasswordScreen.forgotPassword"
-        >
-          <Text style={styles.buttonText}>
-            {t('forgotPasswordScreen.forgotPassword')}
-          </Text>
-        </TouchableOpacity>
+        />
       </View>
     </KeyboardAvoidingView>
   )
@@ -114,7 +93,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#f8f9fa',
+    backgroundColor: Color.brand2[200],
   },
   inner: {
     padding: 24,
@@ -122,33 +101,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 32,
-    fontWeight: '600',
-    marginBottom: 24,
-    color: '#333',
+    paddingBottom: 30,
     textAlign: 'center',
   },
   input: {
     height: 48,
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 16,
     paddingHorizontal: 16,
     marginBottom: 16,
-    backgroundColor: '#fff',
-  },
-  button: {
-    height: 48,
-    backgroundColor: '#007bff',
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    backgroundColor: Color.brand2[50],
+    // borderColor: Color.brand2[200],
+    // borderWidth: 1,
+    // backgroundColor: 'white',
   },
 })
 

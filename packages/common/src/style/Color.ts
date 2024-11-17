@@ -11,6 +11,18 @@ const Color = {
     800: '#59478c',
     900: '#4b3f70',
   },
+  black: {
+    50: '#f9f9f9',
+    100: '#f2f2f2',
+    200: '#e6e6e6',
+    300: '#cccccc',
+    400: '#999999',
+    500: '#666666',
+    600: '#4d4d4d',
+    700: '#333333',
+    800: '#1a1a1a',
+    900: '#000000',
+  },
   green: {
     200: '#bffab8',
     500: '#26C318',
@@ -30,19 +42,6 @@ const Color = {
 }
 
 const StateColor = {
-  primary: {
-    default: Color.brand1[500],
-    disabled: Color.brand1[400],
-    focused: Color.brand1[700],
-  },
-  secondary: {
-    default: Color.brand1[200],
-    focused: Color.brand1[100],
-    // stroke: {
-    //   default: Color.neutralLight[500],
-    //   focused: Color.neutralLight[300],
-    // },
-  },
   error: {
     default: Color.red[500],
     disabled: Color.red[200],

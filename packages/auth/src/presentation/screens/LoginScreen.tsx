@@ -8,41 +8,34 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  Image,
 } from 'react-native'
 import { StackActions, useNavigation } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ParamList } from '../AuthStack'
 import { useLoginViewModel } from '../viewModels/LoginViewModel'
-import { useI18n } from '@app/common'
+import { Button, Color, LabelStyle, useI18n } from '@app/common'
 
 type Props = NativeStackScreenProps<ParamList, 'loginScreen'>
 
-/**
- * LoginScreen component.
- *
- * This component renders a login screen that allows users to enter their email and password,
- * and then log in or navigate to registration or forgot password screens.
- *
- * @returns {JSX.Element} The login screen component.
- */
 const LoginScreen: FC<Props> = () => {
   const { state, login, setEmail, setPassword } = useLoginViewModel()
   const navigation = useNavigation()
   const { t } = useI18n()
 
-  /**
-   * Logs in the user with the current email and password state.
-   *
-   * If the login is successful, navigates to the home screen.
-   * If the login fails, displays an error alert.
-   */
   const handleLogin: () => void = () => {
     login()
   }
 
   useEffect(() => {
-    if (state.error === 'login-missing-fields') {
-      Alert.alert(t('loginScreen.error.title'), t('loginScreen.error.message'))
+    if (state.error === 'login-invalid-email') {
+      Alert.alert(t('loginScreen.error.title'), t('loginScreen.error.emailMessage'))
+      return
+    } else if (state.error === 'login-invalid-password') {
+      Alert.alert(t('loginScreen.error.title'), t('loginScreen.error.passwordMessage'))
+      return
+    } else if (state.error === 'login-missing-fields') {
+      Alert.alert(t('loginScreen.error.title'), t('loginScreen.error.generalMessage'))
       return
     } else if (state.error !== null) {
       Alert.alert(t('loginScreen.error.title'), state.error)
@@ -63,43 +56,36 @@ const LoginScreen: FC<Props> = () => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.inner} accessible={false}>
-        <Text testID="loginScreen.title" style={styles.title}>
-          {t('loginScreen.title')}
-        </Text>
+        <Image
+          source={require('@app/assets/logo-simple.png')}
+          style={styles.image}
+        />
 
         <TextInput
           style={styles.input}
           placeholder={t('loginScreen.email')}
-          placeholderTextColor="#aaa"
+          placeholderTextColor={Color.black[400]}
           keyboardType="email-address"
           value={state.email}
           onChangeText={setEmail}
           autoCapitalize="none"
           autoCorrect={false}
           textContentType="emailAddress"
-          testID="loginScreen.email"
         />
 
         <TextInput
           style={styles.input}
           placeholder={t('loginScreen.password')}
-          placeholderTextColor="#aaa"
+          placeholderTextColor={Color.black[400]}
           secureTextEntry
           value={state.password}
           onChangeText={setPassword}
           autoCapitalize="none"
           autoCorrect={false}
           textContentType={'oneTimeCode'}
-          testID="loginScreen.password"
         />
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleLogin}
-          testID="loginScreen.login"
-        >
-          <Text style={styles.buttonText}>{t('loginScreen.login')}</Text>
-        </TouchableOpacity>
+        <Button.Primary title={t('loginScreen.login')} onPress={handleLogin} />
 
         <View style={styles.linkContainer}>
           <TouchableOpacity
@@ -110,9 +96,10 @@ const LoginScreen: FC<Props> = () => {
                 })
               )
             }
-            testID="loginScreen.register"
           >
-            <Text style={styles.linkText}>{t('loginScreen.register')}</Text>
+            <Text style={{ ...LabelStyle.link, ...styles.linkText }}>
+              {t('loginScreen.register')}
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -123,9 +110,8 @@ const LoginScreen: FC<Props> = () => {
                 })
               )
             }
-            testID="loginScreen.forgotPassword"
           >
-            <Text style={styles.linkText}>
+            <Text style={{ ...LabelStyle.link, ...styles.linkText }}>
               {t('loginScreen.forgotPassword')}
             </Text>
           </TouchableOpacity>
@@ -144,49 +130,33 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#f8f9fa',
+    backgroundColor: Color.background,
   },
   inner: {
-    padding: 24,
+    paddingHorizontal: 24,
     flex: 1,
     justifyContent: 'center',
   },
-  title: {
-    fontSize: 32,
-    fontWeight: '600',
-    marginBottom: 24,
-    color: '#333',
-    textAlign: 'center',
+  image: {
+    width: '100%',
+    height: 230,
+    resizeMode: 'contain',
+    marginBottom: 80,
   },
   input: {
     height: 48,
-    borderColor: '#ddd',
+    borderColor: Color.brand1[100],
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 16,
     paddingHorizontal: 16,
     marginBottom: 16,
-    backgroundColor: '#fff',
-  },
-  button: {
-    height: 48,
-    backgroundColor: '#007bff',
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    backgroundColor: 'white',
   },
   linkContainer: {
     marginTop: 24,
     alignItems: 'center',
   },
   linkText: {
-    fontSize: 14,
-    color: '#007bff',
     marginVertical: 8,
   },
 })

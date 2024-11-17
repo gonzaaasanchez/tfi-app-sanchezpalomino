@@ -1,0 +1,49 @@
+{
+  "translation": {
+    "loginScreen": {
+      "email": "Email",
+      "password": "Contraseña",
+      "login": "Iniciar sesión",
+      "register": "No tenés una cuenta? Registrate",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "error": {
+        "title": "Error",
+        "generalMessage": "Por favor, ingresá el usuario y la contraseña.",
+        "emailMessage": "Por favor, ingresá un email inválido.",
+        "passwordMessage": "La contraseña tiene que tener más de 8 caracteres, una mayúscula y un número."
+      }
+    },
+    "registerScreen": {
+      "title": "Register",
+      "name": "Nombre",
+      "email": "Email",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "register": "Registrate",
+      "error": {
+        "title": "Error",
+        "missingFields": "Por favor, completá todos los datos",
+        "passwordNotMatch": "Las contraseñas no coinciden"
+      },
+      "success": {
+        "title": "Cuenta creada con éxito",
+        "message": "¡Felictaciones! Tu cuenta se creó correctamente"
+      }
+    },
+    "forgotPasswordScreen": {
+      "email": "Email",
+      "forgotPassword": "Enviar link para recuperar contraseña",
+      "error": {
+        "title": "Error",
+        "message": "Por favor, ingresá tu email"
+      },
+      "success": {
+        "title": "Reseteo de contraseña",
+        "message": "Las instrucciones se enviaron a {{email}}"
+      }
+    },
+    "dashboardScreen": {
+      "title": "Dashboard Screen"
+    }
+  }
+}

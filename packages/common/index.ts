@@ -16,6 +16,10 @@ import { appMiddleware } from './src/domain/store/AppMiddleware'
 import { $ as Types } from './src/domain/di/Types'
 import { createResolver } from './src/data/di/Resolver'
 import { CommonRegister } from './src/domain/di/Register'
+import { Color, StateColor } from './src/style/Color'
+import { LabelStyle, ContainerStyle } from './src/style/Styles'
+import { Button, ButtonState } from './src/components/Button'
+import { StringValidator } from './src/utils/StringUtils'
 
 export {
   Resolver,
@@ -34,4 +38,11 @@ export {
   HttpClient,
   UserModel,
   Types,
+  LabelStyle,
+  ContainerStyle,
+  Color,
+  StateColor,
+  Button,
+  ButtonState,
+  StringValidator,
 }

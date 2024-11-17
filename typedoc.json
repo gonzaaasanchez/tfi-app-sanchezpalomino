@@ -1,0 +1,26 @@
+{
+  "plugin": [
+    "typedoc-plugin-merge-modules",
+    "typedoc-plugin-markdown",
+    "typedoc-plugin-not-exported"
+  ],
+  "entryPoints": [
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "packages/**/*.ts",
+    "packages/**/*.tsx"
+  ],
+  "entryPointStrategy": "expand",
+  "excludeNotDocumented": true,
+  "out": "./docs",
+  "mergeModulesRenameDefaults": true,
+  "mergeModulesMergeMode": "project",
+  "hidePageHeader": true,
+  "hideBreadcrumbs": true,
+  "cleanOutputDir": false,
+  "exclude": ["**/node_modules/**"],
+  "alwaysCreateEntryPointModule": true,
+  "excludePrivate": false,
+  "excludeProtected": false,
+  "excludeInternal": false
+}

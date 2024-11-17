@@ -1,0 +1,62 @@
+{
+  "expo": {
+    "name": "mobile",
+    "slug": "mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.package.identifier",
+      "associatedDomains": ["applinks:{{ASSOCIATED_DOMAINS}}"]
+    },
+    "android": {
+      "package": "com.package.identifier",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "mobile",
+              "host": "homeScreen"
+            },
+            {
+              "scheme": "mobile",
+              "host": "detailScreen"
+            },
+            {
+              "scheme": "https",
+              "host": "{{INTENT_FILTER_HOST}}"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "{{EAS_PROJECT_ID}}"
+      }
+    },
+    "owner": "{{EAS_PROJECT_OWNER}}",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "{{EXPO_UPDATE_URL}}"
+    }
+  }
+}

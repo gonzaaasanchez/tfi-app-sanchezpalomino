@@ -1,0 +1,43 @@
+{
+  "name": "@app/mobile",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "expo start --go",
+    "android": "expo start --android --go",
+    "android:dev": "expo start --android --dev-client",
+    "ios": "expo start --ios --go",
+    "ios:dev": "expo start --ios --dev-client",
+    "test": "yarn --cwd='../..' test",
+    "test:debug": "yarn --cwd='../..' test:debug",
+    "test:updateSnapshots": "yarn --cwd='../..' test:updateSnapshots"
+  },
+  "dependencies": {
+    "@app/auth": "*",
+    "@app/common": "*",
+    "@app/dashboard": "*",
+    "@app/factoring": "*",
+    "@app/fueling": "*",
+    "@app/home": "*",
+    "@app/loads": "*",
+    "@app/more": "*",
+    "@app/detail": "*",
+    "@expo/vector-icons": "^14.0.3",
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "@react-navigation/bottom-tabs": "^6.6.1",
+    "@react-navigation/native": "^6.1.18",
+    "@react-navigation/native-stack": "^6.11.0",
+    "@reduxjs/toolkit": "^2.2.7",
+    "expo": "~51.0.36",
+    "expo-dev-client": "~4.0.26",
+    "expo-status-bar": "~1.12.1",
+    "expo-updates": "~0.25.26",
+    "react": "18.2.0",
+    "react-native": "0.74.5",
+    "react-native-safe-area-context": "4.10.5",
+    "react-native-screens": "~3.31.1",
+    "react-redux": "^9.1.2",
+    "reflect-metadata": "^0.2.2"
+  },
+  "private": true
+}

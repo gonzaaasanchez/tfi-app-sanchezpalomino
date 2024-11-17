@@ -1,0 +1,24 @@
+appId: com.package.identifier
+---
+- launchApp:
+    clearState: true
+- assertVisible:
+    id: 'loginScreen.title'
+- assertVisible:
+    id: 'loginScreen.email'
+- tapOn:
+    id: 'loginScreen.email'
+- inputText: 'eve.holt@reqres.in'
+- assertVisible:
+    id: 'loginScreen.password'
+- tapOn:
+    id: 'loginScreen.password'
+- inputText: 'cityslicka'
+- scrollUntilVisible:
+    element:
+      id: 'loginScreen.login'
+- tapOn:
+    id: 'loginScreen.login'
+- assertVisible:
+    id: 'dashboardScreen.title'
+- stopApp

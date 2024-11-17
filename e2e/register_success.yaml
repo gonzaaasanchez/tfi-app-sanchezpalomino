@@ -1,0 +1,46 @@
+appId: com.package.identifier
+---
+- launchApp:
+    clearState: true
+- assertVisible:
+    id: 'loginScreen.title'
+- scrollUntilVisible:
+    element:
+      id: 'loginScreen.register'
+- tapOn:
+    id: 'loginScreen.register'
+- assertVisible:
+    id: 'registerScreen.title'
+- assertVisible:
+    id: 'registerScreen.name'
+- tapOn:
+    id: 'registerScreen.name'
+- inputRandomPersonName
+- tapOn:
+    id: 'registerScreen.email'
+- inputText: 'eve.holt@reqres.in'
+- scrollUntilVisible:
+    element:
+      id: 'registerScreen.password'
+- assertVisible:
+    id: 'registerScreen.password'
+- tapOn:
+    id: 'registerScreen.password'
+- inputText: 'pistol'
+- scrollUntilVisible:
+    element:
+      id: 'registerScreen.confirmPassword'
+- assertVisible:
+    id: 'registerScreen.confirmPassword'
+- tapOn:
+    id: 'registerScreen.confirmPassword'
+- inputText: 'pistol'
+- hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: 'registerScreen.register'
+- tapOn:
+    id: 'registerScreen.register'
+- assertVisible:
+    id: 'dashboardScreen.title'
+- stopApp

@@ -21,6 +21,7 @@ import { LabelStyle, LightTheme, GeneralStyle } from './src/style/Styles'
 import { Button, ButtonState } from './src/components/Button'
 import { StringValidator } from './src/utils/StringUtils'
 import { Loader } from './src/components/Loader'
+import { AnimatedView } from './src/components/AnimatedView'
 
 export {
   Resolver,
@@ -48,4 +49,5 @@ export {
   ButtonState,
   StringValidator,
   Loader,
+  AnimatedView,
 }

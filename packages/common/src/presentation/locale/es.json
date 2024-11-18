@@ -1,5 +1,9 @@
 {
   "translation": {
+    "general": {
+      "comingSoon": "¡Próximamente!",
+      "wereWorking": "Estamos trabajando..."
+    },
     "loginScreen": {
       "email": "Email",
       "password": "Contraseña",
@@ -53,6 +57,9 @@
     },
     "feedScreen": {
       "title": "Feed Screen"
+    },
+    "servicesScreen": {
+      "title": "Servicios"
     }
   }
 }

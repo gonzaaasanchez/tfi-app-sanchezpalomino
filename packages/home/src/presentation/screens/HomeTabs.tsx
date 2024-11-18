@@ -17,7 +17,6 @@ type Props = {
   feed?: FC
   reserves?: FC
   services?: FC
-  loads?: FC
   more?: FC
 }
 
@@ -29,7 +28,6 @@ const HomeTabs: FC<Props> = ({
   feed,
   reserves,
   services,
-  loads,
   more,
 }): JSX.Element => {
   const { t } = useI18n()
@@ -49,10 +47,6 @@ const HomeTabs: FC<Props> = ({
       }).start()
     }
   }
-
-  useEffect(() => {
-    handleIndicatorPosition(0)
-  }, [])
 
   return (
     <Tab.Navigator
@@ -126,7 +120,7 @@ const HomeTabs: FC<Props> = ({
             headerShown: false,
             tabBarLabel: t('tabbar.feed'),
             tabBarIcon: ({ color, size }) => (
-              <MaterialIcons name="home" size={size} color={color} />
+              <MaterialIcons name="home-variant-outline" size={size} color={color} />
             ),
           }}
         />
@@ -140,7 +134,8 @@ const HomeTabs: FC<Props> = ({
             tabBarLabel: t('tabbar.reserves'),
             tabBarIcon: ({ color, size }) => (
               <MaterialIcons
-                name="package-variant-closed"
+                // name="book-account-outline"
+                name="book-account-outline"
                 size={size}
                 color={color}
               />
@@ -156,24 +151,7 @@ const HomeTabs: FC<Props> = ({
             headerShown: false,
             tabBarLabel: t('tabbar.services'),
             tabBarIcon: ({ color, size }) => (
-              <MaterialIcons name="fuel" size={size} color={color} />
-            ),
-          }}
-        />
-      )}
-      {loads && (
-        <Tab.Screen
-          name="loads"
-          component={loads}
-          options={{
-            headerShown: false,
-            tabBarLabel: '',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialIcons
-                name="ticket-confirmation-outline"
-                size={size}
-                color={color}
-              />
+              <MaterialIcons name="shopping-search" size={size} color={color} />
             ),
           }}
         />

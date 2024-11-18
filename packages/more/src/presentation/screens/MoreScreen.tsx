@@ -1,3 +1,4 @@
+import { Color } from '@packages/common'
 import { StackActions, useNavigation } from '@react-navigation/native'
 import React, { FC } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
@@ -23,7 +24,7 @@ const MoreScreen: FC = (): JSX.Element => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Color.brand2[100],
     alignItems: 'center',
     justifyContent: 'center',
   },

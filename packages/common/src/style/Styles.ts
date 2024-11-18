@@ -70,6 +70,16 @@ const LabelStyle = StyleSheet.create({
   },
 })
 
+const GeneralStyle = {
+  header: {
+    headerStyle: {
+      backgroundColor: Color.brand1[700],
+    },
+    headerTintColor: 'white',
+    headerTitleStyle: { fontSize: 18 },
+  },
+}
+
 const LightTheme = {
   ...DefaultTheme,
   colors: {
@@ -78,4 +88,4 @@ const LightTheme = {
   },
 }
 
-export { LabelStyle, LightTheme }
+export { LabelStyle, LightTheme, GeneralStyle }

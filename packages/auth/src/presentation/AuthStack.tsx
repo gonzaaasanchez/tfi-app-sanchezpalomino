@@ -3,7 +3,7 @@ import React, { FC } from 'react'
 import LoginScreen from './screens/LoginScreen'
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen'
 import RegisterScreen from './screens/RegisterScreen'
-import { Color, useI18n } from '@app/common'
+import { Color, GeneralStyle, useI18n } from '@app/common'
 
 type ParamList = {
   loginScreen: undefined
@@ -23,13 +23,7 @@ const AuthStack: FC = (): JSX.Element => {
   return (
     <Stack.Navigator
       initialRouteName="loginScreen"
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: Color.brand1[700],
-        },
-        headerTintColor: 'white',
-        headerTitleStyle: { fontSize: 18 },
-      }}
+      screenOptions={GeneralStyle.header}
     >
       <Stack.Screen
         options={{

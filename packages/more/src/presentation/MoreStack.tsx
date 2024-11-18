@@ -4,13 +4,14 @@ import { MoreScreen } from './screens/MoreScreen'
 import { useMoreViewModel } from './viewModels/MoreViewModel'
 import MaterialIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { ProfileScreen } from './screens/ProfileScreen'
+import { GeneralStyle } from '@packages/common'
 
 const Stack = createNativeStackNavigator()
 
 const MoreStack: FC = (): JSX.Element => {
   const { logout } = useMoreViewModel()
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={GeneralStyle.header}>
       <Stack.Screen
         name="moreStack"
         component={MoreScreen}

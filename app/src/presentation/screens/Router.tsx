@@ -55,7 +55,7 @@ const HomeScreen = (): JSX.Element => {
       feed={FeedStack}
       reserves={ReservesStack}
       services={ServicesStack}
-      loads={LoadsStack}
+      // loads={LoadsStack}
       more={MoreStack}
     />
   )

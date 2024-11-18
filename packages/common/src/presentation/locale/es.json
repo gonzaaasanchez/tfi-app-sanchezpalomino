@@ -45,6 +45,12 @@
         "message": "Las instrucciones se enviaron a {{email}}. Por favor, revisá tu correo."
       }
     },
+    "tabbar": {
+      "feed": "Feed",
+      "reserves": "Reservas",
+      "services": "Servicios",
+      "more": "Más"
+    },
     "feedScreen": {
       "title": "Feed Screen"
     }

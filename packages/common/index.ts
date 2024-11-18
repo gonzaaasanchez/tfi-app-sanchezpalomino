@@ -17,7 +17,7 @@ import { $ as Types } from './src/domain/di/Types'
 import { createResolver } from './src/data/di/Resolver'
 import { CommonRegister } from './src/domain/di/Register'
 import { Color, StateColor } from './src/style/Color'
-import { LabelStyle, LightTheme } from './src/style/Styles'
+import { LabelStyle, LightTheme, GeneralStyle } from './src/style/Styles'
 import { Button, ButtonState } from './src/components/Button'
 import { StringValidator } from './src/utils/StringUtils'
 import { Loader } from './src/components/Loader'
@@ -41,6 +41,7 @@ export {
   Types,
   LabelStyle,
   LightTheme,
+  GeneralStyle,
   Color,
   StateColor,
   Button,

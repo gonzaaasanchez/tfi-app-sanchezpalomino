@@ -1,4 +1,4 @@
-import { useI18n } from '@packages/common'
+import { Color, useI18n } from '@packages/common'
 import React, { FC } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
@@ -14,7 +14,7 @@ const FeedScreen: FC = (): JSX.Element => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Color.brand2[100],
     alignItems: 'center',
     justifyContent: 'center',
   },

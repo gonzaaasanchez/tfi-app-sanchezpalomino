@@ -35,7 +35,7 @@ const App = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
       <ResolverProvider resolver={resolver}>
         <Provider store={store}>
           <Router />

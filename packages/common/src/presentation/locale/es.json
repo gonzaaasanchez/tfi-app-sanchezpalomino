@@ -8,7 +8,7 @@
       "email": "Email",
       "password": "Contraseña",
       "login": "Iniciar sesión",
-      "register": "No tenés una cuenta? Registrate",
+      "register": "¿No tenés una cuenta? ¡Registrate!",
       "forgotPassword": "¿Olvidaste tu contraseña?",
       "error": {
         "title": "Error",

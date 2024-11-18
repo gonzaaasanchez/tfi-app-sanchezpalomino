@@ -29,7 +29,7 @@ const Router = (): JSX.Element => {
 
   return (
     <NavigationContainer linking={linking} theme={LightTheme}>
-      {!state.isLoggedIn ? (
+      {state.isLoggedIn ? (
         <HomeStack.Navigator>
           <HomeStack.Screen
             name="homeScreen"

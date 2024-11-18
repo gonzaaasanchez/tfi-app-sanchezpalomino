@@ -14,7 +14,7 @@ import { StackActions, useNavigation } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ParamList } from '../AuthStack'
 import { useLoginViewModel } from '../viewModels/LoginViewModel'
-import { Button, Color, LabelStyle, useI18n } from '@app/common'
+import { Button, Color, LabelStyle, Loader, useI18n } from '@app/common'
 
 type Props = NativeStackScreenProps<ParamList, 'loginScreen'>
 
@@ -51,95 +51,92 @@ const LoginScreen: FC<Props> = () => {
     }
   }, [state.error])
 
-  if (state.loading === true) {
-    return (
-      <View style={styles.loading}>
-        <Text>{t('loginScreen.loading')}</Text>
-      </View>
-    )
-  }
-
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <View style={styles.inner} accessible={false}>
-        <Image
-          source={require('@app/assets/logo-simple.png')}
-          style={styles.image}
-        />
+    <View style={styles.fullScreenContainer}>
+      {state.loading && <Loader loading={state.loading} />}
+      <KeyboardAvoidingView
+        style={styles.keyboardContainer}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <View style={styles.inner} accessible={false}>
+          <Image
+            source={require('@app/assets/logo-simple.png')}
+            style={styles.image}
+          />
 
-        <TextInput
-          style={styles.input}
-          placeholder={t('loginScreen.email')}
-          placeholderTextColor={Color.black[400]}
-          keyboardType="email-address"
-          value={state.email}
-          onChangeText={setEmail}
-          autoCapitalize="none"
-          autoCorrect={false}
-          textContentType="emailAddress"
-        />
+          <TextInput
+            style={styles.input}
+            placeholder={t('loginScreen.email')}
+            placeholderTextColor={Color.black[400]}
+            keyboardType="email-address"
+            value={state.email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            autoCorrect={false}
+            textContentType="emailAddress"
+          />
 
-        <TextInput
-          style={styles.input}
-          placeholder={t('loginScreen.password')}
-          placeholderTextColor={Color.black[400]}
-          secureTextEntry
-          value={state.password}
-          onChangeText={setPassword}
-          autoCapitalize="none"
-          autoCorrect={false}
-          textContentType={'oneTimeCode'}
-        />
+          <TextInput
+            style={styles.input}
+            placeholder={t('loginScreen.password')}
+            placeholderTextColor={Color.black[400]}
+            secureTextEntry
+            value={state.password}
+            onChangeText={setPassword}
+            autoCapitalize="none"
+            autoCorrect={false}
+            textContentType={'oneTimeCode'}
+          />
 
-        <Button.Primary title={t('loginScreen.login')} onPress={handleLogin} />
+          <Button.Primary
+            title={t('loginScreen.login')}
+            onPress={handleLogin}
+          />
 
-        <View style={styles.linkContainer}>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.dispatch(
-                StackActions.push('registerScreen', {
-                  email: state.email,
-                })
-              )
-            }
-          >
-            <Text style={{ ...LabelStyle.link, ...styles.linkText }}>
-              {t('loginScreen.register')}
-            </Text>
-          </TouchableOpacity>
+          <View style={styles.linkContainer}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.dispatch(
+                  StackActions.push('registerScreen', {
+                    email: state.email,
+                  })
+                )
+              }
+            >
+              <Text style={{ ...LabelStyle.link, ...styles.linkText }}>
+                {t('loginScreen.register')}
+              </Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() =>
-              navigation.dispatch(
-                StackActions.push('forgotPasswordScreen', {
-                  email: state.email,
-                })
-              )
-            }
-          >
-            <Text style={{ ...LabelStyle.link, ...styles.linkText }}>
-              {t('loginScreen.forgotPassword')}
-            </Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.dispatch(
+                  StackActions.push('forgotPasswordScreen', {
+                    email: state.email,
+                  })
+                )
+              }
+            >
+              <Text style={{ ...LabelStyle.link, ...styles.linkText }}>
+                {t('loginScreen.forgotPassword')}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
-  loading: {
+  fullScreenContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  container: {
-    flex: 1,
+    position: 'relative',
     justifyContent: 'center',
     backgroundColor: Color.brand2[200],
+  },
+  keyboardContainer: {
+    flex: 1,
   },
   inner: {
     paddingHorizontal: 24,

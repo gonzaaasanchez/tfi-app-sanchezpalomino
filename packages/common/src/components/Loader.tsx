@@ -10,7 +10,7 @@ import catPlay from '@app/assets/lottie-json/cat-play.json'
 type LoaderProps = {
   loading: boolean
   opacity?: number
-  children?: string
+  message?: string
 }
 
 const LottieLoaders = [dogWalk, dogWaiting, catSleep, catPlay]
@@ -18,7 +18,7 @@ const LottieLoaders = [dogWalk, dogWaiting, catSleep, catPlay]
 const Loader: FC<LoaderProps> = ({
   loading,
   opacity = 0.95,
-  children,
+  message: children,
 }): JSX.Element => {
   const animation = useRef<LottieView>(null)
   const randomLoader =

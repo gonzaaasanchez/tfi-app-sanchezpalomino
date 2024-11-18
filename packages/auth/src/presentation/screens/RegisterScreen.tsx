@@ -12,20 +12,10 @@ import {
 import { ParamList } from '../AuthStack'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useRegisterViewModel } from '../viewModels/RegisterViewModel'
-import { useI18n } from '@app/common'
+import { Button, Color, useI18n } from '@app/common'
 
 type Props = NativeStackScreenProps<ParamList, 'registerScreen'>
 
-/**
- * RegisterScreen component.
- *
- * This component renders a registration screen that allows users to enter their
- * name, email, password and confirm password, and then log in or navigate to login
- * screen.
- *
- * @param {Props} props - Component props.
- * @returns {JSX.Element} The rendered RegisterScreen component.
- */
 const RegisterScreen = ({ route }: Props): JSX.Element => {
   const {
     state,
@@ -39,14 +29,6 @@ const RegisterScreen = ({ route }: Props): JSX.Element => {
   const { email } = route.params
   const { t } = useI18n()
 
-  /**
-   * Handles the register button press.
-   *
-   * Calls the createUser function from the useRegisterViewModel hook. If the
-   * createUser function succeeds, it displays a success alert.
-   *
-   * @returns {Promise<void>}
-   */
   const handleRegister: () => Promise<void> = async () => {
     if (await createUser()) {
       Alert.alert(
@@ -71,6 +53,11 @@ const RegisterScreen = ({ route }: Props): JSX.Element => {
         t('registerScreen.error.title'),
         t('registerScreen.error.passwordNotMatch')
       )
+    } else if (state.error === 'register-invalid-email') {
+      Alert.alert(
+        t('registerScreen.error.title'),
+        t('registerScreen.error.emailMessage')
+      )
     } else if (state.error !== null) {
       Alert.alert(t('registerScreen.error.title'), state.error)
     }
@@ -90,14 +77,10 @@ const RegisterScreen = ({ route }: Props): JSX.Element => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.inner} accessible={false}>
-        <Text style={styles.title} testID="registerScreen.title">
-          {t('registerScreen.title')}
-        </Text>
-
         <TextInput
           style={styles.input}
           placeholder={t('registerScreen.name')}
-          placeholderTextColor="#aaa"
+          placeholderTextColor={Color.black[400]}
           value={state.name}
           onChangeText={setName}
           autoCapitalize="words"
@@ -108,7 +91,7 @@ const RegisterScreen = ({ route }: Props): JSX.Element => {
         <TextInput
           style={styles.input}
           placeholder={t('registerScreen.email')}
-          placeholderTextColor="#aaa"
+          placeholderTextColor={Color.black[400]}
           keyboardType="email-address"
           value={state.email}
           onChangeText={setEmail}
@@ -121,7 +104,7 @@ const RegisterScreen = ({ route }: Props): JSX.Element => {
         <TextInput
           style={styles.input}
           placeholder={t('registerScreen.password')}
-          placeholderTextColor="#aaa"
+          placeholderTextColor={Color.black[400]}
           secureTextEntry
           value={state.password}
           onChangeText={setPassword}
@@ -134,7 +117,7 @@ const RegisterScreen = ({ route }: Props): JSX.Element => {
         <TextInput
           style={styles.input}
           placeholder={t('registerScreen.confirmPassword')}
-          placeholderTextColor="#aaa"
+          placeholderTextColor={Color.black[400]}
           secureTextEntry
           value={state.confirmPassword}
           onChangeText={setConfirmPassword}
@@ -144,13 +127,10 @@ const RegisterScreen = ({ route }: Props): JSX.Element => {
           testID="registerScreen.confirmPassword"
         />
 
-        <TouchableOpacity
-          style={styles.button}
+        <Button.Primary
+          title={t('registerScreen.register')}
           onPress={handleRegister}
-          testID="registerScreen.register"
-        >
-          <Text style={styles.buttonText}>{t('registerScreen.register')}</Text>
-        </TouchableOpacity>
+        />
       </View>
     </KeyboardAvoidingView>
   )
@@ -165,7 +145,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#f8f9fa',
+    backgroundColor: Color.brand2[200],
   },
   inner: {
     padding: 24,
@@ -181,25 +161,13 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 48,
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 16,
     paddingHorizontal: 16,
     marginBottom: 16,
-    backgroundColor: '#fff',
-  },
-  button: {
-    height: 48,
-    backgroundColor: '#007bff',
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    backgroundColor: Color.brand2[50],
+    // borderColor: Color.brand2[200],
+    // borderWidth: 1,
+    // backgroundColor: 'white',
   },
 })
 

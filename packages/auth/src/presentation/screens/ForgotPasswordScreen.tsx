@@ -60,7 +60,7 @@ const ForgotPasswordScreen = ({ route }: Props): JSX.Element => {
     >
       <View style={styles.inner} accessible={false}>
         <Text style={{ ...LabelStyle.body2, ...styles.title }}>
-          {t('forgotPasswordScreen.forgotPassword')}
+          {t('forgotPasswordScreen.instructions')}
         </Text>
 
         <TextInput
@@ -76,7 +76,7 @@ const ForgotPasswordScreen = ({ route }: Props): JSX.Element => {
         />
 
         <Button.Primary
-          title={t('loginScreen.login')}
+          title={t('forgotPasswordScreen.button')}
           onPress={handlePasswordReset}
         />
       </View>

@@ -1,6 +1,6 @@
-import { StyleSheet } from 'react-native';
-import { Color, StateColor } from './Color';
-import { DefaultTheme } from '@react-navigation/native';
+import { StyleSheet } from 'react-native'
+import { Color, StateColor } from './Color'
+import { DefaultTheme } from '@react-navigation/native'
 
 const LabelStyle = StyleSheet.create({
   largeTitle: {
@@ -68,44 +68,7 @@ const LabelStyle = StyleSheet.create({
     fontSize: 10,
     textAlign: 'left',
   },
-});
-
-const ContainerStyle = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: Color.brand1[700],
-  },
-  topBar: {
-    top: 0,
-    height: 125,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    width: '100%',
-    paddingBottom: 20,
-    paddingHorizontal: 22,
-    backgroundColor: Color.brand1[200],
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
-  },
-  topBarCircleButton: {
-    width: 42,
-    height: 42,
-    borderRadius: 100,
-    // backgroundColor: StateColor.tertiary.negative.default,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  topBarTitle: {
-    height: 42, // same height as topBarCircleIcon
-    justifyContent: 'center',
-  },
-  topBarCircleIcon: {
-    width: 20,
-    height: 20,
-    tintColor: 'white',
-  },
-});
+})
 
 const LightTheme = {
   ...DefaultTheme,
@@ -113,6 +76,6 @@ const LightTheme = {
     ...DefaultTheme.colors,
     backgroundColor: Color.brand1[200],
   },
-};
+}
 
-export { LabelStyle, ContainerStyle, LightTheme };
+export { LabelStyle, LightTheme }

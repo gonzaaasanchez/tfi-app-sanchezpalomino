@@ -9,7 +9,7 @@
       "error": {
         "title": "Error",
         "generalMessage": "Por favor, ingresá el usuario y la contraseña.",
-        "emailMessage": "Por favor, ingresá un email inválido.",
+        "emailMessage": "Por favor, ingresá una dirección de email válida",
         "passwordMessage": "La contraseña tiene que tener más de 8 caracteres, una mayúscula y un número."
       }
     },
@@ -19,11 +19,12 @@
       "email": "Email",
       "password": "Contraseña",
       "confirmPassword": "Confirmar contraseña",
-      "register": "Registrate",
+      "register": "Registrame",
       "error": {
         "title": "Error",
-        "missingFields": "Por favor, completá todos los datos",
-        "passwordNotMatch": "Las contraseñas no coinciden"
+        "missingFields": "Por favor, completá todos los datos.",
+        "passwordNotMatch": "Por favor, asegurate que las contraseñas coincidan.",
+        "emailMessage": "Por favor, ingresá una dirección de email válida."
       },
       "success": {
         "title": "Cuenta creada con éxito",
@@ -33,7 +34,8 @@
     "forgotPasswordScreen": {
       "title": "Olvidé mi contraseña",
       "email": "Email",
-      "forgotPassword": "Ingresá el email con el que te registraste y te enviaremos un link para recuperar tu contraseña",
+      "instructions": "Ingresá el email con el que te registraste y te enviaremos un link para recuperar tu contraseña",
+      "button": "Enviar el link",
       "error": {
         "title": "Error",
         "message": "Por favor, ingresá tu email."

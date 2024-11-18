@@ -14,7 +14,9 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.package.identifier",
-      "associatedDomains": ["applinks:{{ASSOCIATED_DOMAINS}}"]
+      "associatedDomains": [
+        "applinks:{{ASSOCIATED_DOMAINS}}"
+      ]
     },
     "android": {
       "package": "com.package.identifier",
@@ -39,7 +41,10 @@
               "host": "{{INTENT_FILTER_HOST}}"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
@@ -52,6 +57,24 @@
       }
     },
     "owner": "{{EAS_PROJECT_OWNER}}",
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/SourGummy-Black.ttf",
+            "./assets/fonts/SourGummy-Bold.ttf",
+            "./assets/fonts/SourGummy-ExtraBold.ttf",
+            "./assets/fonts/SourGummy-ExtraLight.ttf",
+            "./assets/fonts/SourGummy-Light.ttf",
+            "./assets/fonts/SourGummy-Medium.ttf",
+            "./assets/fonts/SourGummy-Regular.ttf",
+            "./assets/fonts/SourGummy-SemiBold.ttf",
+            "./assets/fonts/SourGummy-Thin.ttf"
+          ]
+        }
+      ]
+    ],
     "runtimeVersion": {
       "policy": "appVersion"
     },

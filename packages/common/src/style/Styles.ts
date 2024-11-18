@@ -2,69 +2,93 @@ import { StyleSheet } from 'react-native'
 import { Color } from './Color'
 import { DefaultTheme } from '@react-navigation/native'
 
+const FontFamilyByWeight = {
+  SourGummy: {
+    100: 'SourGummy-Thin',
+    thin: 'SourGummy-Thin',
+    200: 'SourGummy-ExtraLight',
+    ultralight: 'SourGummy-ExtraLight',
+    300: 'SourGummy-Light',
+    light: 'SourGummy-Light',
+    400: 'SourGummy-Regular',
+    regular: 'SourGummy-Regular',
+    500: 'SourGummy-Medium',
+    medium: 'SourGummy-Medium',
+    600: 'SourGummy-Semibold',
+    semibold: 'SourGummy-Semibold',
+    700: 'SourGummy-Bold',
+    bold: 'SourGummy-Bold',
+    800: 'SourGummy-ExtraBold',
+    black: 'SourGummy-ExtraBold',
+    900: 'SourGummy-Black',
+    heavy: 'SourGummy-Heavy',
+  },
+}
+const fontFamily = FontFamilyByWeight['SourGummy']
+
 const LabelStyle = StyleSheet.create({
   largeTitle: {
-    fontWeight: 400,
+    fontFamily: fontFamily[400],
     fontSize: 32,
     textAlign: 'left',
   },
   title1: {
-    fontWeight: 500,
+    fontFamily: fontFamily[500],
     fontSize: 26,
     textAlign: 'left',
   },
   title2: {
-    fontWeight: 500,
+    fontFamily: fontFamily[500],
     fontSize: 20,
     textAlign: 'left',
   },
   title3: {
-    fontWeight: 500,
+    fontFamily: fontFamily[500],
     fontSize: 18,
     textAlign: 'left',
   },
   body: {
-    fontWeight: 400,
+    fontFamily: fontFamily[400],
     fontSize: 16,
     textAlign: 'left',
   },
   body2: {
-    fontWeight: 400,
+    fontFamily: fontFamily[400],
     fontSize: 14,
     textAlign: 'left',
   },
   callout: {
-    fontWeight: 400,
+    fontFamily: fontFamily[400],
     fontSize: 16,
     textAlign: 'left',
   },
   link: {
-    fontWeight: 400,
+    fontFamily: fontFamily[400],
     fontSize: 14,
     textAlign: 'left',
   },
   link2: {
-    fontWeight: 400,
+    fontFamily: fontFamily[400],
     fontSize: 12,
     textAlign: 'left',
   },
   subhead: {
-    fontWeight: 400,
+    fontFamily: fontFamily[400],
     fontSize: 12,
     textAlign: 'left',
   },
   footnote: {
-    fontWeight: 400,
+    fontFamily: fontFamily[400],
     fontSize: 12,
     textAlign: 'left',
   },
   caption1: {
-    fontWeight: 400,
+    fontFamily: fontFamily[400],
     fontSize: 11,
     textAlign: 'left',
   },
   caption2: {
-    fontWeight: 400,
+    fontFamily: fontFamily[400],
     fontSize: 10,
     textAlign: 'left',
   },
@@ -76,7 +100,10 @@ const GeneralStyle = {
       backgroundColor: Color.brand1[700],
     },
     headerTintColor: 'white',
-    headerTitleStyle: { fontSize: 18 },
+    headerTitleStyle: {
+      fontSize: 18,
+      fontFamily: 'SourGummy-Medium',
+    },
   },
 }
 

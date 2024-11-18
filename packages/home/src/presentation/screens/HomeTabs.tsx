@@ -21,8 +21,8 @@ type Props = {
 }
 
 const indicatorWidth = 32
-const focusedColor = Color.brand1[700]
-const unfocusedColor = Color.brand1[300]
+const focusedColor = Color.brand1[800]
+const unfocusedColor = Color.brand1[400]
 
 const HomeTabs: FC<Props> = ({
   feed,

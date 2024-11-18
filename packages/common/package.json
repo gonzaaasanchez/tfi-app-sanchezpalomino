@@ -7,6 +7,7 @@
     "axios": "^1.7.7",
     "i18next": "^23.15.1",
     "inversify": "^6.0.2",
+    "lottie-react-native": "^7.1.0",
     "react": "18.2.0",
     "react-i18next": "^15.0.2",
     "react-native": "0.74.5",

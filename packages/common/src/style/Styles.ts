@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { Color, StateColor } from './Color'
+import { Color } from './Color'
 import { DefaultTheme } from '@react-navigation/native'
 
 const LabelStyle = StyleSheet.create({

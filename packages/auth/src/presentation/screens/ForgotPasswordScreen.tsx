@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
@@ -12,7 +11,7 @@ import {
 import { ParamList } from '../AuthStack'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useForgotPasswordViewModel } from '../viewModels/ForgotPasswordViewModel'
-import { Button, Color, LabelStyle, useI18n } from '@app/common'
+import { Button, Color, LabelStyle, Loader, useI18n } from '@app/common'
 
 type Props = NativeStackScreenProps<ParamList, 'forgotPasswordScreen'>
 
@@ -36,14 +35,6 @@ const ForgotPasswordScreen = ({ route }: Props): JSX.Element => {
     }
   }, [state.error])
 
-  if (state.loading === true) {
-    return (
-      <View style={styles.loading}>
-        <Text>{t('forgotPasswordScreen.loading')}</Text>
-      </View>
-    )
-  }
-
   const handlePasswordReset: () => Promise<void> = async () => {
     if (await forgotPassword()) {
       Alert.alert(
@@ -54,46 +45,48 @@ const ForgotPasswordScreen = ({ route }: Props): JSX.Element => {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <View style={styles.inner} accessible={false}>
-        <Text style={{ ...LabelStyle.body2, ...styles.title }}>
-          {t('forgotPasswordScreen.instructions')}
-        </Text>
+    <View style={styles.fullScreenContainer}>
+      {state.loading && <Loader loading={state.loading}/>}
+      <KeyboardAvoidingView
+        style={styles.keyboardContainer}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <View style={styles.inner} accessible={false}>
+          <Text style={{ ...LabelStyle.body2, ...styles.title }}>
+            {t('forgotPasswordScreen.instructions')}
+          </Text>
 
-        <TextInput
-          style={styles.input}
-          placeholder={t('forgotPasswordScreen.email')}
-          placeholderTextColor={Color.black[400]}
-          keyboardType="email-address"
-          value={state.email}
-          onChangeText={setEmail}
-          autoCapitalize="none"
-          autoCorrect={false}
-          textContentType="emailAddress"
-        />
+          <TextInput
+            style={styles.input}
+            placeholder={t('forgotPasswordScreen.email')}
+            placeholderTextColor={Color.black[400]}
+            keyboardType="email-address"
+            value={state.email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            autoCorrect={false}
+            textContentType="emailAddress"
+          />
 
-        <Button.Primary
-          title={t('forgotPasswordScreen.button')}
-          onPress={handlePasswordReset}
-        />
-      </View>
-    </KeyboardAvoidingView>
+          <Button.Primary
+            title={t('forgotPasswordScreen.button')}
+            onPress={handlePasswordReset}
+          />
+        </View>
+      </KeyboardAvoidingView>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
-  loading: {
+  fullScreenContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  container: {
-    flex: 1,
+    position: 'relative',
     justifyContent: 'center',
     backgroundColor: Color.brand2[200],
+  },
+  keyboardContainer: {
+    flex: 1,
   },
   inner: {
     padding: 24,

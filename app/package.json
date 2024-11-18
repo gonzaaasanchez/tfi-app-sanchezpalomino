@@ -15,9 +15,9 @@
   "dependencies": {
     "@app/auth": "*",
     "@app/common": "*",
-    "@app/dashboard": "*",
-    "@app/factoring": "*",
-    "@app/fueling": "*",
+    "@app/feed": "*",
+    "@app/reserves": "*",
+    "@app/services": "*",
     "@app/home": "*",
     "@app/loads": "*",
     "@app/more": "*",

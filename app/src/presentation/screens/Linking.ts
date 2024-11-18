@@ -7,9 +7,9 @@ const linking = {
       homeScreen: {
         path: 'homeScreen',
         screens: {
-          dashboard: 'dashboard',
-          factoring: 'factoring',
-          fueling: 'fueling',
+          feed: 'feed',
+          reserves: 'reserves',
+          services: 'services',
           loads: 'loads',
           more: {
             path: 'more',

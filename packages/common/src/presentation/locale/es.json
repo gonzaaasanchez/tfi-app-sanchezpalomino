@@ -45,8 +45,8 @@
         "message": "Las instrucciones se enviaron a {{email}}. Por favor, revisá tu correo."
       }
     },
-    "dashboardScreen": {
-      "title": "Dashboard Screen"
+    "feedScreen": {
+      "title": "Feed Screen"
     }
   }
 }

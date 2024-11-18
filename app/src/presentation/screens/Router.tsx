@@ -2,14 +2,14 @@ import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { HomeTabs } from '@app/home'
 import { AuthStack } from '@app/auth'
-import { DashboardStack } from '@app/dashboard'
-import { FactoringStack } from '@app/factoring'
-import { FuelingStack } from '@app/fueling'
+import { FeedStack } from '@app/feed'
+import { ReservesStack } from '@app/reserves'
+import { ServicesStack } from '@app/services'
 import { LoadsStack } from '@app/loads'
 import { MoreStack } from '@app/more'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useRouterViewModel } from '../viewModels/ViewModel'
-import { DetailStack } from '@packages/detail'
+import { DetailStack } from '@app/detail'
 import { linking } from './Linking'
 import { LightTheme } from '@packages/common'
 
@@ -29,7 +29,7 @@ const Router = (): JSX.Element => {
 
   return (
     <NavigationContainer linking={linking} theme={LightTheme}>
-      {state.isLoggedIn ? (
+      {!state.isLoggedIn ? (
         <HomeStack.Navigator>
           <HomeStack.Screen
             name="homeScreen"
@@ -52,9 +52,9 @@ const Router = (): JSX.Element => {
 const HomeScreen = (): JSX.Element => {
   return (
     <HomeTabs
-      dashboard={DashboardStack}
-      factoring={FactoringStack}
-      fueling={FuelingStack}
+      feed={FeedStack}
+      reserves={ReservesStack}
+      services={ServicesStack}
       loads={LoadsStack}
       more={MoreStack}
     />

@@ -5,42 +5,42 @@ import MaterialIcons from '@expo/vector-icons/MaterialCommunityIcons'
 const Tab = createBottomTabNavigator()
 
 type Props = {
-  dashboard?: FC
-  factoring?: FC
-  fueling?: FC
+  feed?: FC
+  reserves?: FC
+  services?: FC
   loads?: FC
   more?: FC
 }
 
 const HomeTabs: FC<Props> = ({
-  dashboard,
-  factoring,
-  fueling,
+  feed,
+  reserves,
+  services,
   loads,
   more,
 }): JSX.Element => {
   return (
     <Tab.Navigator>
-      {dashboard && (
+      {feed && (
         <Tab.Screen
-          name="dashboard"
-          component={dashboard}
+          name="feed"
+          component={feed}
           options={{
             headerShown: false,
-            tabBarLabel: 'Home',
+            tabBarLabel: 'Feed',
             tabBarIcon: ({ color }) => {
               return <MaterialIcons name="home" size={24} color={color} />
             },
           }}
         />
       )}
-      {factoring && (
+      {reserves && (
         <Tab.Screen
-          name="factoring"
-          component={factoring}
+          name="reserves"
+          component={reserves}
           options={{
             headerShown: false,
-            tabBarLabel: 'Factoring',
+            tabBarLabel: 'Reservas',
             tabBarIcon: ({ color }) => {
               return (
                 <MaterialIcons
@@ -53,13 +53,13 @@ const HomeTabs: FC<Props> = ({
           }}
         />
       )}
-      {fueling && (
+      {services && (
         <Tab.Screen
-          name="fueling"
-          component={fueling}
+          name="services"
+          component={services}
           options={{
             headerShown: false,
-            tabBarLabel: 'Fueling',
+            tabBarLabel: 'Servicios',
             tabBarIcon: ({ color }) => {
               return <MaterialIcons name="fuel" size={24} color={color} />
             },

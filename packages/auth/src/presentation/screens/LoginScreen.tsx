@@ -31,40 +31,40 @@ const LoginScreen: FC<Props> = () => {
   const navigation = useNavigation()
   const { t } = useI18n()
   const bottomSheetModalRef = useRef(null)
-  const [errorTitle, setErrorTitle] = useState('')
-  const [errorSubtitle, setErrorSubtitle] = useState('')
+  const [alertTitle, setAlertTitle] = useState('')
+  const [alertSubtitle, setAlertSubtitle] = useState('')
 
   const handleLogin: () => void = () => {
     login()
   }
 
-  const showError = (title: string, subtitle: string) => {
-    setErrorTitle(title)
-    setErrorSubtitle(subtitle)
+  const showAlert = (title: string, subtitle: string) => {
+    setAlertTitle(title)
+    setAlertSubtitle(subtitle)
     bottomSheetModalRef.current?.present()
   }
 
   useEffect(() => {
     if (state.error === 'login-invalid-email') {
-      showError(
+      showAlert(
         t('loginScreen.error.title'),
         t('loginScreen.error.emailMessage')
       )
       return
     } else if (state.error === 'login-invalid-password') {
-      showError(
+      showAlert(
         t('loginScreen.error.title'),
         t('loginScreen.error.passwordMessage')
       )
       return
     } else if (state.error === 'login-missing-fields') {
-      showError(
+      showAlert(
         t('loginScreen.error.title'),
         t('loginScreen.error.generalMessage')
       )
       return
     } else if (state.error !== null) {
-      showError(t('loginScreen.error.title'), state.error)
+      showAlert(t('loginScreen.error.title'), state.error)
     }
   }, [state.error])
 
@@ -145,8 +145,8 @@ const LoginScreen: FC<Props> = () => {
       </View>
       <PPBottomSheet
         ref={bottomSheetModalRef}
-        title={errorTitle}
-        subtitle={errorSubtitle}
+        title={alertTitle}
+        subtitle={alertSubtitle}
       />
     </PPBottomSheetContainer>
   )

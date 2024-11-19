@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import {
   View,
   TextInput,
@@ -10,7 +10,14 @@ import {
 import { ParamList } from '../AuthStack'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useRegisterViewModel } from '../viewModels/RegisterViewModel'
-import { Button, Color, Loader, useI18n } from '@app/common'
+import {
+  Button,
+  Color,
+  Loader,
+  PPBottomSheet,
+  PPBottomSheetContainer,
+  useI18n,
+} from '@app/common'
 
 type Props = NativeStackScreenProps<ParamList, 'registerScreen'>
 
@@ -23,9 +30,15 @@ const RegisterScreen = ({ route }: Props): JSX.Element => {
     setConfirmPassword,
     setName,
   } = useRegisterViewModel()
-
   const { email } = route.params
   const { t } = useI18n()
+  const bottomSheetModalRef = useRef(null)
+  const [alertTitle, setAlertTitle] = useState('')
+  const [alertSubtitle, setAlertSubtitle] = useState('')
+
+  useLayoutEffect(() => {
+    setEmail(email)
+  }, [])
 
   const handleRegister: () => Promise<void> = async () => {
     if (await createUser()) {
@@ -36,96 +49,109 @@ const RegisterScreen = ({ route }: Props): JSX.Element => {
     }
   }
 
-  useLayoutEffect(() => {
-    setEmail(email)
-  }, [])
+  const showAlert = (title: string, subtitle: string) => {
+    setAlertTitle(title)
+    setAlertSubtitle(subtitle)
+    bottomSheetModalRef.current?.present()
+  }
 
   useEffect(() => {
     if (state.error === 'register-missing-fields') {
-      Alert.alert(
+      showAlert(
         t('registerScreen.error.title'),
         t('registerScreen.error.missingFields')
       )
+      return
     } else if (state.error === 'register-password-not-match') {
-      Alert.alert(
+      showAlert(
         t('registerScreen.error.title'),
         t('registerScreen.error.passwordNotMatch')
       )
+      return
     } else if (state.error === 'register-invalid-email') {
-      Alert.alert(
+      showAlert(
         t('registerScreen.error.title'),
         t('registerScreen.error.emailMessage')
       )
+      return
     } else if (state.error !== null) {
-      Alert.alert(t('registerScreen.error.title'), state.error)
+      showAlert(t('registerScreen.error.title'), state.error)
+      return
     }
   }, [state.error])
 
   return (
-    <View style={styles.fullScreenContainer}>
-      {state.loading && <Loader loading={state.loading} />}
-      <KeyboardAvoidingView
-        style={styles.keyboardContainer}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
-        <View style={styles.inner} accessible={false}>
-          <TextInput
-            style={styles.input}
-            placeholder={t('registerScreen.name')}
-            placeholderTextColor={Color.black[400]}
-            value={state.name}
-            onChangeText={setName}
-            autoCapitalize="words"
-            autoCorrect={false}
-            testID="registerScreen.name"
-          />
+    <PPBottomSheetContainer>
+      <View style={styles.fullScreenContainer}>
+        {state.loading && <Loader loading={state.loading} />}
+        <KeyboardAvoidingView
+          style={styles.keyboardContainer}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+          <View style={styles.inner} accessible={false}>
+            <TextInput
+              style={styles.input}
+              placeholder={t('registerScreen.name')}
+              placeholderTextColor={Color.black[400]}
+              value={state.name}
+              onChangeText={setName}
+              autoCapitalize="words"
+              autoCorrect={false}
+              testID="registerScreen.name"
+            />
 
-          <TextInput
-            style={styles.input}
-            placeholder={t('registerScreen.email')}
-            placeholderTextColor={Color.black[400]}
-            keyboardType="email-address"
-            value={state.email}
-            onChangeText={setEmail}
-            autoCapitalize="none"
-            autoCorrect={false}
-            textContentType="emailAddress"
-            testID="registerScreen.email"
-          />
+            <TextInput
+              style={styles.input}
+              placeholder={t('registerScreen.email')}
+              placeholderTextColor={Color.black[400]}
+              keyboardType="email-address"
+              value={state.email}
+              onChangeText={setEmail}
+              autoCapitalize="none"
+              autoCorrect={false}
+              textContentType="emailAddress"
+              testID="registerScreen.email"
+            />
 
-          <TextInput
-            style={styles.input}
-            placeholder={t('registerScreen.password')}
-            placeholderTextColor={Color.black[400]}
-            secureTextEntry
-            value={state.password}
-            onChangeText={setPassword}
-            autoCapitalize="none"
-            autoCorrect={false}
-            textContentType={'oneTimeCode'}
-            testID="registerScreen.password"
-          />
+            <TextInput
+              style={styles.input}
+              placeholder={t('registerScreen.password')}
+              placeholderTextColor={Color.black[400]}
+              secureTextEntry
+              value={state.password}
+              onChangeText={setPassword}
+              autoCapitalize="none"
+              autoCorrect={false}
+              textContentType={'oneTimeCode'}
+              testID="registerScreen.password"
+            />
 
-          <TextInput
-            style={styles.input}
-            placeholder={t('registerScreen.confirmPassword')}
-            placeholderTextColor={Color.black[400]}
-            secureTextEntry
-            value={state.confirmPassword}
-            onChangeText={setConfirmPassword}
-            autoCapitalize="none"
-            autoCorrect={false}
-            textContentType={'oneTimeCode'}
-            testID="registerScreen.confirmPassword"
-          />
+            <TextInput
+              style={styles.input}
+              placeholder={t('registerScreen.confirmPassword')}
+              placeholderTextColor={Color.black[400]}
+              secureTextEntry
+              value={state.confirmPassword}
+              onChangeText={setConfirmPassword}
+              autoCapitalize="none"
+              autoCorrect={false}
+              textContentType={'oneTimeCode'}
+              testID="registerScreen.confirmPassword"
+            />
 
-          <Button.Primary
-            title={t('registerScreen.register')}
-            onPress={handleRegister}
-          />
-        </View>
-      </KeyboardAvoidingView>
-    </View>
+            <Button.Primary
+              title={t('registerScreen.register')}
+              onPress={handleRegister}
+            />
+          </View>
+        </KeyboardAvoidingView>
+      </View>
+      <PPBottomSheet
+        ref={bottomSheetModalRef}
+        title={alertTitle}
+        subtitle={alertSubtitle}
+      />
+    </PPBottomSheetContainer>
   )
 }
 

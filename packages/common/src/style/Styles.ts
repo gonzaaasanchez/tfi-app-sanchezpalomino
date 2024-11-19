@@ -58,8 +58,13 @@ const LabelStyle = StyleSheet.create({
     textAlign: 'left',
   },
   callout: {
-    fontFamily: fontFamily[400],
+    fontFamily: fontFamily[300],
     fontSize: 16,
+    textAlign: 'left',
+  },
+  callout2: {
+    fontFamily: fontFamily[300],
+    fontSize: 14,
     textAlign: 'left',
   },
   link: {

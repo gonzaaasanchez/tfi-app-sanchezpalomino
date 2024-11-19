@@ -184,9 +184,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     backgroundColor: Color.brand2[50],
     fontFamily: 'SourGummy-Regular',
-    // borderColor: Color.brand2[200],
-    // borderWidth: 1,
-    // backgroundColor: 'white',
   },
 })
 

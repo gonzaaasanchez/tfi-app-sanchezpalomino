@@ -20,6 +20,8 @@ import {
   PPBottomSheetContainer,
   useI18n,
 } from '@app/common'
+import catSuccess from '@app/assets/lottie-json/success-cat.json'
+import { AnimationObject } from 'lottie-react-native'
 
 type Props = NativeStackScreenProps<ParamList, 'forgotPasswordScreen'>
 
@@ -30,14 +32,20 @@ const ForgotPasswordScreen = ({ route }: Props): JSX.Element => {
   const bottomSheetModalRef = useRef(null)
   const [alertTitle, setAlertTitle] = useState('')
   const [alertSubtitle, setAlertSubtitle] = useState('')
+  const [alertAnimation, setAlertAnimation] = useState(null)
 
   useLayoutEffect(() => {
     setEmail(email)
   }, [])
 
-  const showAlert = (title: string, subtitle: string) => {
+  const showAlert = (
+    title: string,
+    subtitle: string,
+    animation?: AnimationObject | null
+  ) => {
     setAlertTitle(title)
     setAlertSubtitle(subtitle)
+    setAlertAnimation(animation)
     bottomSheetModalRef.current?.present()
   }
 
@@ -58,7 +66,8 @@ const ForgotPasswordScreen = ({ route }: Props): JSX.Element => {
     if (await forgotPassword()) {
       showAlert(
         t('forgotPasswordScreen.success.title'),
-        t('forgotPasswordScreen.success.message', { email: state.email })
+        t('forgotPasswordScreen.success.message', { email: state.email }),
+        catSuccess
       )
     }
   }
@@ -99,6 +108,7 @@ const ForgotPasswordScreen = ({ route }: Props): JSX.Element => {
         ref={bottomSheetModalRef}
         title={alertTitle}
         subtitle={alertSubtitle}
+        lottieFile={alertAnimation}
       />
     </PPBottomSheetContainer>
   )

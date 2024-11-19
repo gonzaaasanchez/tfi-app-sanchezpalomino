@@ -3,16 +3,17 @@ import {
   BottomSheetModal,
   BottomSheetView,
 } from '@gorhom/bottom-sheet'
-import { forwardRef } from 'react'
-import { ImageSourcePropType, View, StyleSheet, Text } from 'react-native'
+import { forwardRef, useRef } from 'react'
+import { View, StyleSheet, Text } from 'react-native'
 import { useI18n } from '../../domain/hooks/i18n'
 import { LabelStyle } from '../../style/Styles'
 import { Button } from '../Button'
+import LottieView, { AnimationObject } from 'lottie-react-native'
 
 type PPBottomSheetProps = {
   title: string
   subtitle?: string
-  icon?: ImageSourcePropType
+  lottieFile?: string | AnimationObject | { uri: string }
   primaryActionTitle?: string
   secondaryActionTitle?: string
   onPrimaryAction?: () => void
@@ -25,7 +26,7 @@ const PPBottomSheet = forwardRef<BottomSheetModal, PPBottomSheetProps>(
     {
       title,
       subtitle,
-      icon,
+      lottieFile,
       primaryActionTitle,
       secondaryActionTitle,
       onPrimaryAction,
@@ -36,6 +37,7 @@ const PPBottomSheet = forwardRef<BottomSheetModal, PPBottomSheetProps>(
     ref
   ) => {
     const { t } = useI18n()
+    const animation = useRef<LottieView>(null)
 
     const defaultDissmiss = () => {
       if (ref && 'current' in ref && ref.current) {
@@ -60,7 +62,15 @@ const PPBottomSheet = forwardRef<BottomSheetModal, PPBottomSheetProps>(
       >
         <BottomSheetView style={styles.view}>
           <View style={styles.textContainer}>
-            {/* <Image source={icon} style={styles.image} /> */}
+            {lottieFile && (
+              <LottieView
+                autoPlay={true}
+                ref={animation}
+                style={styles.animation}
+                source={lottieFile}
+              />
+            )}
+
             {title && (
               <Text style={[LabelStyle.title1, { textAlign: 'center' }]}>
                 {title}
@@ -101,10 +111,10 @@ const styles = StyleSheet.create({
   textContainer: {
     gap: 8,
   },
-  image: {
+  animation: {
     alignSelf: 'center',
-    width: 48,
-    height: 48,
+    height: 180,
+    aspectRatio: 1,
   },
 })
 

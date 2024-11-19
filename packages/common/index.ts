@@ -22,6 +22,8 @@ import { Button, ButtonState } from './src/components/Button'
 import { StringValidator } from './src/utils/StringUtils'
 import { Loader } from './src/components/Loader'
 import { AnimatedView } from './src/components/AnimatedView'
+import { PPBottomSheetContainer } from './src/components/bottom-sheet/PPBottomSheetContainer'
+import { PPBottomSheet } from './src/components/bottom-sheet/PPBottomSheet'
 
 export {
   Resolver,
@@ -50,4 +52,6 @@ export {
   StringValidator,
   Loader,
   AnimatedView,
+  PPBottomSheetContainer,
+  PPBottomSheet,
 }

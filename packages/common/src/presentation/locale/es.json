@@ -2,7 +2,10 @@
   "translation": {
     "general": {
       "comingSoon": "¡Próximamente!",
-      "wereWorking": "Estamos trabajando..."
+      "wereWorking": "Estamos trabajando...",
+      "ok": "Ok",
+      "accept": "Aceptar",
+      "cancel": "Cancelar"
     },
     "loginScreen": {
       "email": "Email",

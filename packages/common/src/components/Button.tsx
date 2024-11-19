@@ -1,13 +1,5 @@
 import React, { FC, ReactNode } from 'react'
-import {
-  Pressable,
-  StyleProp,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native'
+import { Pressable, StyleSheet, Text, View, ViewStyle } from 'react-native'
 import { LabelStyle } from '../style/Styles'
 import { Color } from '../style/Color'
 
@@ -19,54 +11,11 @@ enum ButtonState {
 type BaseButtonProps = {
   title: string
   state?: ButtonState
-  style?: StyleProp<ViewStyle>
+  style?: ViewStyle
   leadingIcon?: ReactNode
   trailingIcon?: ReactNode
-  onPress?: () => void
+  onPress: () => void
   variant: 'primary' | 'secondary'
-}
-
-const BaseButton: FC<BaseButtonProps> = ({
-  title,
-  state = ButtonState.ENABLE,
-  style,
-  leadingIcon,
-  trailingIcon,
-  onPress = () => {},
-  variant,
-}): JSX.Element => {
-  const isDisabled = state === ButtonState.DISABLE
-  const isPrimary = variant === 'primary'
-  const buttonStyles = isPrimary
-    ? [styles.baseButton, styles.primaryButton, isDisabled && styles.disabled]
-    : [styles.baseButton, styles.secondaryButton, isDisabled && styles.disabled]
-
-  const textColor = isPrimary ? 'white' : Color.brand1[500]
-
-  const IconWrapper = ({ icon }: { icon: ReactNode }) => (
-    <View style={styles.icon}>{icon}</View>
-  )
-
-  const Wrapper = isPrimary ? Pressable : TouchableOpacity
-
-  return (
-    <Wrapper
-      onPress={!isDisabled ? onPress : undefined}
-      style={({ pressed }) => [
-        style,
-        ...buttonStyles,
-        isPrimary && pressed && !isDisabled && styles.primaryPressed,
-        !isPrimary && pressed && !isDisabled && styles.secondaryPressed,
-      ]}
-      activeOpacity={isPrimary ? undefined : 0.6}
-    >
-      <View style={styles.buttonRow}>
-        <IconWrapper icon={leadingIcon} />
-        <Text style={[LabelStyle.body, { color: textColor }]}>{title}</Text>
-        <IconWrapper icon={trailingIcon} />
-      </View>
-    </Wrapper>
-  )
 }
 
 const Button: any = (props: Omit<BaseButtonProps, 'variant'>) => {
@@ -80,6 +29,47 @@ Button.Primary = (props: Omit<BaseButtonProps, 'variant'>) => (
 Button.Secondary = (props: Omit<BaseButtonProps, 'variant'>) => (
   <BaseButton {...props} variant="secondary" />
 )
+
+const BaseButton: FC<BaseButtonProps> = ({
+  title,
+  state = ButtonState.ENABLE,
+  style,
+  leadingIcon,
+  trailingIcon,
+  onPress,
+  variant,
+}) => {
+  const isDisabled = state === ButtonState.DISABLE
+  const isPrimary = variant === 'primary'
+
+  return (
+    <Pressable
+      onPress={!isDisabled ? onPress : undefined}
+      style={({ pressed }) => [
+        styles.baseButton,
+        isPrimary ? styles.primaryButton : styles.secondaryButton,
+        isDisabled && styles.disabled,
+        pressed &&
+          !isDisabled &&
+          (isPrimary ? styles.primaryPressed : styles.secondaryPressed),
+        style,
+      ]}
+    >
+      <View style={styles.buttonRow}>
+        {leadingIcon && <View style={styles.icon}>{leadingIcon}</View>}
+        <Text
+          style={[
+            LabelStyle.body,
+            { color: isPrimary ? 'white' : Color.black[800] },
+          ]}
+        >
+          {title}
+        </Text>
+        {trailingIcon && <View style={styles.icon}>{trailingIcon}</View>}
+      </View>
+    </Pressable>
+  )
+}
 
 const styles = StyleSheet.create({
   baseButton: {
@@ -97,8 +87,8 @@ const styles = StyleSheet.create({
     backgroundColor: Color.brand1[600],
   },
   secondaryButton: {
-    backgroundColor: 'white',
-    borderColor: Color.brand1[200],
+    backgroundColor: Color.brand1[50],
+    borderColor: Color.brand1[100],
     borderWidth: 1,
   },
   secondaryPressed: {
@@ -114,7 +104,6 @@ const styles = StyleSheet.create({
   },
   icon: {
     alignItems: 'center',
-    flex: 1,
   },
 })
 

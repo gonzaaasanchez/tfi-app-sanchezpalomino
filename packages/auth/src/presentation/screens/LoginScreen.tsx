@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import {
   View,
   Text,
@@ -14,7 +14,15 @@ import { StackActions, useNavigation } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ParamList } from '../AuthStack'
 import { useLoginViewModel } from '../viewModels/LoginViewModel'
-import { Button, Color, LabelStyle, Loader, useI18n } from '@app/common'
+import {
+  Button,
+  Color,
+  LabelStyle,
+  Loader,
+  PPBottomSheet,
+  PPBottomSheetContainer,
+  useI18n,
+} from '@app/common'
 
 type Props = NativeStackScreenProps<ParamList, 'loginScreen'>
 
@@ -22,109 +30,125 @@ const LoginScreen: FC<Props> = () => {
   const { state, login, setEmail, setPassword } = useLoginViewModel()
   const navigation = useNavigation()
   const { t } = useI18n()
+  const bottomSheetModalRef = useRef(null)
+  const [errorTitle, setErrorTitle] = useState('')
+  const [errorSubtitle, setErrorSubtitle] = useState('')
 
   const handleLogin: () => void = () => {
     login()
   }
 
+  const showError = (title: string, subtitle: string) => {
+    setErrorTitle(title)
+    setErrorSubtitle(subtitle)
+    bottomSheetModalRef.current?.present()
+  }
+
   useEffect(() => {
     if (state.error === 'login-invalid-email') {
-      Alert.alert(
+      showError(
         t('loginScreen.error.title'),
         t('loginScreen.error.emailMessage')
       )
       return
     } else if (state.error === 'login-invalid-password') {
-      Alert.alert(
+      showError(
         t('loginScreen.error.title'),
         t('loginScreen.error.passwordMessage')
       )
       return
     } else if (state.error === 'login-missing-fields') {
-      Alert.alert(
+      showError(
         t('loginScreen.error.title'),
         t('loginScreen.error.generalMessage')
       )
       return
     } else if (state.error !== null) {
-      Alert.alert(t('loginScreen.error.title'), state.error)
+      showError(t('loginScreen.error.title'), state.error)
     }
   }, [state.error])
 
   return (
-    <View style={styles.fullScreenContainer}>
-      {state.loading && <Loader loading={state.loading} />}
-      <KeyboardAvoidingView
-        style={styles.keyboardContainer}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
-        <View style={styles.inner} accessible={false}>
-          <Image
-            source={require('@app/assets/logo-simple.png')}
-            style={styles.image}
-          />
+    <PPBottomSheetContainer>
+      <View style={styles.fullScreenContainer}>
+        {state.loading && <Loader loading={state.loading} />}
+        <KeyboardAvoidingView
+          style={styles.keyboardContainer}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+          <View style={styles.inner} accessible={false}>
+            <Image
+              source={require('@app/assets/logo-simple.png')}
+              style={styles.image}
+            />
 
-          <TextInput
-            style={styles.input}
-            placeholder={t('loginScreen.email')}
-            placeholderTextColor={Color.black[400]}
-            keyboardType="email-address"
-            value={state.email}
-            onChangeText={setEmail}
-            autoCapitalize="none"
-            autoCorrect={false}
-            textContentType="emailAddress"
-          />
+            <TextInput
+              style={styles.input}
+              placeholder={t('loginScreen.email')}
+              placeholderTextColor={Color.black[400]}
+              keyboardType="email-address"
+              value={state.email}
+              onChangeText={setEmail}
+              autoCapitalize="none"
+              autoCorrect={false}
+              textContentType="emailAddress"
+            />
 
-          <TextInput
-            style={styles.input}
-            placeholder={t('loginScreen.password')}
-            placeholderTextColor={Color.black[400]}
-            secureTextEntry
-            value={state.password}
-            onChangeText={setPassword}
-            autoCapitalize="none"
-            autoCorrect={false}
-            textContentType={'oneTimeCode'}
-          />
+            <TextInput
+              style={styles.input}
+              placeholder={t('loginScreen.password')}
+              placeholderTextColor={Color.black[400]}
+              secureTextEntry
+              value={state.password}
+              onChangeText={setPassword}
+              autoCapitalize="none"
+              autoCorrect={false}
+              textContentType={'oneTimeCode'}
+            />
 
-          <Button.Primary
-            title={t('loginScreen.login')}
-            onPress={handleLogin}
-          />
+            <Button.Primary
+              title={t('loginScreen.login')}
+              onPress={handleLogin}
+            />
 
-          <View style={styles.linkContainer}>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.dispatch(
-                  StackActions.push('registerScreen', {
-                    email: state.email,
-                  })
-                )
-              }
-            >
-              <Text style={{ ...LabelStyle.link, ...styles.linkText }}>
-                {t('loginScreen.register')}
-              </Text>
-            </TouchableOpacity>
+            <View style={styles.linkContainer}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.dispatch(
+                    StackActions.push('registerScreen', {
+                      email: state.email,
+                    })
+                  )
+                }
+              >
+                <Text style={{ ...LabelStyle.link, ...styles.linkText }}>
+                  {t('loginScreen.register')}
+                </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={() =>
-                navigation.dispatch(
-                  StackActions.push('forgotPasswordScreen', {
-                    email: state.email,
-                  })
-                )
-              }
-            >
-              <Text style={{ ...LabelStyle.link, ...styles.linkText }}>
-                {t('loginScreen.forgotPassword')}
-              </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.dispatch(
+                    StackActions.push('forgotPasswordScreen', {
+                      email: state.email,
+                    })
+                  )
+                }
+              >
+                <Text style={{ ...LabelStyle.link, ...styles.linkText }}>
+                  {t('loginScreen.forgotPassword')}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </KeyboardAvoidingView>
-    </View>
+        </KeyboardAvoidingView>
+      </View>
+      <PPBottomSheet
+        ref={bottomSheetModalRef}
+        title={errorTitle}
+        subtitle={errorSubtitle}
+      />
+    </PPBottomSheetContainer>
   )
 }
 

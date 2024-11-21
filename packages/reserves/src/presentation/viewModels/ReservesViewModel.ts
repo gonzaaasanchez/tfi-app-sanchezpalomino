@@ -26,18 +26,20 @@ const initialState: ReservesState = {
 const useReservesViewModel = (): ReservesViewModel => {
   const [state, setState] = useState<ReservesState>(initialState)
 
-  const setReserveType = (type) => {
+  const setReserveType: (status: ReserveType) => void = async (type) => {
     setState((previous) => ({
       ...previous,
       selectedType: type,
     }))
+    getReserves()
   }
 
-  const setReserveStatus: (status: ReserveStatus) => void = (status) => {
+  const setReserveStatus: (status: ReserveStatus) => void = async (status) => {
     setState((previous) => ({
       ...previous,
       selectedStatus: status,
     }))
+    getReserves()
   }
 
   const getReserves = async (): Promise<void> => {

@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { $ } from '../../domain/di/Types'
 import { LoginUseCase } from '../../domain/usecases/LoginUseCase'
-import { StringValidator } from '@packages/common/src/utils/StringUtils'
 
 type LoginViewModel = {
   state: LoginState

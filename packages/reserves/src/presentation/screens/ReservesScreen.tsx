@@ -42,10 +42,6 @@ const ReservesScreen: FC = (): JSX.Element => {
     }
   }, [state.error])
 
-  useEffect(() => {
-    getReserves()
-  }, [state.selectedStatus, state.selectedType])
-
   const onRefresh = useCallback(() => {
     setIsRefreshing(true)
     getReserves().finally(() => setIsRefreshing(false))
@@ -66,8 +62,14 @@ const ReservesScreen: FC = (): JSX.Element => {
       <ReservationsHeader
         defaultSelectedStatus={state.selectedStatus}
         defaultSelectedType={state.selectedType}
-        onTypeSelected={setReserveType}
-        onStatusSelected={setReserveStatus}
+        onTypeSelected={(type) => {
+          console.log('setReserveType ' + type)
+          setReserveType(type)
+        }}
+        onStatusSelected={(status) => {
+          console.log('setReserveStatus ' + status)
+          setReserveStatus(status)
+        }}
       />
       <ScrollView
         onLayout={handleLayout}

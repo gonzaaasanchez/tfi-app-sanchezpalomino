@@ -1,5 +1,5 @@
 import { Color, LabelStyle, useI18n } from '@packages/common'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { ReserveType, ReserveStatus } from '../../data/models/local/Types'
 
@@ -40,6 +40,14 @@ const ReservationsHeader: React.FC<ReservationsHeaderProps> = ({
     defaultSelectedStatus
   )
 
+  useEffect(() => {
+    onTypeSelected(selectedType)
+  }, [selectedType])
+
+  useEffect(() => {
+    onStatusSelected(selectedStatus)
+  }, [selectedStatus])
+
   return (
     <View style={styles.container}>
       <View style={styles.segmentedControl}>
@@ -52,7 +60,6 @@ const ReservationsHeader: React.FC<ReservationsHeaderProps> = ({
             ]}
             onPress={() => {
               setSelectedType(type.key)
-              onTypeSelected(selectedType)
             }}
           >
             <Text
@@ -76,7 +83,6 @@ const ReservationsHeader: React.FC<ReservationsHeaderProps> = ({
             ]}
             onPress={() => {
               setSelectedStatus(status.key)
-              onStatusSelected(selectedStatus)
             }}
           >
             <Text

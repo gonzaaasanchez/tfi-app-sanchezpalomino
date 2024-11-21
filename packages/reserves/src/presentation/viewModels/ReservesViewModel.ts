@@ -6,11 +6,13 @@ type ReservesViewModel = {
   state: ReservesState
   setReserveType: (type: ReserveType) => void
   setReserveStatus: (status: ReserveStatus) => void
+  getReserves: () => Promise<void>
 }
 
 type ReservesState = {
   selectedType: ReserveType
   selectedStatus: ReserveStatus
+  reserves: string[]
 } & UIState
 
 const initialState: ReservesState = {
@@ -18,12 +20,13 @@ const initialState: ReservesState = {
   error: null,
   selectedType: 'sent',
   selectedStatus: 'confirmed',
+  reserves: [],
 }
 
 const useReservesViewModel = (): ReservesViewModel => {
   const [state, setState] = useState<ReservesState>(initialState)
 
-  const setReserveType: (type: ReserveType) => void = (type) => {
+  const setReserveType = (type) => {
     setState((previous) => ({
       ...previous,
       selectedType: type,
@@ -37,7 +40,35 @@ const useReservesViewModel = (): ReservesViewModel => {
     }))
   }
 
-  return { state, setReserveType, setReserveStatus }
+  const getReserves = async (): Promise<void> => {
+    const delay = (ms: number) =>
+      new Promise<void>((resolve) => setTimeout(resolve, ms))
+
+    setState((previous) => ({
+      ...previous,
+      loading: true,
+      error: null,
+    }))
+
+    try {
+      //   const user = await useCase.execute(state.email, state.password)
+      await delay(1500)
+
+      setState((previous) => ({
+        ...previous,
+        loading: false,
+        error: null,
+      }))
+    } catch (error) {
+      setState((previous) => ({
+        ...previous,
+        loading: false,
+        error: error.message,
+      }))
+    }
+  }
+
+  return { state, setReserveType, setReserveStatus, getReserves }
 }
 
 export { useReservesViewModel }

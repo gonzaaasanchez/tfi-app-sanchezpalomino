@@ -24,6 +24,7 @@ import { Loader } from './src/components/Loader'
 import { AnimatedView } from './src/components/AnimatedView'
 import { PPBottomSheetContainer } from './src/components/bottom-sheet/PPBottomSheetContainer'
 import { PPBottomSheet } from './src/components/bottom-sheet/PPBottomSheet'
+import { EmptyView } from './src/components/EmptyView'
 
 export {
   Resolver,
@@ -54,4 +55,5 @@ export {
   AnimatedView,
   PPBottomSheetContainer,
   PPBottomSheet,
+  EmptyView,
 }

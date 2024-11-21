@@ -5,7 +5,9 @@
       "wereWorking": "Estamos trabajando...",
       "ok": "Ok",
       "accept": "Aceptar",
-      "cancel": "Cancelar"
+      "cancel": "Cancelar",
+      "ups": "¡Ups!",
+      "emptyList": "No hay información para mostrar"
     },
     "loginScreen": {
       "email": "Email",

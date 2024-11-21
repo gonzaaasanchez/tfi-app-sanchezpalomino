@@ -112,19 +112,8 @@ const HomeTabs: FC<Props> = ({
       )}
     >
       {/* Tab Screens */}
-      {feed && (
-        <Tab.Screen
-          name="feed"
-          component={feed}
-          options={{
-            headerShown: false,
-            tabBarLabel: t('tabbar.feed'),
-            tabBarIcon: ({ color, size }) => (
-              <MaterialIcons name="home-variant-outline" size={size} color={color} />
-            ),
-          }}
-        />
-      )}
+
+      {/* borrame */}
       {reserves && (
         <Tab.Screen
           name="reserves"
@@ -143,6 +132,43 @@ const HomeTabs: FC<Props> = ({
           }}
         />
       )}
+      {/* borrame */}
+
+      {feed && (
+        <Tab.Screen
+          name="feed"
+          component={feed}
+          options={{
+            headerShown: false,
+            tabBarLabel: t('tabbar.feed'),
+            tabBarIcon: ({ color, size }) => (
+              <MaterialIcons
+                name="home-variant-outline"
+                size={size}
+                color={color}
+              />
+            ),
+          }}
+        />
+      )}
+      {/* {reserves && (
+        <Tab.Screen
+          name="reserves"
+          component={reserves}
+          options={{
+            headerShown: false,
+            tabBarLabel: t('tabbar.reserves'),
+            tabBarIcon: ({ color, size }) => (
+              <MaterialIcons
+                // name="book-account-outline"
+                name="book-account-outline"
+                size={size}
+                color={color}
+              />
+            ),
+          }}
+        />
+      )} */}
       {services && (
         <Tab.Screen
           name="services"

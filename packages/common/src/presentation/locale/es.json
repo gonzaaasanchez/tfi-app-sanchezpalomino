@@ -61,6 +61,18 @@
     "feedScreen": {
       "title": "Feed Screen"
     },
+    "reservesScreen": {
+      "title": "Reservas",
+      "types": {
+        "sent": "Enviadas",
+        "received": "Recibidas"
+      },
+      "statuses": {
+        "accepted": "Confirmadas",
+        "rejected": "Rechazadas",
+        "pending": "Pendientes"
+      }
+    },
     "servicesScreen": {
       "title": "Servicios"
     }

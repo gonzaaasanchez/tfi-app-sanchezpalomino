@@ -75,7 +75,7 @@ const ForgotPasswordScreen = ({ route }: Props): JSX.Element => {
   return (
     <PPBottomSheetContainer>
       <View style={styles.fullScreenContainer}>
-        {state.loading && <Loader loading={state.loading} />}
+        {state.loading && <Loader loading={state.loading} animal="dog" />}
         <KeyboardAvoidingView
           style={styles.keyboardContainer}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

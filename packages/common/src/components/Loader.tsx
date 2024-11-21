@@ -9,21 +9,34 @@ import catPlay from '@app/assets/lottie-json/cat-play.json'
 
 type LoaderProps = {
   loading: boolean
+  animal?: 'dog' | 'cat' | 'all'
   opacity?: number
   message?: string
 }
 
-const LottieLoaders = [dogWalk, dogWaiting, catSleep, catPlay]
+const DogLoaders = [dogWalk, dogWaiting]
+const CatLoaders = [catSleep, catPlay]
+const AllLoaders = DogLoaders && CatLoaders
 
 const Loader: FC<LoaderProps> = ({
   loading,
+  animal = 'all',
   opacity = 0.95,
   message: children,
 }): JSX.Element => {
   const animation = useRef<LottieView>(null)
-  const randomLoader =
-    LottieLoaders[Math.floor(Math.random() * LottieLoaders.length)]
-
+  const randomLoader = (
+    animal === 'all' ? AllLoaders : animal === 'cat' ? CatLoaders : DogLoaders
+  )[
+    Math.floor(
+      Math.random() *
+        (animal === 'all'
+          ? AllLoaders.length
+          : animal === 'cat'
+            ? CatLoaders.length
+            : DogLoaders.length)
+    )
+  ]
   return (
     <Modal
       transparent={true}

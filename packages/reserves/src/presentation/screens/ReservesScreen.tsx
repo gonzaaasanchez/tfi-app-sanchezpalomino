@@ -1,12 +1,5 @@
 import { Color, Loader, useI18n } from '@packages/common'
-import React, {
-  FC,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useLayoutEffect,
-} from 'react'
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
 import {
   RefreshControl,
   ScrollView,
@@ -18,6 +11,7 @@ import {
 import ReservationsHeader from '../components/ReservationsHeader'
 import { useReservesViewModel } from '../viewModels/ReservesViewModel'
 import { EmptyView } from '@packages/common/src/components/EmptyView'
+import ReservationCard from '../components/ReservationCard'
 
 const ReservesScreen: FC = (): JSX.Element => {
   const { state, setReserveType, setReserveStatus, getReserves } =
@@ -72,12 +66,14 @@ const ReservesScreen: FC = (): JSX.Element => {
         }}
       />
       <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        contentInsetAdjustmentBehavior='always'
         onLayout={handleLayout}
         refreshControl={
           <RefreshControl
             refreshing={isRefreshing}
             onRefresh={onRefresh}
-            tintColor={Color.brand1[500]}
+            tintColor={Color.brand1[100]}
           />
         }
       >
@@ -92,7 +88,16 @@ const ReservesScreen: FC = (): JSX.Element => {
             />
           </View>
         ) : (
-          <Text>Contenido de las reservas</Text>
+          state.reserves.map((reservation, index) => (
+            <ReservationCard
+              key={index}
+              imageUrl={reservation.photoUrl}
+              firstName={reservation.firstName}
+              lastName={reservation.lastName}
+              date={reservation.date}
+              address={reservation.address}
+            />
+          ))
         )}
       </ScrollView>
     </View>
@@ -107,6 +112,10 @@ const styles = StyleSheet.create({
   emptyViewContainer: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  scrollContainer: {
+    padding: 20,
+    paddingBottom: 80 + 30, //tabbar aprox height + padding
   },
 })
 

@@ -2,6 +2,83 @@ import { UIState } from '@packages/common'
 import { useState } from 'react'
 import { ReserveStatus, ReserveType } from '../../data/models/local/Types'
 
+const reservations = [
+  {
+    photoUrl:
+      'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
+    firstName: 'John',
+    lastName: 'Doe',
+    date: '2024-11-21',
+    address: '123 Main St, City, Country',
+  },
+  {
+    photoUrl:
+      'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
+    firstName: 'Jane',
+    lastName: 'Smith',
+    date: '2024-11-22',
+    address: '456 Another St, City, Country',
+  },
+  {
+    photoUrl:
+      'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
+    firstName: 'John',
+    lastName: 'Doe',
+    date: '2024-11-21',
+    address: '123 Main St, City, Country',
+  },
+  {
+    photoUrl:
+      'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
+    firstName: 'Jane',
+    lastName: 'Smith',
+    date: '2024-11-22',
+    address: '456 Another St, City, Country',
+  },
+
+  {
+    photoUrl:
+      'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
+    firstName: 'John',
+    lastName: 'Doe',
+    date: '2024-11-21',
+    address: '123 Main St, City, Country',
+  },
+  {
+    photoUrl:
+      'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
+    firstName: 'Jane',
+    lastName: 'Smith',
+    date: '2024-11-22',
+    address: '456 Another St, City, Country',
+  },
+  {
+    photoUrl:
+      'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
+    firstName: 'Jane',
+    lastName: 'Smith',
+    date: '2024-11-22',
+    address: '456 Another St, City, Country',
+  },
+
+  {
+    photoUrl:
+      'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
+    firstName: 'John',
+    lastName: 'Doe',
+    date: '2024-11-21',
+    address: '123 Main St, City, Country',
+  },
+  {
+    photoUrl:
+      'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
+    firstName: 'Jane',
+    lastName: 'Smith',
+    date: '2024-11-22',
+    address: '456 Another St, City, Country',
+  },
+]
+
 type ReservesViewModel = {
   state: ReservesState
   setReserveType: (type: ReserveType) => void
@@ -12,7 +89,7 @@ type ReservesViewModel = {
 type ReservesState = {
   selectedType: ReserveType
   selectedStatus: ReserveStatus
-  reserves: string[]
+  reserves: any[]
 } & UIState
 
 const initialState: ReservesState = {
@@ -60,6 +137,7 @@ const useReservesViewModel = (): ReservesViewModel => {
         ...previous,
         loading: false,
         error: null,
+        reserves: reservations,
       }))
     } catch (error) {
       setState((previous) => ({

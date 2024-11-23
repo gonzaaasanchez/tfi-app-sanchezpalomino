@@ -23,7 +23,6 @@ class RegisterUseCase {
     if (password !== confirmPassword) {
       throw new Error('register-password-not-match')
     }
-    // Call the repository to create the user
     return await this.authRepository.createUser(email, password, name)
   }
 }

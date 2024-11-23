@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from 'react'
+import React, { FC, useRef } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import MaterialIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -84,7 +84,7 @@ const HomeTabs: FC<Props> = ({
                   <View style={styles.tabLabelContainer}>
                     <Text
                       style={{
-                        ...LabelStyle.subhead,
+                        ...styles.tabLabelCommon,
                         ...(isFocused && styles.tabLabelSelected),
                         ...(!isFocused && styles.tabLabelUnselected),
                       }}
@@ -221,9 +221,9 @@ const styles = StyleSheet.create({
   },
   shadow: {
     shadowColor: Color.black[500],
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.4,
+    shadowRadius: 5,
     elevation: 10,
   },
   indicatorContainer: {
@@ -248,16 +248,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  tabLabelUnselected: {
+  tabLabelCommon: {
     marginTop: 5,
     textAlign: 'center',
+    ...LabelStyle.subhead(),
+  },
+  tabLabelUnselected: {
     color: unfocusedColor,
   },
   tabLabelSelected: {
-    marginTop: 5,
-    textAlign: 'center',
     color: focusedColor,
-    fontWeight: 'bold',
+    ...LabelStyle.subhead(500),
   },
 })
 

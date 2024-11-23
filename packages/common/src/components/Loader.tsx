@@ -64,7 +64,9 @@ const Loader: FC<LoaderProps> = ({
           />
 
           {children != null && (
-            <Text style={[LabelStyle.title2, styles.message]}>{children}</Text>
+            <Text style={[LabelStyle.title2(), styles.message]}>
+              {children}
+            </Text>
           )}
         </View>
       </View>

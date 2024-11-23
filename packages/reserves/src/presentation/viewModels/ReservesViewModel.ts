@@ -1,83 +1,8 @@
-import { UIState } from '@packages/common'
+import { UIState, useInjection } from '@packages/common'
 import { useState } from 'react'
 import { ReserveStatus, ReserveType } from '../../data/models/local/Types'
-
-const reservations = [
-  {
-    photoUrl:
-      'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
-    firstName: 'John',
-    lastName: 'Doe',
-    date: '2024-11-21',
-    address: '123 Main St, City, Country',
-  },
-  {
-    photoUrl:
-      'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
-    firstName: 'Jane',
-    lastName: 'Smith',
-    date: '2024-11-22',
-    address: '456 Another St, City, Country',
-  },
-  {
-    photoUrl:
-      'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
-    firstName: 'John',
-    lastName: 'Doe',
-    date: '2024-11-21',
-    address: '123 Main St, City, Country',
-  },
-  {
-    photoUrl:
-      'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
-    firstName: 'Jane',
-    lastName: 'Smith',
-    date: '2024-11-22',
-    address: '456 Another St, City, Country',
-  },
-
-  {
-    photoUrl:
-      'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
-    firstName: 'John',
-    lastName: 'Doe',
-    date: '2024-11-21',
-    address: '123 Main St, City, Country',
-  },
-  {
-    photoUrl:
-      'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
-    firstName: 'Jane',
-    lastName: 'Smith',
-    date: '2024-11-22',
-    address: '456 Another St, City, Country',
-  },
-  {
-    photoUrl:
-      'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
-    firstName: 'Jane',
-    lastName: 'Smith',
-    date: '2024-11-22',
-    address: '456 Another St, City, Country',
-  },
-
-  {
-    photoUrl:
-      'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
-    firstName: 'John',
-    lastName: 'Doe',
-    date: '2024-11-21',
-    address: '123 Main St, City, Country',
-  },
-  {
-    photoUrl:
-      'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
-    firstName: 'Jane',
-    lastName: 'Smith',
-    date: '2024-11-22',
-    address: '456 Another St, City, Country',
-  },
-]
+import { GetReservesUseCase } from '../../domain/usecases/GetReservesUseCase'
+import { $ } from '../../domain/di/Types'
 
 type ReservesViewModel = {
   state: ReservesState
@@ -102,6 +27,9 @@ const initialState: ReservesState = {
 
 const useReservesViewModel = (): ReservesViewModel => {
   const [state, setState] = useState<ReservesState>(initialState)
+  const getReservesUseCase: GetReservesUseCase = useInjection(
+    $.GetReservesUseCase
+  )
 
   const setReserveType: (status: ReserveType) => void = async (type) => {
     setState((previous) => ({
@@ -116,13 +44,9 @@ const useReservesViewModel = (): ReservesViewModel => {
       ...previous,
       selectedStatus: status,
     }))
-    getReserves()
   }
 
   const getReserves = async (): Promise<void> => {
-    const delay = (ms: number) =>
-      new Promise<void>((resolve) => setTimeout(resolve, ms))
-
     setState((previous) => ({
       ...previous,
       loading: true,
@@ -130,14 +54,18 @@ const useReservesViewModel = (): ReservesViewModel => {
     }))
 
     try {
-      //   const user = await useCase.execute(state.email, state.password)
-      await delay(1500)
+      console.log('selectedType ' + state.selectedType)
+      console.log('selectedStatus ' + state.selectedStatus)
+      const response = await getReservesUseCase.execute(
+        state.selectedType,
+        state.selectedStatus
+      )
 
       setState((previous) => ({
         ...previous,
         loading: false,
         error: null,
-        reserves: reservations,
+        reserves: response,
       }))
     } catch (error) {
       setState((previous) => ({

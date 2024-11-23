@@ -1,4 +1,4 @@
-type ReserveType = 'sent' | 'received'
-type ReserveStatus = 'confirmed' | 'pending' | 'cancelled'
+type GetReserveType = 'sent' | 'received'
+type GetReserveStatus = 'confirmed' | 'pending' | 'cancelled'
 
-export { ReserveType, ReserveStatus }
+export { GetReserveType as ReserveType, GetReserveStatus as ReserveStatus }

@@ -81,7 +81,7 @@ const ForgotPasswordScreen = ({ route }: Props): JSX.Element => {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
           <View style={styles.inner} accessible={false}>
-            <Text style={{ ...LabelStyle.body2, ...styles.title }}>
+            <Text style={{ ...LabelStyle.body2(), ...styles.title }}>
               {t('forgotPasswordScreen.instructions')}
             </Text>
 

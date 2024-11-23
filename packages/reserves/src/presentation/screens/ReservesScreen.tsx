@@ -36,6 +36,10 @@ const ReservesScreen: FC = (): JSX.Element => {
     }
   }, [state.error])
 
+  useEffect(() => {
+    getReserves()
+  }, [state.selectedStatus, state.selectedType])
+
   const onRefresh = useCallback(() => {
     setIsRefreshing(true)
     getReserves().finally(() => setIsRefreshing(false))
@@ -56,18 +60,12 @@ const ReservesScreen: FC = (): JSX.Element => {
       <ReservationsHeader
         defaultSelectedStatus={state.selectedStatus}
         defaultSelectedType={state.selectedType}
-        onTypeSelected={(type) => {
-          console.log('setReserveType ' + type)
-          setReserveType(type)
-        }}
-        onStatusSelected={(status) => {
-          console.log('setReserveStatus ' + status)
-          setReserveStatus(status)
-        }}
+        onTypeSelected={(type) => setReserveType(type)}
+        onStatusSelected={(status) => setReserveStatus(status)}
       />
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
-        contentInsetAdjustmentBehavior='always'
+        contentInsetAdjustmentBehavior="always"
         onLayout={handleLayout}
         refreshControl={
           <RefreshControl
@@ -89,14 +87,7 @@ const ReservesScreen: FC = (): JSX.Element => {
           </View>
         ) : (
           state.reserves.map((reservation, index) => (
-            <ReservationCard
-              key={index}
-              imageUrl={reservation.photoUrl}
-              firstName={reservation.firstName}
-              lastName={reservation.lastName}
-              date={reservation.date}
-              address={reservation.address}
-            />
+            <ReservationCard key={index} reservation={reservation} />
           ))
         )}
       </ScrollView>

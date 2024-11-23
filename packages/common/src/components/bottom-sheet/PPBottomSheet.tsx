@@ -72,12 +72,12 @@ const PPBottomSheet = forwardRef<BottomSheetModal, PPBottomSheetProps>(
             )}
 
             {title && (
-              <Text style={[LabelStyle.title1, { textAlign: 'center' }]}>
+              <Text style={[LabelStyle.title1(), { textAlign: 'center' }]}>
                 {title}
               </Text>
             )}
             {subtitle && (
-              <Text style={[LabelStyle.callout, { textAlign: 'center' }]}>
+              <Text style={[LabelStyle.callout(), { textAlign: 'center' }]}>
                 {subtitle}
               </Text>
             )}

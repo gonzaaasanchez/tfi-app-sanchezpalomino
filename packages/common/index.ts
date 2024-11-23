@@ -12,6 +12,8 @@ import {
   AppState,
 } from './src/domain/store/AppSlice'
 import { UserModel } from './src/data/models/UserModel'
+import { PetModel } from './src/data/models/PetModel'
+import { LocationModel } from './src/data/models/LocationModel'
 import { appMiddleware } from './src/domain/store/AppMiddleware'
 import { $ as Types } from './src/domain/di/Types'
 import { createResolver } from './src/data/di/Resolver'
@@ -42,6 +44,8 @@ export {
   AppState,
   HttpClient,
   UserModel,
+  PetModel,
+  LocationModel,
   Types,
   LabelStyle,
   LightTheme,

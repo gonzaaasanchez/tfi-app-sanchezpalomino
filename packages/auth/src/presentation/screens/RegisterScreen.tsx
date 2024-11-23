@@ -170,13 +170,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  title: {
-    fontSize: 32,
-    fontWeight: '600',
-    marginBottom: 24,
-    color: '#333',
-    textAlign: 'center',
-  },
   input: {
     height: 48,
     borderRadius: 16,

@@ -1,34 +1,54 @@
 import { Color, LabelStyle } from '@packages/common'
 import React from 'react'
 import { StyleSheet, Text, View, Image } from 'react-native'
+import MaterialIcons from '@expo/vector-icons/MaterialCommunityIcons'
+import { ReservationModel } from '../../data/models/ReservationModel'
 
 type ReservationCardProps = {
-  imageUrl: string
-  firstName: string
-  lastName: string
-  date: string
-  address: string
+  reservation: ReservationModel
 }
 
-const ReservationCard: React.FC<ReservationCardProps> = ({
-  imageUrl,
-  firstName,
-  lastName,
-  date,
-  address,
-}) => {
+const ReservationCard: React.FC<ReservationCardProps> = ({ reservation }) => {
   return (
     <View style={styles.cardContainer}>
       <View style={styles.leftContainer}>
-        <Image source={{ uri: imageUrl }} style={styles.profileImage} />
+        <Image
+          source={{ uri: reservation.userOwner?.avatar }}
+          style={styles.profileImage}
+        />
       </View>
 
       <View style={styles.rightContainer}>
-        <Text style={[LabelStyle.body, styles.name]}>
-          {firstName} {lastName}
+        <Text style={{ ...LabelStyle.body(600), color: Color.black[700] }}>
+          {reservation.userOwner?.fullName}
         </Text>
-        <Text style={[LabelStyle.body, styles.date]}>{date}</Text>
-        <Text style={[LabelStyle.body, styles.address]}>{address}</Text>
+
+        <View style={styles.row}>
+          <MaterialIcons
+            style={{ marginTop: 2 }}
+            name="calendar-today"
+            size={16}
+            color={Color.black[400]}
+          />
+          <Text style={{ ...LabelStyle.body2(), ...styles.date }}>
+            {reservation.startDate} - {reservation.endDate}
+          </Text>
+        </View>
+
+        <View style={styles.row}>
+          <MaterialIcons
+            style={{ marginTop: 2 }}
+            name="map-marker"
+            size={16}
+            color={Color.black[400]}
+          />
+          <Text style={{ ...LabelStyle.body2(), ...styles.address }}>
+            {reservation.location}
+            <Text style={styles.distance}>
+              {' (a ' + reservation.distance + ' km)'}
+            </Text>
+          </Text>
+        </View>
       </View>
     </View>
   )
@@ -42,7 +62,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     shadowColor: Color.black[300],
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.3,
     shadowRadius: 6,
     marginBottom: 12,
     elevation: 3,
@@ -59,17 +79,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  name: {
-    fontWeight: 'bold',
-    color: Color.black[700],
+  row: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginTop: 5,
   },
   date: {
-    color: Color.black[500],
-    marginTop: 4,
+    color: Color.black[400],
+    marginLeft: 6,
   },
   address: {
     color: Color.black[400],
-    marginTop: 4,
+    marginLeft: 6,
+    flexShrink: 1,
+  },
+  distance: {
+    color: Color.black[300],
   },
 })
 

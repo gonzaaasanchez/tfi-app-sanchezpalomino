@@ -1,103 +1,133 @@
-import { StyleSheet } from 'react-native'
+import { TextStyle } from 'react-native'
 import { Color } from './Color'
 import { DefaultTheme } from '@react-navigation/native'
 
-const FontFamilyByWeight = {
-  SourGummy: {
-    100: 'SourGummy-Thin',
-    thin: 'SourGummy-Thin',
-    200: 'SourGummy-ExtraLight',
-    ultralight: 'SourGummy-ExtraLight',
-    300: 'SourGummy-Light',
-    light: 'SourGummy-Light',
-    400: 'SourGummy-Regular',
-    regular: 'SourGummy-Regular',
-    500: 'SourGummy-Medium',
-    medium: 'SourGummy-Medium',
-    600: 'SourGummy-Semibold',
-    semibold: 'SourGummy-Semibold',
-    700: 'SourGummy-Bold',
-    bold: 'SourGummy-Bold',
-    800: 'SourGummy-ExtraBold',
-    black: 'SourGummy-ExtraBold',
-    900: 'SourGummy-Black',
-    heavy: 'SourGummy-Heavy',
-  },
+const SourGummyWithWeight = {
+  100: 'SourGummy-Thin',
+  200: 'SourGummy-ExtraLight',
+  300: 'SourGummy-Light',
+  400: 'SourGummy-Regular',
+  500: 'SourGummy-Medium',
+  600: 'SourGummy-Semibold',
+  700: 'SourGummy-Bold',
+  800: 'SourGummy-ExtraBold',
+  900: 'SourGummy-Black',
 }
-const fontFamily = FontFamilyByWeight['SourGummy']
 
-const LabelStyle = StyleSheet.create({
-  largeTitle: {
-    fontFamily: fontFamily[400],
-    fontSize: 32,
+const LabelStyle = {
+  largeTitle: (
+    fontWeight: keyof typeof SourGummyWithWeight = 400,
+    fontSize: number = 32
+  ): TextStyle => ({
+    fontFamily: SourGummyWithWeight[fontWeight],
+    fontSize,
     textAlign: 'left',
-  },
-  title1: {
-    fontFamily: fontFamily[500],
-    fontSize: 26,
+  }),
+  title1: (
+    fontWeight: keyof typeof SourGummyWithWeight = 500,
+    fontSize: number = 26
+  ): TextStyle => ({
+    fontFamily: SourGummyWithWeight[fontWeight],
+    fontSize,
     textAlign: 'left',
-  },
-  title2: {
-    fontFamily: fontFamily[500],
-    fontSize: 20,
+  }),
+  title2: (
+    fontWeight: keyof typeof SourGummyWithWeight = 500,
+    fontSize: number = 20
+  ): TextStyle => ({
+    fontFamily: SourGummyWithWeight[fontWeight],
+    fontSize,
     textAlign: 'left',
-  },
-  title3: {
-    fontFamily: fontFamily[500],
-    fontSize: 18,
+  }),
+  title3: (
+    fontWeight: keyof typeof SourGummyWithWeight = 500,
+    fontSize: number = 18
+  ): TextStyle => ({
+    fontFamily: SourGummyWithWeight[fontWeight],
+    fontSize,
     textAlign: 'left',
-  },
-  body: {
-    fontFamily: fontFamily[400],
-    fontSize: 16,
+  }),
+  body: (
+    fontWeight: keyof typeof SourGummyWithWeight = 400,
+    fontSize: number = 16
+  ): TextStyle => ({
+    fontFamily: SourGummyWithWeight[fontWeight],
+    fontSize,
     textAlign: 'left',
-  },
-  body2: {
-    fontFamily: fontFamily[400],
-    fontSize: 14,
+  }),
+  body2: (
+    fontWeight: keyof typeof SourGummyWithWeight = 400,
+    fontSize: number = 14
+  ): TextStyle => ({
+    fontFamily: SourGummyWithWeight[fontWeight],
+    fontSize,
     textAlign: 'left',
-  },
-  callout: {
-    fontFamily: fontFamily[300],
-    fontSize: 16,
+  }),
+  callout: (
+    fontWeight: keyof typeof SourGummyWithWeight = 300,
+    fontSize: number = 16
+  ): TextStyle => ({
+    fontFamily: SourGummyWithWeight[fontWeight],
+    fontSize,
     textAlign: 'left',
-  },
-  callout2: {
-    fontFamily: fontFamily[300],
-    fontSize: 14,
+  }),
+  callout2: (
+    fontWeight: keyof typeof SourGummyWithWeight = 300,
+    fontSize: number = 14
+  ): TextStyle => ({
+    fontFamily: SourGummyWithWeight[fontWeight],
+    fontSize,
     textAlign: 'left',
-  },
-  link: {
-    fontFamily: fontFamily[400],
-    fontSize: 14,
+  }),
+  link: (
+    fontWeight: keyof typeof SourGummyWithWeight = 400,
+    fontSize: number = 14
+  ): TextStyle => ({
+    fontFamily: SourGummyWithWeight[fontWeight],
+    fontSize,
     textAlign: 'left',
-  },
-  link2: {
-    fontFamily: fontFamily[400],
-    fontSize: 12,
+  }),
+  link2: (
+    fontWeight: keyof typeof SourGummyWithWeight = 400,
+    fontSize: number = 12
+  ): TextStyle => ({
+    fontFamily: SourGummyWithWeight[fontWeight],
+    fontSize,
     textAlign: 'left',
-  },
-  subhead: {
-    fontFamily: fontFamily[400],
-    fontSize: 12,
+  }),
+  subhead: (
+    fontWeight: keyof typeof SourGummyWithWeight = 400,
+    fontSize: number = 12
+  ): TextStyle => ({
+    fontFamily: SourGummyWithWeight[fontWeight],
+    fontSize,
     textAlign: 'left',
-  },
-  footnote: {
-    fontFamily: fontFamily[400],
-    fontSize: 12,
+  }),
+  footnote: (
+    fontWeight: keyof typeof SourGummyWithWeight = 400,
+    fontSize: number = 12
+  ): TextStyle => ({
+    fontFamily: SourGummyWithWeight[fontWeight],
+    fontSize,
     textAlign: 'left',
-  },
-  caption1: {
-    fontFamily: fontFamily[400],
-    fontSize: 11,
+  }),
+  caption1: (
+    fontWeight: keyof typeof SourGummyWithWeight = 400,
+    fontSize: number = 11
+  ): TextStyle => ({
+    fontFamily: SourGummyWithWeight[fontWeight],
+    fontSize,
     textAlign: 'left',
-  },
-  caption2: {
-    fontFamily: fontFamily[400],
-    fontSize: 10,
+  }),
+  caption2: (
+    fontWeight: keyof typeof SourGummyWithWeight = 400,
+    fontSize: number = 10
+  ): TextStyle => ({
+    fontFamily: SourGummyWithWeight[fontWeight],
+    fontSize,
     textAlign: 'left',
-  },
-})
+  }),
+}
 
 const GeneralStyle = {
   header: {
@@ -120,4 +150,4 @@ const LightTheme = {
   },
 }
 
-export { LabelStyle, LightTheme, GeneralStyle }
+export { LabelStyle, LightTheme, GeneralStyle, SourGummyWithWeight }

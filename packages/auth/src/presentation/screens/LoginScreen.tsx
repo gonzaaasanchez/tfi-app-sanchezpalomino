@@ -121,7 +121,7 @@ const LoginScreen: FC<Props> = () => {
                   )
                 }
               >
-                <Text style={{ ...LabelStyle.link, ...styles.linkText }}>
+                <Text style={{ ...LabelStyle.link(), ...styles.linkText }}>
                   {t('loginScreen.register')}
                 </Text>
               </TouchableOpacity>
@@ -135,7 +135,7 @@ const LoginScreen: FC<Props> = () => {
                   )
                 }
               >
-                <Text style={{ ...LabelStyle.link, ...styles.linkText }}>
+                <Text style={{ ...LabelStyle.link(), ...styles.linkText }}>
                   {t('loginScreen.forgotPassword')}
                 </Text>
               </TouchableOpacity>

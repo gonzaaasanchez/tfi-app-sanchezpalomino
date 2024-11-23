@@ -11,7 +11,7 @@ type Option<K extends string> = {
 type ReservationsHeaderProps = {
   onTypeSelected: (ReserveType) => void
   onStatusSelected: (ReserveStatus) => void
-  defaultSelectedType: ReserveType // Añadido: valor por defecto para selectedType
+  defaultSelectedType: ReserveType
   defaultSelectedStatus: ReserveStatus
 }
 
@@ -126,11 +126,11 @@ const styles = StyleSheet.create({
     borderRadius: 24,
   },
   buttonText: {
-    ...LabelStyle.callout,
+    ...LabelStyle.callout(),
     color: Color.black[500],
   },
   buttonTextActive: {
-    ...LabelStyle.body,
+    ...LabelStyle.body(),
     color: 'white',
   },
 })

@@ -58,10 +58,10 @@ const BaseButton: FC<BaseButtonProps> = ({
       <View style={styles.buttonRow}>
         {leadingIcon && <View style={styles.icon}>{leadingIcon}</View>}
         <Text
-          style={[
-            LabelStyle.body,
-            { color: isPrimary ? 'white' : Color.black[800] },
-          ]}
+          style={{
+            ...LabelStyle.body(),
+            color: isPrimary ? 'white' : Color.black[800],
+          }}
         >
           {title}
         </Text>

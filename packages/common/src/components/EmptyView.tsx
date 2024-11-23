@@ -43,11 +43,11 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   title: {
-    ...LabelStyle.title1,
+    ...LabelStyle.title1(),
     color: Color.black[700],
   },
   subtitle: {
-    ...LabelStyle.body,
+    ...LabelStyle.body(),
     color: Color.black[500],
   },
 })

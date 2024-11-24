@@ -73,6 +73,10 @@
         "pending": "Pendientes"
       }
     },
+    "reserveDetailScreen": {
+      "title": "Detalle de la reserva"
+    },
+    
     "servicesScreen": {
       "title": "Servicios"
     }

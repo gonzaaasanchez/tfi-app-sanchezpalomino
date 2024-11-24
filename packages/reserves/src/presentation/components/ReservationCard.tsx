@@ -1,56 +1,62 @@
 import { Color, LabelStyle } from '@packages/common'
 import React from 'react'
-import { StyleSheet, Text, View, Image } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import MaterialIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { ReservationModel } from '../../data/models/ReservationModel'
 
 type ReservationCardProps = {
   reservation: ReservationModel
+  onReservationSelected: () => void
 }
 
-const ReservationCard: React.FC<ReservationCardProps> = ({ reservation }) => {
+const ReservationCard: React.FC<ReservationCardProps> = ({
+  reservation,
+  onReservationSelected,
+}) => {
   return (
-    <View style={styles.cardContainer}>
-      <View style={styles.leftContainer}>
-        <Image
-          source={{ uri: reservation.userOwner?.avatar }}
-          style={styles.profileImage}
-        />
-      </View>
-
-      <View style={styles.rightContainer}>
-        <Text style={{ ...LabelStyle.body(600), color: Color.black[700] }}>
-          {reservation.userOwner?.fullName}
-        </Text>
-
-        <View style={styles.row}>
-          <MaterialIcons
-            style={{ marginTop: 2 }}
-            name="calendar-today"
-            size={16}
-            color={Color.black[400]}
+    <TouchableOpacity activeOpacity={0.85} onPress={onReservationSelected}>
+      <View style={styles.cardContainer}>
+        <View style={styles.leftContainer}>
+          <Image
+            source={{ uri: reservation.userOwner?.avatar }}
+            style={styles.profileImage}
           />
-          <Text style={{ ...LabelStyle.body2(), ...styles.date }}>
-            {reservation.visitsRangeDate}
-          </Text>
         </View>
 
-        <View style={styles.row}>
-          <MaterialIcons
-            style={{ marginTop: 2 }}
-            name="map-marker"
-            size={16}
-            color={Color.black[400]}
-          />
-          <Text style={{ ...LabelStyle.body2(), ...styles.address }}>
-            {reservation.location}
-            <Text style={styles.distance}>
-              {' (a ' + reservation.distance + ' km)'}
+        <View style={styles.rightContainer}>
+          <Text style={{ ...LabelStyle.body(600), color: Color.black[700] }}>
+            {reservation.userOwner?.fullName}
+          </Text>
+
+          <View style={styles.row}>
+            <MaterialIcons
+              style={{ marginTop: 2 }}
+              name="calendar-today"
+              size={16}
+              color={Color.black[400]}
+            />
+            <Text style={{ ...LabelStyle.body2(), ...styles.date }}>
+              {reservation.visitsRangeDate}
             </Text>
-          </Text>
+          </View>
+
+          <View style={styles.row}>
+            <MaterialIcons
+              style={{ marginTop: 2 }}
+              name="map-marker"
+              size={16}
+              color={Color.black[400]}
+            />
+            <Text style={{ ...LabelStyle.body2(), ...styles.address }}>
+              {reservation.location}
+              <Text style={styles.distance}>
+                {' (a ' + reservation.distance + ' km)'}
+              </Text>
+            </Text>
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 

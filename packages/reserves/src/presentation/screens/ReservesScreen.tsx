@@ -18,11 +18,12 @@ import { useReservesViewModel } from '../viewModels/ReservesViewModel'
 import { EmptyView } from '@packages/common/src/components/EmptyView'
 import ReservationCard from '../components/ReservationCard'
 import { AnimationObject } from 'lottie-react-native'
-import cat404 from '@app/assets/lottie-json/cat-sleep.json'
+import { StackActions, useNavigation } from '@react-navigation/native'
 
 const ReservesScreen: FC = (): JSX.Element => {
   const { state, setReserveType, setReserveStatus, getReserves } =
     useReservesViewModel()
+  const navigation = useNavigation()
   const bottomSheetModalRef = useRef(null)
   const [alertTitle, setAlertTitle] = useState('')
   const [alertSubtitle, setAlertSubtitle] = useState('')
@@ -66,7 +67,6 @@ const ReservesScreen: FC = (): JSX.Element => {
     getReserves().finally(() => setIsRefreshing(false))
   }, [getReserves])
 
-  // Función para manejar el cálculo del espacio disponible
   const handleLayout = (event: LayoutChangeEvent) => {
     const { height } = event.nativeEvent.layout
     const tabbarAproxHeight = 130
@@ -109,7 +109,17 @@ const ReservesScreen: FC = (): JSX.Element => {
             </View>
           ) : (
             state.reserves.map((reservation, index) => (
-              <ReservationCard key={index} reservation={reservation} />
+              <ReservationCard
+                key={index}
+                reservation={reservation}
+                onReservationSelected={() => {
+                  navigation.dispatch(
+                    StackActions.push('reservationDetail', {
+                      reservation: reservation,
+                    })
+                  )
+                }}
+              />
             ))
           )}
         </ScrollView>

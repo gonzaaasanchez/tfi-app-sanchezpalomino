@@ -7,7 +7,8 @@
       "accept": "Aceptar",
       "cancel": "Cancelar",
       "ups": "¡Ups!",
-      "emptyList": "No hay información para mostrar"
+      "emptyList": "No hay información para mostrar",
+      "serviceError": "Ha ocurrido un error. Por favor, ¡intentalo nuevamente!"
     },
     "loginScreen": {
       "email": "Email",
@@ -16,7 +17,6 @@
       "register": "¿No tenés una cuenta? ¡Registrate!",
       "forgotPassword": "¿Olvidaste tu contraseña?",
       "error": {
-        "title": "Error",
         "generalMessage": "Por favor, ingresá el usuario y la contraseña.",
         "emailMessage": "Por favor, ingresá una dirección de email válida",
         "passwordMessage": "La contraseña tiene que tener más de 8 caracteres, una mayúscula y un número."
@@ -30,7 +30,6 @@
       "confirmPassword": "Confirmar contraseña",
       "register": "Registrame",
       "error": {
-        "title": "Error",
         "missingFields": "Por favor, completá todos los datos.",
         "passwordNotMatch": "Por favor, asegurate que las contraseñas coincidan.",
         "emailMessage": "Por favor, ingresá una dirección de email válida."
@@ -46,7 +45,6 @@
       "instructions": "Ingresá el email con el que te registraste y te enviaremos un link para recuperar tu contraseña",
       "button": "Enviar el link",
       "error": {
-        "title": "Error",
         "message": "Por favor, ingresá tu email."
       },
       "success": {

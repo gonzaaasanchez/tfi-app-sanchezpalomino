@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { StyleSheet, View } from 'react-native'
-import { ResolverProvider } from '@app/common'
+import { GenericToast, ResolverProvider } from '@app/common'
 import { Router } from './presentation/screens/Router'
 import { store } from './domain/store/Store'
 import { Provider } from 'react-redux'
@@ -41,6 +41,7 @@ const App = (): JSX.Element => {
           <Router />
         </Provider>
       </ResolverProvider>
+      <GenericToast />
     </View>
   )
 }

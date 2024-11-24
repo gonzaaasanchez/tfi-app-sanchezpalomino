@@ -9,7 +9,7 @@ import {
   View,
   Text,
 } from 'react-native'
-import { Color, LabelStyle, useI18n } from '@packages/common'
+import { Color, LabelStyle, PPBottomSheetContainer, useI18n } from '@packages/common'
 
 const Tab = createBottomTabNavigator()
 
@@ -49,109 +49,110 @@ const HomeTabs: FC<Props> = ({
   }
 
   return (
-    <Tab.Navigator
-      tabBar={({ state, descriptors, navigation }) => (
-        <View style={[styles.tabBar, { bottom: insets.bottom + 10 }]}>
-          {/* Tabs */}
-          <View style={[styles.mainContainer, styles.shadow]}>
-            {state.routes.map((route, index) => {
-              const { options } = descriptors[route.key]
-              const isFocused = state.index === index
-              const label = options.tabBarLabel as string
-              const icon = options.tabBarIcon?.({
-                focused: isFocused,
-                color: isFocused ? focusedColor : unfocusedColor,
-                size: 24,
-              })
+    <PPBottomSheetContainer>
+      <Tab.Navigator
+        tabBar={({ state, descriptors, navigation }) => (
+          <View style={[styles.tabBar, { bottom: insets.bottom + 10 }]}>
+            {/* Tabs */}
+            <View style={[styles.mainContainer, styles.shadow]}>
+              {state.routes.map((route, index) => {
+                const { options } = descriptors[route.key]
+                const isFocused = state.index === index
+                const label = options.tabBarLabel as string
+                const icon = options.tabBarIcon?.({
+                  focused: isFocused,
+                  color: isFocused ? focusedColor : unfocusedColor,
+                  size: 24,
+                })
 
-              return (
-                <TouchableOpacity
-                  key={route.key}
-                  activeOpacity={0.7}
-                  style={styles.tabItemWrapper}
-                  onPress={() => {
-                    handleIndicatorPosition(index)
-                    navigation.navigate(route.name)
-                  }}
-                  onLayout={(event) => {
-                    // Adjust initial tab layout
-                    const { x, width } = event.nativeEvent.layout
-                    tabRefs.current[route.name] = { x, width }
-                    index === 0 && handleIndicatorPosition(0)
-                  }}
-                >
-                  {icon}
-                  <View style={styles.tabLabelContainer}>
-                    <Text
-                      style={{
-                        ...styles.tabLabelCommon,
-                        ...(isFocused && styles.tabLabelSelected),
-                        ...(!isFocused && styles.tabLabelUnselected),
-                      }}
-                    >
-                      {label}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              )
-            })}
+                return (
+                  <TouchableOpacity
+                    key={route.key}
+                    activeOpacity={0.7}
+                    style={styles.tabItemWrapper}
+                    onPress={() => {
+                      handleIndicatorPosition(index)
+                      navigation.navigate(route.name)
+                    }}
+                    onLayout={(event) => {
+                      // Adjust initial tab layout
+                      const { x, width } = event.nativeEvent.layout
+                      tabRefs.current[route.name] = { x, width }
+                      index === 0 && handleIndicatorPosition(0)
+                    }}
+                  >
+                    {icon}
+                    <View style={styles.tabLabelContainer}>
+                      <Text
+                        style={{
+                          ...styles.tabLabelCommon,
+                          ...(isFocused && styles.tabLabelSelected),
+                          ...(!isFocused && styles.tabLabelUnselected),
+                        }}
+                      >
+                        {label}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                )
+              })}
+            </View>
+
+            {/* Animated Indicator */}
+            <Animated.View
+              style={[
+                styles.indicatorContainer,
+                {
+                  transform: [{ translateX: indicatorPosition }],
+                },
+              ]}
+            >
+              <View style={styles.indicator} />
+            </Animated.View>
           </View>
+        )}
+      >
+        {/* Tab Screens */}
 
-          {/* Animated Indicator */}
-          <Animated.View
-            style={[
-              styles.indicatorContainer,
-              {
-                transform: [{ translateX: indicatorPosition }],
-              },
-            ]}
-          >
-            <View style={styles.indicator} />
-          </Animated.View>
-        </View>
-      )}
-    >
-      {/* Tab Screens */}
+        {/* borrame */}
+        {reserves && (
+          <Tab.Screen
+            name="reserves"
+            component={reserves}
+            options={{
+              headerShown: false,
+              tabBarLabel: t('tabbar.reserves'),
+              tabBarIcon: ({ color, size }) => (
+                <MaterialIcons
+                  // name="book-account-outline"
+                  name="book-account-outline"
+                  size={size}
+                  color={color}
+                />
+              ),
+            }}
+          />
+        )}
+        {/* borrame */}
 
-      {/* borrame */}
-      {reserves && (
-        <Tab.Screen
-          name="reserves"
-          component={reserves}
-          options={{
-            headerShown: false,
-            tabBarLabel: t('tabbar.reserves'),
-            tabBarIcon: ({ color, size }) => (
-              <MaterialIcons
-                // name="book-account-outline"
-                name="book-account-outline"
-                size={size}
-                color={color}
-              />
-            ),
-          }}
-        />
-      )}
-      {/* borrame */}
-
-      {feed && (
-        <Tab.Screen
-          name="feed"
-          component={feed}
-          options={{
-            headerShown: false,
-            tabBarLabel: t('tabbar.feed'),
-            tabBarIcon: ({ color, size }) => (
-              <MaterialIcons
-                name="home-variant-outline"
-                size={size}
-                color={color}
-              />
-            ),
-          }}
-        />
-      )}
-      {/* {reserves && (
+        {feed && (
+          <Tab.Screen
+            name="feed"
+            component={feed}
+            options={{
+              headerShown: false,
+              tabBarLabel: t('tabbar.feed'),
+              tabBarIcon: ({ color, size }) => (
+                <MaterialIcons
+                  name="home-variant-outline"
+                  size={size}
+                  color={color}
+                />
+              ),
+            }}
+          />
+        )}
+        {/* {reserves && (
         <Tab.Screen
           name="reserves"
           component={reserves}
@@ -169,37 +170,42 @@ const HomeTabs: FC<Props> = ({
           }}
         />
       )} */}
-      {services && (
-        <Tab.Screen
-          name="services"
-          component={services}
-          options={{
-            headerShown: false,
-            tabBarLabel: t('tabbar.services'),
-            tabBarIcon: ({ color, size }) => (
-              <MaterialIcons name="shopping-search" size={size} color={color} />
-            ),
-          }}
-        />
-      )}
-      {more && (
-        <Tab.Screen
-          name="more"
-          component={more}
-          options={{
-            headerShown: false,
-            tabBarLabel: t('tabbar.more'),
-            tabBarIcon: ({ color, size }) => (
-              <MaterialIcons
-                name="dots-horizontal-circle-outline"
-                size={size}
-                color={color}
-              />
-            ),
-          }}
-        />
-      )}
-    </Tab.Navigator>
+        {services && (
+          <Tab.Screen
+            name="services"
+            component={services}
+            options={{
+              headerShown: false,
+              tabBarLabel: t('tabbar.services'),
+              tabBarIcon: ({ color, size }) => (
+                <MaterialIcons
+                  name="shopping-search"
+                  size={size}
+                  color={color}
+                />
+              ),
+            }}
+          />
+        )}
+        {more && (
+          <Tab.Screen
+            name="more"
+            component={more}
+            options={{
+              headerShown: false,
+              tabBarLabel: t('tabbar.more'),
+              tabBarIcon: ({ color, size }) => (
+                <MaterialIcons
+                  name="dots-horizontal-circle-outline"
+                  size={size}
+                  color={color}
+                />
+              ),
+            }}
+          />
+        )}
+      </Tab.Navigator>
+    </PPBottomSheetContainer>
   )
 }
 

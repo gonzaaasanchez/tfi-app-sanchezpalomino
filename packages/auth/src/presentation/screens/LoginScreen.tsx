@@ -21,6 +21,7 @@ import {
   Loader,
   PPBottomSheet,
   PPBottomSheetContainer,
+  ShowToast,
   useI18n,
 } from '@app/common'
 
@@ -47,24 +48,28 @@ const LoginScreen: FC<Props> = () => {
   useEffect(() => {
     if (state.error === 'login-invalid-email') {
       showAlert(
-        t('loginScreen.error.title'),
+        t('general.ups'),
         t('loginScreen.error.emailMessage')
       )
       return
     } else if (state.error === 'login-invalid-password') {
       showAlert(
-        t('loginScreen.error.title'),
+        t('general.ups'),
         t('loginScreen.error.passwordMessage')
       )
       return
     } else if (state.error === 'login-missing-fields') {
       showAlert(
-        t('loginScreen.error.title'),
+        t('general.ups'),
         t('loginScreen.error.generalMessage')
       )
       return
     } else if (state.error !== null) {
-      showAlert(t('loginScreen.error.title'), state.error)
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: state.error,
+      })
     }
   }, [state.error])
 

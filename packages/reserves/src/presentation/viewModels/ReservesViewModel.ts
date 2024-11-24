@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { ReserveStatus, ReserveType } from '../../data/models/local/Types'
 import { GetReservesUseCase } from '../../domain/usecases/GetReservesUseCase'
 import { $ } from '../../domain/di/Types'
+import { ReservationModel } from '../../data/models/ReservationModel'
 
 type ReservesViewModel = {
   state: ReservesState
@@ -14,7 +15,7 @@ type ReservesViewModel = {
 type ReservesState = {
   selectedType: ReserveType
   selectedStatus: ReserveStatus
-  reserves: any[]
+  reserves: ReservationModel[]
 } & UIState
 
 const initialState: ReservesState = {
@@ -60,7 +61,6 @@ const useReservesViewModel = (): ReservesViewModel => {
         state.selectedType,
         state.selectedStatus
       )
-
       setState((previous) => ({
         ...previous,
         loading: false,
@@ -68,6 +68,7 @@ const useReservesViewModel = (): ReservesViewModel => {
         reserves: response,
       }))
     } catch (error) {
+      console.log(error)
       setState((previous) => ({
         ...previous,
         loading: false,

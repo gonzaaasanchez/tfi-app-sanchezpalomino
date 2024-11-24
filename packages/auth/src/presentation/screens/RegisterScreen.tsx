@@ -58,24 +58,24 @@ const RegisterScreen = ({ route }: Props): JSX.Element => {
   useEffect(() => {
     if (state.error === 'register-missing-fields') {
       showAlert(
-        t('registerScreen.error.title'),
+        t('general.ups'),
         t('registerScreen.error.missingFields')
       )
       return
     } else if (state.error === 'register-password-not-match') {
       showAlert(
-        t('registerScreen.error.title'),
+        t('general.ups'),
         t('registerScreen.error.passwordNotMatch')
       )
       return
     } else if (state.error === 'register-invalid-email') {
       showAlert(
-        t('registerScreen.error.title'),
+        t('general.ups'),
         t('registerScreen.error.emailMessage')
       )
       return
     } else if (state.error !== null) {
-      showAlert(t('registerScreen.error.title'), state.error)
+      showAlert(t('general.ups'), state.error)
       return
     }
   }, [state.error])

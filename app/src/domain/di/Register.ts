@@ -24,7 +24,7 @@ const registerDependencies = (): void => {
 }
 
 const AppRegister = (resolver: Resolver): void => {
-  resolver.registerSingleton(Types.BaseURL, 'https://reqres.in/api')
+  resolver.registerSingleton(Types.BaseURL, '')
 }
 
 export { resolver, registerDependencies }

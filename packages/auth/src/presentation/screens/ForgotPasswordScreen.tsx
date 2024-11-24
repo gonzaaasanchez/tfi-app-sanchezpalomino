@@ -18,6 +18,7 @@ import {
   Loader,
   PPBottomSheet,
   PPBottomSheetContainer,
+  ShowToast,
   useI18n,
 } from '@app/common'
 import catSuccess from '@app/assets/lottie-json/success-cat.json'
@@ -52,12 +53,16 @@ const ForgotPasswordScreen = ({ route }: Props): JSX.Element => {
   useEffect(() => {
     if (state.error === 'forgot-password-missing-fields') {
       showAlert(
-        t('forgotPasswordScreen.error.title'),
+        t('general.ups'),
         t('forgotPasswordScreen.error.message')
       )
       return
     } else if (state.error !== null) {
-      showAlert(t('forgotPasswordScreen.error.title'), state.error)
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: state.error,
+      })
       return
     }
   }, [state.error])

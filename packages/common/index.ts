@@ -22,6 +22,7 @@ import { Color, StateColor } from './src/style/Color'
 import { LabelStyle, LightTheme, GeneralStyle } from './src/style/Styles'
 import { Button, ButtonState } from './src/components/Button'
 import { StringValidator } from './src/utils/StringUtils'
+import { DateUtils } from './src/utils/DateUtils'
 import { Loader } from './src/components/Loader'
 import { AnimatedView } from './src/components/AnimatedView'
 import { PPBottomSheetContainer } from './src/components/bottom-sheet/PPBottomSheetContainer'
@@ -60,6 +61,7 @@ export {
   Button,
   ButtonState,
   StringValidator,
+  DateUtils,
   Loader,
   AnimatedView,
   PPBottomSheetContainer,

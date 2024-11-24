@@ -31,7 +31,7 @@ const ReservationCard: React.FC<ReservationCardProps> = ({ reservation }) => {
             color={Color.black[400]}
           />
           <Text style={{ ...LabelStyle.body2(), ...styles.date }}>
-            {reservation.startDate} - {reservation.endDate}
+            {reservation.visitsRangeDate}
           </Text>
         </View>
 

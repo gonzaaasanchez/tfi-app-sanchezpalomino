@@ -57,18 +57,20 @@ const useReservesViewModel = (): ReservesViewModel => {
     try {
       console.log('selectedType ' + state.selectedType)
       console.log('selectedStatus ' + state.selectedStatus)
-      const response = await getReservesUseCase.execute(
-        state.selectedType,
-        state.selectedStatus
-      )
+      const reserves: ReservationModel[] = (
+        await getReservesUseCase.execute(
+          state.selectedType,
+          state.selectedStatus
+        )
+      ).map((item) => new ReservationModel(item))
+
       setState((previous) => ({
         ...previous,
         loading: false,
         error: null,
-        reserves: response,
+        reserves: reserves,
       }))
     } catch (error) {
-      console.log(error)
       setState((previous) => ({
         ...previous,
         loading: false,

@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   segmentedControl: {
     flexDirection: 'row',
     borderRadius: 24,
-    backgroundColor: Color.brand2[100],
+    backgroundColor: Color.mainBackground,
     overflow: 'hidden',
   },
   buttonContainer: {

@@ -28,7 +28,7 @@ class ReservesApiImpl implements ReservesApi {
     // const response = await this.httpClient.get<ReservationModel[]>('/reserves')
     // return response
     await this.delay(2000)
-    if (type === 'received') {
+    if (type === 'sent') {
       return []
     }
     switch (status) {

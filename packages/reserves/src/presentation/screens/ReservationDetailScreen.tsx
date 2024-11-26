@@ -1,8 +1,9 @@
-import { ShowToast, useI18n } from '@packages/common'
-import { FC, useEffect, useRef, useState } from 'react'
+import { Color, LabelStyle, ShowToast, useI18n } from '@packages/common'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { FC, useEffect } from 'react'
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import { useReservesViewModel } from '../viewModels/ReservesViewModel'
-import { View, Text } from 'react-native'
-import { ReservationModel } from '../../data/models/ReservationModel'
+import { PlaceType, ReservationModel } from '../../data/models/ReservationModel'
 import { RouteProp, useRoute } from '@react-navigation/native'
 
 type RootStackParamList = {
@@ -15,12 +16,12 @@ type ReservationDetailScreenRouteProp = RouteProp<
 >
 
 const ReservationDetailScreen: FC = (): JSX.Element => {
-  const { state, setReserveType, setReserveStatus, getReserves } =
-    useReservesViewModel()
+  const { state } = useReservesViewModel()
   const { t } = useI18n()
-
   const route = useRoute<ReservationDetailScreenRouteProp>()
   const reservation = route.params.reservation
+
+  type MaterialIconName = keyof typeof MaterialIcons.glyphMap
 
   useEffect(() => {
     if (state.error !== null) {
@@ -32,11 +33,159 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
     }
   }, [state.error])
 
+  const detailItem = ({
+    index,
+    icon,
+    title,
+    value,
+  }: {
+    index?: number
+    icon: MaterialIconName
+    title?: string
+    value: string
+  }) => {
+    return (
+      <View
+        {...(index != null ? { key: index } : {})}
+        style={styles.detailContainerItem}
+      >
+        <View style={{ marginTop: 1 }}>
+          <MaterialIcons name={icon} size={15} color={Color.black[500]} />
+        </View>
+        <View style={{ flexDirection: 'row' }}>
+          {title && (
+            <Text style={styles.detailContainerTitleText}>{title}</Text>
+          )}
+          <Text
+            style={{
+              ...styles.detailContainerValueText,
+              ...(title && { paddingLeft: 0 }),
+            }}
+          >
+            {value}
+          </Text>
+        </View>
+      </View>
+    )
+  }
+
   return (
-    <View style={{ flex: 1 }}>
-      <Text>{reservation?.userOwner?.fullName}</Text>
+    <View style={styles.container}>
+      <View style={styles.card}>
+        <View style={styles.userContainer}>
+          <Image
+            source={{ uri: reservation.userOwner?.avatar }}
+            style={styles.avatar}
+          />
+          <View>
+            <Text style={LabelStyle.title2()}>
+              {reservation.userOwner?.fullName}
+            </Text>
+            <Text style={LabelStyle.callout2()}>
+              {reservation.userOwner?.phoneNumber}
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>{t('reserveDetailScreen.pets')}</Text>
+        <View style={styles.detailContainer}>
+          {reservation.pets?.map((pet, index) =>
+            detailItem({
+              index: index,
+              icon: 'pets',
+              value: `${pet.name} (${pet.type})`,
+            })
+          )}
+        </View>
+      </View>
+
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>{t('reserveDetailScreen.details')}</Text>
+
+        <View style={styles.detailContainer}>
+          {detailItem({
+            icon: 'home',
+            title: t('reserveDetailScreen.placeType'),
+            value:
+              reservation.placeType === PlaceType.Home
+                ? t('reserveDetailScreen.placeTypeHome')
+                : t('reserveDetailScreen.placeTypeVisit'),
+          })}
+          {reservation.placeType === PlaceType.Visit &&
+            detailItem({
+              icon: 'location-pin',
+              title: t('reserveDetailScreen.where'),
+              value: reservation.location,
+            })}
+          {detailItem({
+            icon: 'calendar-month',
+            title: t('reserveDetailScreen.date'),
+            value: reservation.visitsRangeDate,
+          })}
+          {reservation.placeType === PlaceType.Visit &&
+            detailItem({
+              icon: 'numbers',
+              title: t('reserveDetailScreen.visitsPerDay'),
+              value: reservation.visitsPerDay.toString(),
+            })}
+        </View>
+      </View>
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: Color.mainBackground,
+  },
+  /* Card */
+  card: {
+    backgroundColor: 'white',
+    padding: 16,
+    marginBottom: 16,
+    borderRadius: 8,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  cardTitle: {
+    ...LabelStyle.body(500),
+    marginBottom: 5,
+  },
+  detailContainer: {
+    marginTop: 10,
+    gap: 5,
+  },
+  detailContainerItem: {
+    flexDirection: 'row',
+  },
+  detailContainerTitleText: {
+    ...LabelStyle.body2(500),
+    color: Color.black[700],
+    paddingLeft: 5,
+  },
+  detailContainerValueText: {
+    ...LabelStyle.callout2(),
+    color: Color.black[500],
+    paddingLeft: 5,
+  },
+  /* User */
+  userContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  avatar: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    marginRight: 10,
+  },
+})
 
 export { ReservationDetailScreen }

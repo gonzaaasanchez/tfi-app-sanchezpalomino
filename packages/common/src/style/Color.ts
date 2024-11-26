@@ -50,6 +50,7 @@ const Color = {
     500: '#ef5da8',
     700: '#bf1760',
   },
+  mainBackground: '#f9eadb',
 }
 
 const StateColor = {

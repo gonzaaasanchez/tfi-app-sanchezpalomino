@@ -11,7 +11,7 @@ enum ReservationStatus {
   Started = 'started',
   Finished = 'finished',
   CancelledOwner = 'cancelled_owner',
-  CancelledCarer = 'Cancelled_Carer',
+  CancelledCarer = 'cancelled_carer',
 }
 
 class ReservationModel {
@@ -53,6 +53,4 @@ class ReservationModel {
 
 }
 
-export { UserModel }
-
-export { PlaceType, ReservationStatus, ReservationModel }
+export { UserModel, PlaceType, ReservationStatus, ReservationModel }

@@ -137,7 +137,7 @@ const ReservesScreen: FC = (): JSX.Element => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Color.brand2[100],
+    backgroundColor: Color.mainBackground,
   },
   emptyViewContainer: {
     justifyContent: 'center',

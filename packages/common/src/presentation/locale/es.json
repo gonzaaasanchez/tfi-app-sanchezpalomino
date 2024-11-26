@@ -74,9 +74,17 @@
       }
     },
     "reserveDetailScreen": {
-      "title": "Detalle de la reserva"
+      "title": "Detalle de la reserva",
+      "user": "Usuario",
+      "pets": "Vas a estar cuidando a: ",
+      "details": "Detalles de la visita",
+      "date": "Cuándo: ",
+      "placeType": "Dónde: ",
+      "placeTypeHome": "Lo/s recibís en tu casa",
+      "placeTypeVisit": "Lo/s visitás en su casa",
+      "where": "Dirección: ",
+      "visitsPerDay": "Cantidad de visitas por día: "
     },
-    
     "servicesScreen": {
       "title": "Servicios"
     }

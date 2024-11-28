@@ -63,10 +63,9 @@ const ReservationsHeader: React.FC<ReservationsHeaderProps> = ({
             }}
           >
             <Text
-              style={[
-                styles.buttonText,
-                selectedType === type.key && styles.buttonTextActive,
-              ]}
+              style={LabelStyle.callout({
+                color: selectedType === type.key ? 'white' : Color.black[500],
+              })}
             >
               {type.label}
             </Text>
@@ -86,10 +85,10 @@ const ReservationsHeader: React.FC<ReservationsHeaderProps> = ({
             }}
           >
             <Text
-              style={[
-                styles.buttonText,
-                selectedStatus === status.key && styles.buttonTextActive,
-              ]}
+              style={LabelStyle.callout({
+                color:
+                  selectedStatus === status.key ? 'white' : Color.black[500],
+              })}
             >
               {status.label}
             </Text>
@@ -124,14 +123,6 @@ const styles = StyleSheet.create({
   selectedButton: {
     backgroundColor: Color.brand1[700],
     borderRadius: 24,
-  },
-  buttonText: {
-    ...LabelStyle.callout(),
-    color: Color.black[500],
-  },
-  buttonTextActive: {
-    ...LabelStyle.body(),
-    color: 'white',
   },
 })
 

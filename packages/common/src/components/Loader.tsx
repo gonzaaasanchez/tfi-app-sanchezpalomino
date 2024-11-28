@@ -63,11 +63,7 @@ const Loader: FC<LoaderProps> = ({
             source={randomLoader}
           />
 
-          {children != null && (
-            <Text style={[LabelStyle.title2(), styles.message]}>
-              {children}
-            </Text>
-          )}
+          {children != null && <Text style={styles.message}>{children}</Text>}
         </View>
       </View>
     </Modal>
@@ -90,6 +86,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   message: {
+    ...LabelStyle.title2(),
     marginTop: 20,
   },
   overlay: {

@@ -147,7 +147,7 @@ const RegisterScreen = ({ route }: Props): JSX.Element => {
           </View>
         </KeyboardAvoidingView>
       </View>
-      <PPBottomSheet.Layout
+      <PPBottomSheet.Dialog
         ref={bottomSheetModalRef}
         title={alertTitle}
         subtitle={alertSubtitle}

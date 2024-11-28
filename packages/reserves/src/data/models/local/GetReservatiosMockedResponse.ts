@@ -21,25 +21,30 @@ export const GetReservatiosMockedResponse = {
           id: 'p1',
           name: 'Firulais',
           comment:
-            'Mi perro hermoso Firulais es mi gran compañero. Le gusta mucho salir a pasear.',
+            'Mi perro hermoso Firulais es mi gran compañero. Le gusta mucho salir a pasear. Hay que tener cuidado porque, si bien es muy obediente, siempre es muy apresurado para cruzar la calle y es peligroso',
+          photoUrl:
+            'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
           type: { id: '1', name: 'Perro' },
           characteristics: [
             { id: '1', name: 'Tamaño', value: 'Grande' },
             { id: '2', name: 'Edad', value: '3' },
             { id: '3', name: 'Personalidad', value: 'Tranquilo' },
-            { id: '4', name: 'Medicación', value: 'No' },
+            { id: '4', name: 'Necesita medicación', value: 'No' },
           ],
         },
         {
           id: 'p2',
           name: 'Mishu',
-          comment: 'Mishu es mi gata y es muy amigable.',
+          comment:
+            'Mishu es mi gata y es muy amigable. Le gusta salir a tomar solcito al balcón y jugar con su cañita de pescar. Come atún y alimento sin problemas. Le gusta tomar agua de la canilla',
+          photoUrl:
+            'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
           type: { id: '2', name: 'Gato' },
           characteristics: [
             { id: '1', name: 'Tamaño', value: 'Pequeño' },
             { id: '2', name: 'Edad', value: '1' },
             { id: '3', name: 'Personalidad', value: 'Tranquilo' },
-            { id: '4', name: 'Medicación', value: 'No' },
+            { id: '4', name: 'Necesita medicación', value: 'No' },
           ],
         },
       ],
@@ -66,12 +71,14 @@ export const GetReservatiosMockedResponse = {
           id: 'p3',
           name: 'Toby',
           comment: 'Toby es un crack, se porta re bien',
+          photoUrl:
+            'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
           type: { id: '1', name: 'Perro' },
           characteristics: [
             { id: '1', name: 'Tamaño', value: 'Mediano' },
             { id: '2', name: 'Edad', value: '7' },
             { id: '3', name: 'Personalidad', value: 'Enérgico' },
-            { id: '4', name: 'Medicación', value: 'No' },
+            { id: '4', name: 'Necesita medicación', value: 'No' },
           ],
         },
       ],
@@ -98,12 +105,14 @@ export const GetReservatiosMockedResponse = {
           id: 'p4',
           name: 'Luna',
           comment: 'Es una gata especial, mi gran compañera.',
+          photoUrl:
+            'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
           type: { id: '2', name: 'Gato' },
           characteristics: [
             { id: '1', name: 'Tamaño', value: 'Pequeño' },
             { id: '2', name: 'Edad', value: '3' },
             { id: '3', name: 'Personalidad', value: 'Tranquila' },
-            { id: '4', name: 'Medicación', value: '1 pastilla por día' },
+            { id: '4', name: 'Necesita medicación', value: '1 pastilla por día' },
           ],
         },
       ],
@@ -131,12 +140,14 @@ export const GetReservatiosMockedResponse = {
           name: 'Bobby',
           comment:
             'Bobby es un perro rescatado y es un poco miedoso pero tranquilo',
+          photoUrl:
+            'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
           type: { id: '1', name: 'Perro' },
           characteristics: [
             { id: '1', name: 'Tamaño', value: 'Pequeño' },
             { id: '2', name: 'Edad', value: '8' },
             { id: '3', name: 'Personalidad', value: 'Miedoso' },
-            { id: '4', name: 'Medicación', value: '2 pastillas día' },
+            { id: '4', name: 'Necesita medicación', value: '2 pastillas día' },
           ],
         },
       ],
@@ -164,24 +175,28 @@ export const GetReservatiosMockedResponse = {
           name: 'Simba',
           comment:
             'Mi perro hermoso Simba es mi gran compañero. Le gusta mucho salir a pasear.',
+          photoUrl:
+            'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
           type: { id: '1', name: 'Perro' },
           characteristics: [
             { id: '1', name: 'Tamaño', value: 'Grande' },
             { id: '2', name: 'Edad', value: '3' },
             { id: '3', name: 'Personalidad', value: 'Tranquilo' },
-            { id: '4', name: 'Medicación', value: 'No' },
+            { id: '4', name: 'Necesita medicación', value: 'No' },
           ],
         },
         {
           id: 'p7',
           name: 'Nala',
           comment: 'Nala es mi gata y es muy amigable.',
+          photoUrl:
+            'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
           type: { id: '2', name: 'Gato' },
           characteristics: [
             { id: '1', name: 'Tamaño', value: 'Pequeño' },
             { id: '2', name: 'Edad', value: '1' },
             { id: '3', name: 'Personalidad', value: 'Tranquilo' },
-            { id: '4', name: 'Medicación', value: 'No' },
+            { id: '4', name: 'Necesita medicación', value: 'No' },
           ],
         },
       ],
@@ -208,12 +223,14 @@ export const GetReservatiosMockedResponse = {
           id: 'p8',
           name: 'Max',
           comment: 'Max es mestizo y se llama así por Max Verstappen',
+          photoUrl:
+            'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
           type: { id: '1', name: 'Perro' },
           characteristics: [
             { id: '1', name: 'Tamaño', value: 'Pequeño' },
             { id: '2', name: 'Edad', value: '5' },
             { id: '3', name: 'Personalidad', value: 'Jueguetón' },
-            { id: '4', name: 'Medicación', value: 'No' },
+            { id: '4', name: 'Necesita medicación', value: 'No' },
           ],
         },
       ],
@@ -240,12 +257,14 @@ export const GetReservatiosMockedResponse = {
           id: 'p9',
           name: 'Coco',
           comment: 'Es muy cariñoso con todo el mundo.',
+          photoUrl:
+            'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
           type: { id: '1', name: 'Perro' },
           characteristics: [
             { id: '1', name: 'Tamaño', value: 'Grande' },
             { id: '2', name: 'Edad', value: '4' },
             { id: '3', name: 'Personalidad', value: 'Cariñoso' },
-            { id: '4', name: 'Medicación', value: 'No' },
+            { id: '4', name: 'Necesita medicación', value: 'No' },
           ],
         },
       ],
@@ -272,12 +291,14 @@ export const GetReservatiosMockedResponse = {
           id: 'p10',
           name: 'Rocky',
           comment: 'Rocky es un caniche juguetón',
+          photoUrl:
+            'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
           type: { id: '1', name: 'Perro' },
           characteristics: [
             { id: '1', name: 'Tamaño', value: 'Mediano' },
             { id: '2', name: 'Edad', value: '2' },
             { id: '3', name: 'Personalidad', value: 'Enérgico' },
-            { id: '4', name: 'Medicación', value: 'No' },
+            { id: '4', name: 'Necesita medicación', value: 'No' },
           ],
         },
       ],
@@ -304,12 +325,14 @@ export const GetReservatiosMockedResponse = {
           id: 'p11',
           name: 'Tommy',
           comment: 'Muy simpático con otros perros',
+          photoUrl:
+            'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
           type: { id: '1', name: 'Perro' },
           characteristics: [
             { id: '1', name: 'Tamaño', value: 'Grande' },
             { id: '2', name: 'Edad', value: '6' },
             { id: '3', name: 'Personalidad', value: 'Amistoso' },
-            { id: '4', name: 'Medicación', value: '1 pastilla noche' },
+            { id: '4', name: 'Necesita medicación', value: '1 pastilla noche' },
           ],
         },
       ],
@@ -336,12 +359,14 @@ export const GetReservatiosMockedResponse = {
           id: 'p12',
           name: 'Duke',
           comment: 'Es un perro bulldog.',
+          photoUrl:
+            'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
           type: { id: '1', name: 'Perro' },
           characteristics: [
             { id: '1', name: 'Tamaño', value: 'Grande' },
             { id: '2', name: 'Edad', value: '2' },
             { id: '3', name: 'Personalidad', value: 'Tranquilo' },
-            { id: '4', name: 'Medicación', value: '2 pastillas día' },
+            { id: '4', name: 'Necesita medicación', value: '2 pastillas día' },
           ],
         },
       ],

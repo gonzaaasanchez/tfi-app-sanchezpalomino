@@ -71,18 +71,17 @@ const CustomToast: React.FC<CustomToastProps> = ({
           <View style={styles.textContainer}>
             <Text
               style={{
-                ...LabelStyle.body2(300),
+                ...LabelStyle.body2({ fontWeight: 300, color: color }),
                 paddingBottom: 3,
-                color: color,
               }}
             >
               {title}
             </Text>
             <Text
-              style={{
-                ...LabelStyle.title2(400),
+              style={LabelStyle.title2({
+                fontWeight: 400,
                 color: Color.black[600],
-              }}
+              })}
             >
               {subtitle}
             </Text>

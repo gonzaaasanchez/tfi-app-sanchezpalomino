@@ -84,7 +84,7 @@ const ForgotPasswordScreen = ({ route }: Props): JSX.Element => {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
           <View style={styles.inner} accessible={false}>
-            <Text style={{ ...LabelStyle.body2(), ...styles.title }}>
+            <Text style={styles.title}>
               {t('forgotPasswordScreen.instructions')}
             </Text>
 
@@ -107,7 +107,7 @@ const ForgotPasswordScreen = ({ route }: Props): JSX.Element => {
           </View>
         </KeyboardAvoidingView>
       </View>
-      <PPBottomSheet.Layout
+      <PPBottomSheet.Dialog
         ref={bottomSheetModalRef}
         title={alertTitle}
         subtitle={alertSubtitle}
@@ -133,8 +133,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
+    ...LabelStyle.body2({ textAlign: 'center' }),
     paddingBottom: 30,
-    textAlign: 'center',
   },
   input: {
     height: 48,

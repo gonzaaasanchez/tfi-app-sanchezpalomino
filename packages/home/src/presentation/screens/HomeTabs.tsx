@@ -9,7 +9,12 @@ import {
   View,
   Text,
 } from 'react-native'
-import { Color, LabelStyle, PPBottomSheetContainer, useI18n } from '@packages/common'
+import {
+  Color,
+  LabelStyle,
+  PPBottomSheetContainer,
+  useI18n,
+} from '@packages/common'
 
 const Tab = createBottomTabNavigator()
 
@@ -256,15 +261,13 @@ const styles = StyleSheet.create({
   },
   tabLabelCommon: {
     marginTop: 5,
-    textAlign: 'center',
-    ...LabelStyle.subhead(),
+    ...LabelStyle.subhead({ textAlign: 'center' }),
   },
   tabLabelUnselected: {
     color: unfocusedColor,
   },
   tabLabelSelected: {
-    color: focusedColor,
-    ...LabelStyle.subhead(500),
+    ...LabelStyle.subhead({ fontWeight: 500, color: focusedColor }),
   },
 })
 

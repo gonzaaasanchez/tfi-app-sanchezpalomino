@@ -87,8 +87,10 @@
       "placeTypeHome": "En tu casa",
       "placeTypeVisit": "La visitás en su casa",
       "placeTypeVisitPlural": "Las visitás en su casa",
-      "where": "Dirección: ",
-      "visitsPerDay": "Cantidad de visitas por día: "
+      "where": "Dónde: ",
+      "location": "Dirección: ",
+      "visitsPerDay": "Cantidad de visitas por día: ",
+      "petDetails": "Más detalles:"
     },
     "servicesScreen": {
       "title": "Servicios"

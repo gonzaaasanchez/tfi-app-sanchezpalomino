@@ -15,117 +15,242 @@ const SourGummyWithWeight = {
 }
 
 const LabelStyle = {
-  largeTitle: (
-    fontWeight: keyof typeof SourGummyWithWeight = 400,
-    fontSize: number = 32
-  ): TextStyle => ({
+  largeTitle: ({
+    fontWeight = 400,
+    fontSize = 32,
+    textAlign = 'left',
+    color = Color.black[900],
+  }: {
+    fontWeight?: keyof typeof SourGummyWithWeight
+    fontSize?: number
+    textAlign?: 'left' | 'center' | 'right'
+    color?: string
+  } = {}): TextStyle => ({
     fontFamily: SourGummyWithWeight[fontWeight],
     fontSize,
-    textAlign: 'left',
+    textAlign,
+    color,
   }),
-  title1: (
-    fontWeight: keyof typeof SourGummyWithWeight = 500,
-    fontSize: number = 26
-  ): TextStyle => ({
+
+  title1: ({
+    fontWeight = 500,
+    fontSize = 26,
+    textAlign = 'left',
+    color = Color.black[900],
+  }: {
+    fontWeight?: keyof typeof SourGummyWithWeight
+    fontSize?: number
+    textAlign?: 'left' | 'center' | 'right'
+    color?: string
+  } = {}): TextStyle => ({
     fontFamily: SourGummyWithWeight[fontWeight],
     fontSize,
-    textAlign: 'left',
+    textAlign,
+    color,
   }),
-  title2: (
-    fontWeight: keyof typeof SourGummyWithWeight = 500,
-    fontSize: number = 20
-  ): TextStyle => ({
+
+  title2: ({
+    fontWeight = 500,
+    fontSize = 20,
+    textAlign = 'left',
+    color = Color.black[900],
+  }: {
+    fontWeight?: keyof typeof SourGummyWithWeight
+    fontSize?: number
+    textAlign?: 'left' | 'center' | 'right'
+    color?: string
+  } = {}): TextStyle => ({
     fontFamily: SourGummyWithWeight[fontWeight],
     fontSize,
-    textAlign: 'left',
+    textAlign,
+    color,
   }),
-  title3: (
-    fontWeight: keyof typeof SourGummyWithWeight = 500,
-    fontSize: number = 18
-  ): TextStyle => ({
+
+  title3: ({
+    fontWeight = 500,
+    fontSize = 18,
+    textAlign = 'left',
+    color = Color.black[900],
+  }: {
+    fontWeight?: keyof typeof SourGummyWithWeight
+    fontSize?: number
+    textAlign?: 'left' | 'center' | 'right'
+    color?: string
+  } = {}): TextStyle => ({
     fontFamily: SourGummyWithWeight[fontWeight],
     fontSize,
-    textAlign: 'left',
+    textAlign,
+    color,
   }),
-  body: (
-    fontWeight: keyof typeof SourGummyWithWeight = 400,
-    fontSize: number = 16
-  ): TextStyle => ({
+
+  body: ({
+    fontWeight = 400,
+    fontSize = 16,
+    textAlign = 'left',
+    color = Color.black[900],
+  }: {
+    fontWeight?: keyof typeof SourGummyWithWeight
+    fontSize?: number
+    textAlign?: 'left' | 'center' | 'right'
+    color?: string
+  } = {}): TextStyle => ({
     fontFamily: SourGummyWithWeight[fontWeight],
     fontSize,
-    textAlign: 'left',
+    textAlign,
+    color,
   }),
-  body2: (
-    fontWeight: keyof typeof SourGummyWithWeight = 400,
-    fontSize: number = 14
-  ): TextStyle => ({
+
+  body2: ({
+    fontWeight = 400,
+    fontSize = 14,
+    textAlign = 'left',
+    color = Color.black[900],
+  }: {
+    fontWeight?: keyof typeof SourGummyWithWeight
+    fontSize?: number
+    textAlign?: 'left' | 'center' | 'right'
+    color?: string
+  } = {}): TextStyle => ({
     fontFamily: SourGummyWithWeight[fontWeight],
     fontSize,
-    textAlign: 'left',
+    textAlign,
+    color,
   }),
-  callout: (
-    fontWeight: keyof typeof SourGummyWithWeight = 300,
-    fontSize: number = 16
-  ): TextStyle => ({
+
+  callout: ({
+    fontWeight = 300,
+    fontSize = 16,
+    textAlign = 'left',
+    color = Color.black[900],
+  }: {
+    fontWeight?: keyof typeof SourGummyWithWeight
+    fontSize?: number
+    textAlign?: 'left' | 'center' | 'right'
+    color?: string
+  } = {}): TextStyle => ({
     fontFamily: SourGummyWithWeight[fontWeight],
     fontSize,
-    textAlign: 'left',
+    textAlign,
+    color,
   }),
-  callout2: (
-    fontWeight: keyof typeof SourGummyWithWeight = 300,
-    fontSize: number = 14
-  ): TextStyle => ({
+
+  callout2: ({
+    fontWeight = 300,
+    fontSize = 14,
+    textAlign = 'left',
+    color = Color.black[900],
+  }: {
+    fontWeight?: keyof typeof SourGummyWithWeight
+    fontSize?: number
+    textAlign?: 'left' | 'center' | 'right'
+    color?: string
+  } = {}): TextStyle => ({
     fontFamily: SourGummyWithWeight[fontWeight],
     fontSize,
-    textAlign: 'left',
+    textAlign,
+    color,
   }),
-  link: (
-    fontWeight: keyof typeof SourGummyWithWeight = 400,
-    fontSize: number = 14
-  ): TextStyle => ({
+
+  link: ({
+    fontWeight = 300,
+    fontSize = 14,
+    textAlign = 'left',
+    color = Color.black[900],
+  }: {
+    fontWeight?: keyof typeof SourGummyWithWeight
+    fontSize?: number
+    textAlign?: 'left' | 'center' | 'right'
+    color?: string
+  } = {}): TextStyle => ({
     fontFamily: SourGummyWithWeight[fontWeight],
     fontSize,
-    textAlign: 'left',
+    textAlign,
+    color,
   }),
-  link2: (
-    fontWeight: keyof typeof SourGummyWithWeight = 400,
-    fontSize: number = 12
-  ): TextStyle => ({
+
+  link2: ({
+    fontWeight = 300,
+    fontSize = 12,
+    textAlign = 'left',
+    color = Color.black[900],
+  }: {
+    fontWeight?: keyof typeof SourGummyWithWeight
+    fontSize?: number
+    textAlign?: 'left' | 'center' | 'right'
+    color?: string
+  } = {}): TextStyle => ({
     fontFamily: SourGummyWithWeight[fontWeight],
     fontSize,
-    textAlign: 'left',
+    textAlign,
+    color,
   }),
-  subhead: (
-    fontWeight: keyof typeof SourGummyWithWeight = 400,
-    fontSize: number = 12
-  ): TextStyle => ({
+
+  subhead: ({
+    fontWeight = 400,
+    fontSize = 12,
+    textAlign = 'left',
+    color = Color.black[900],
+  }: {
+    fontWeight?: keyof typeof SourGummyWithWeight
+    fontSize?: number
+    textAlign?: 'left' | 'center' | 'right'
+    color?: string
+  } = {}): TextStyle => ({
     fontFamily: SourGummyWithWeight[fontWeight],
     fontSize,
-    textAlign: 'left',
+    textAlign,
+    color,
   }),
-  footnote: (
-    fontWeight: keyof typeof SourGummyWithWeight = 400,
-    fontSize: number = 12
-  ): TextStyle => ({
+
+  footnote: ({
+    fontWeight = 400,
+    fontSize = 12,
+    textAlign = 'left',
+    color = Color.black[900],
+  }: {
+    fontWeight?: keyof typeof SourGummyWithWeight
+    fontSize?: number
+    textAlign?: 'left' | 'center' | 'right'
+    color?: string
+  } = {}): TextStyle => ({
     fontFamily: SourGummyWithWeight[fontWeight],
     fontSize,
-    textAlign: 'left',
+    textAlign,
+    color,
   }),
-  caption1: (
-    fontWeight: keyof typeof SourGummyWithWeight = 400,
-    fontSize: number = 11
-  ): TextStyle => ({
+
+  caption1: ({
+    fontWeight = 400,
+    fontSize = 11,
+    textAlign = 'left',
+    color = Color.black[900],
+  }: {
+    fontWeight?: keyof typeof SourGummyWithWeight
+    fontSize?: number
+    textAlign?: 'left' | 'center' | 'right'
+    color?: string
+  } = {}): TextStyle => ({
     fontFamily: SourGummyWithWeight[fontWeight],
     fontSize,
-    textAlign: 'left',
+    textAlign,
+    color,
   }),
-  caption2: (
-    fontWeight: keyof typeof SourGummyWithWeight = 400,
-    fontSize: number = 10
-  ): TextStyle => ({
+
+  caption2: ({
+    fontWeight = 400,
+    fontSize = 10,
+    textAlign = 'left',
+    color = Color.black[900],
+  }: {
+    fontWeight?: keyof typeof SourGummyWithWeight
+    fontSize?: number
+    textAlign?: 'left' | 'center' | 'right'
+    color?: string
+  } = {}): TextStyle => ({
     fontFamily: SourGummyWithWeight[fontWeight],
     fontSize,
-    textAlign: 'left',
+    textAlign,
+    color,
   }),
 }
 
@@ -150,4 +275,4 @@ const LightTheme = {
   },
 }
 
-export { LabelStyle, LightTheme, GeneralStyle, SourGummyWithWeight }
+export { LabelStyle, LightTheme, GeneralStyle }

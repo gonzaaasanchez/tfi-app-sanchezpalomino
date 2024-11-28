@@ -1,4 +1,10 @@
-import { Color, LabelStyle, PPMaterialIcon, PPMaterialIconsName, useI18n } from '@packages/common'
+import {
+  Color,
+  LabelStyle,
+  PPMaterialIcon,
+  PPMaterialIconsName,
+  useI18n,
+} from '@packages/common'
 import React from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import { PlaceType, ReservationModel } from '../../data/models/ReservationModel'
@@ -22,8 +28,10 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
   const IconText: React.FC<IconTextProps> = ({ iconName, text }) => {
     return (
       <View style={styles.row}>
-        <PPMaterialIcon icon={iconName} size={16} color={Color.black[400]} />
-        <Text style={styles.date}>{text}</Text>
+        <View style={{ marginTop: 1 }}>
+          <PPMaterialIcon icon={iconName} size={16} color={Color.black[400]} />
+        </View>
+        <Text style={styles.detail}>{text}</Text>
       </View>
     )
   }
@@ -94,20 +102,12 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   userName: {
-    ...LabelStyle.body(600),
-    color: Color.black[700],
+    ...LabelStyle.body({ fontWeight: 600, color: Color.black[700] }),
   },
-  date: {
-    color: Color.black[400],
-    marginLeft: 6,
-  },
-  address: {
-    color: Color.black[400],
+  detail: {
+    ...LabelStyle.callout2({ color: Color.black[400] }),
     marginLeft: 6,
     flexShrink: 1,
-  },
-  distance: {
-    color: Color.black[300],
   },
 })
 

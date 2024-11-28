@@ -49,30 +49,29 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
     }
   }, [petDetail])
 
-  const detailItem = ({
-    index = null,
+  const DetailItem: React.FC<{
+    icon: PPMaterialIconsName
+    iconSize?: number
+    iconTopPadding?: number
+    title?: string
+    value: string
+    onPress?: () => void
+  }> = ({
+    iconSize = 15,
+    iconTopPadding: neededIconPadding = 1,
     icon,
     title = null,
     value,
     onPress = null,
-  }: {
-    index?: number
-    icon: PPMaterialIconsName
-    title?: string
-    value: string
-    onPress?: () => void
   }) => {
     return (
       <TouchableOpacity
         activeOpacity={onPress ? 0.6 : 1}
         onPress={onPress || undefined}
       >
-        <View
-          {...(index != null ? { key: index } : {})}
-          style={styles.detailContainerItem}
-        >
-          <View style={{ marginTop: 1 }}>
-            <PPMaterialIcon icon={icon} />
+        <View style={styles.detailContainerItem}>
+          <View style={{ marginTop: neededIconPadding }}>
+            <PPMaterialIcon icon={icon} size={iconSize} />
           </View>
           <View style={styles.detailContainerTitleSubtitle}>
             {title && (
@@ -89,6 +88,31 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
           </View>
         </View>
       </TouchableOpacity>
+    )
+  }
+
+  const PetDetailSheet: FC = () => {
+    return (
+      <View style={{paddingBottom: 20}}>
+        <Image style={styles.petImage} source={{ uri: petDetail?.photoUrl }} />
+        <Text style={styles.petName}>{petDetail?.name}</Text>
+        <Text style={styles.petType}>{`(${petDetail?.type.name})`}</Text>
+        <Text style={styles.petComment}>{petDetail?.comment}</Text>
+        <Text style={styles.petCharacteristicsTitle}>
+          {t('reserveDetailScreen.petDetails')}
+        </Text>
+        {petDetail.characteristics?.map((characteristic) => (
+          <View key={characteristic.id}>
+            <DetailItem
+              icon="pets"
+              iconSize={14}
+              iconTopPadding={2}
+              title={`${characteristic.name}: `}
+              value={`${characteristic.value}`}
+            />
+          </View>
+        ))}
+      </View>
     )
   }
 
@@ -115,14 +139,15 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
         <View style={styles.card}>
           <Text style={styles.cardTitle}>{t('reserveDetailScreen.pets')}</Text>
           <View style={styles.detailContainer}>
-            {reservation.pets?.map((pet, index) =>
-              detailItem({
-                index: index,
-                icon: 'pets',
-                value: `${pet.name} (${pet.type.name})`,
-                onPress: () => setPetDetail(pet),
-              })
-            )}
+            {reservation.pets?.map((pet) => (
+              <View key={pet.id}>
+                <DetailItem
+                  icon="pets"
+                  value={`${pet.name} (${pet.type.name})`}
+                  onPress={() => setPetDetail(pet)}
+                />
+              </View>
+            ))}
           </View>
         </View>
 
@@ -130,45 +155,47 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
           <Text style={styles.cardTitle}>
             {t('reserveDetailScreen.details')}
           </Text>
-
           <View style={styles.detailContainer}>
-            {detailItem({
-              icon: 'home-filled',
-              title: t('reserveDetailScreen.placeType'),
-              value:
+            <DetailItem
+              icon="home-filled"
+              title={t('reserveDetailScreen.where')}
+              value={
                 reservation.placeType === PlaceType.Home
                   ? t('reserveDetailScreen.placeTypeHome')
                   : reservation.pets?.length === 1
                     ? t('reserveDetailScreen.placeTypeVisit')
-                    : t('reserveDetailScreen.placeTypeVisitPlural'),
-            })}
-            {reservation.placeType === PlaceType.Visit &&
-              detailItem({
-                icon: 'map-marker',
-                title: t('reserveDetailScreen.where'),
-                value: `${reservation.location} (a ${reservation.distance} km)`,
-              })}
-            {detailItem({
-              icon: 'calendar-today',
-              title: t('reserveDetailScreen.date'),
-              value: reservation.visitsRangeDate,
-            })}
-            {reservation.placeType === PlaceType.Visit &&
-              detailItem({
-                icon: 'numbers',
-                title: t('reserveDetailScreen.visitsPerDay'),
-                value: reservation.visitsPerDay.toString(),
-              })}
+                    : t('reserveDetailScreen.placeTypeVisitPlural')
+              }
+            />
+            {reservation.placeType === PlaceType.Visit && (
+              <DetailItem
+                icon="map-marker"
+                title={t('reserveDetailScreen.location')}
+                value={`${reservation.location} (a ${reservation.distance} km)`}
+              />
+            )}
+            <DetailItem
+              icon="calendar-today"
+              title={t('reserveDetailScreen.date')}
+              value={reservation.visitsRangeDate}
+            />
+            {reservation.placeType === PlaceType.Visit && (
+              <DetailItem
+                icon="numbers"
+                title={t('reserveDetailScreen.visitsPerDay')}
+                value={reservation.visitsPerDay.toString()}
+              />
+            )}
           </View>
         </View>
       </View>
-      <PPBottomSheet.Layout
+      <PPBottomSheet.Empty
         ref={petDetailModalRef}
-        title={petDetail?.name}
-        subtitle={petDetail?.name}
         dismisseable={true}
         onDismiss={() => setPetDetail(null)}
-      />
+      >
+        <PetDetailSheet />
+      </PPBottomSheet.Empty>
     </PPBottomSheetContainer>
   )
 }
@@ -192,7 +219,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   cardTitle: {
-    ...LabelStyle.body(500),
+    ...LabelStyle.body({ fontWeight: 500 }),
     marginBottom: 5,
   },
   detailContainer: {
@@ -209,14 +236,12 @@ const styles = StyleSheet.create({
     paddingRight: 20,
   },
   detailContainerTitleText: {
-    ...LabelStyle.body2(500),
-    color: Color.black[700],
+    ...LabelStyle.body2({ fontWeight: 500, color: Color.black[700] }),
     paddingLeft: 5,
     flexShrink: 0,
   },
   detailContainerValueText: {
-    ...LabelStyle.callout2(),
-    color: Color.black[500],
+    ...LabelStyle.callout2({ color: Color.black[500] }),
     paddingLeft: 5,
     flexShrink: 1,
     flexGrow: 1,
@@ -232,6 +257,32 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 35,
     marginRight: 10,
+  },
+  /* Pet sheet detail */
+  petImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    alignSelf: 'center',
+  },
+  petName: {
+    ...LabelStyle.title1(),
+    textAlign: 'center',
+  },
+  petType: {
+    ...LabelStyle.callout2(),
+    textAlign: 'center',
+    color: Color.black[500],
+  },
+  petComment: {
+    ...LabelStyle.callout2({ fontWeight: 200 }),
+    paddingVertical: 20,
+    color: Color.black[800],
+  },
+  petCharacteristicsTitle: {
+    ...LabelStyle.body({ textAlign: 'center' }),
+    paddingBottom: 10,
+    color: Color.black[800],
   },
 })
 

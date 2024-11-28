@@ -10,15 +10,8 @@ import { LabelStyle } from '../../style/Styles'
 import { Button } from '../Button'
 import LottieView, { AnimationObject } from 'lottie-react-native'
 
-type PPBottomSheetEmptyProps = {
-  variant?: 'empty'
-  dismisseable?: boolean
-  onDismiss?: () => void
-  children?: JSX.Element
-}
-
-type PPBottomSheetLayoutProps = {
-  variant?: 'layout'
+type PPBottomSheetDialogProps = {
+  variant: 'dialog'
   title: string
   subtitle?: string
   lottieFile?: string | AnimationObject | { uri: string }
@@ -30,20 +23,26 @@ type PPBottomSheetLayoutProps = {
   onDismiss?: () => void
 }
 
-type PPBottomSheetProps = PPBottomSheetEmptyProps | PPBottomSheetLayoutProps
+type PPBottomSheetEmptyProps = {
+  variant: 'empty'
+  dismisseable?: boolean
+  onDismiss?: () => void
+  children: JSX.Element
+}
+
+type PPBottomSheetProps = PPBottomSheetEmptyProps | PPBottomSheetDialogProps
 
 const PPBottomSheet = {
+  Dialog: forwardRef<
+    BottomSheetModal,
+    Omit<PPBottomSheetDialogProps, 'variant'>
+  >((props, ref) => (
+    <BasePPBottomSheet {...props} ref={ref} variant="dialog" />
+  )),
   Empty: forwardRef<BottomSheetModal, Omit<PPBottomSheetEmptyProps, 'variant'>>(
     (props, ref) => <BasePPBottomSheet {...props} ref={ref} variant="empty" />
   ),
-  Layout: forwardRef<
-    BottomSheetModal,
-    Omit<PPBottomSheetLayoutProps, 'variant'>
-  >((props, ref) => (
-    <BasePPBottomSheet {...props} ref={ref} variant="layout" />
-  )),
 }
-
 const BasePPBottomSheet = forwardRef<BottomSheetModal, PPBottomSheetProps>(
   (props, ref) => {
     const { variant } = props
@@ -71,47 +70,49 @@ const BasePPBottomSheet = forwardRef<BottomSheetModal, PPBottomSheetProps>(
           />
         )}
       >
-        {variant === 'empty' && props?.children}
+        <BottomSheetView style={styles.view}>
+          {variant === 'empty' && props.children}
 
-        {variant === 'layout' && (
-          <BottomSheetView style={styles.view}>
-            <View style={styles.textContainer}>
-              {props.lottieFile && (
-                <LottieView
-                  autoPlay={true}
-                  ref={animation}
-                  style={styles.animation}
-                  source={props.lottieFile}
+          {variant === 'dialog' && (
+            <>
+              <View style={styles.textContainer}>
+                {props.lottieFile && (
+                  <LottieView
+                    autoPlay={true}
+                    ref={animation}
+                    style={styles.animation}
+                    source={props.lottieFile}
+                  />
+                )}
+
+                {props.title && (
+                  <Text style={LabelStyle.title1({ textAlign: 'center' })}>
+                    {props.title}
+                  </Text>
+                )}
+                {props.subtitle && (
+                  <Text style={LabelStyle.callout({ textAlign: 'center' })}>
+                    {props.subtitle}
+                  </Text>
+                )}
+              </View>
+
+              <View>
+                <Button.Primary
+                  title={props.primaryActionTitle ?? t('general.accept')}
+                  onPress={props.onPrimaryAction ?? defaultDissmiss}
                 />
-              )}
 
-              {props.title && (
-                <Text style={[LabelStyle.title1(), { textAlign: 'center' }]}>
-                  {props.title}
-                </Text>
-              )}
-              {props.subtitle && (
-                <Text style={[LabelStyle.callout(), { textAlign: 'center' }]}>
-                  {props.subtitle}
-                </Text>
-              )}
-            </View>
-
-            <View>
-              <Button.Primary
-                title={props.primaryActionTitle ?? t('general.accept')}
-                onPress={props.onPrimaryAction ?? defaultDissmiss}
-              />
-
-              {props.secondaryActionTitle && (
-                <Button.Secondary
-                  title={props.secondaryActionTitle}
-                  onPress={props.onSecondaryAction ?? defaultDissmiss}
-                />
-              )}
-            </View>
-          </BottomSheetView>
-        )}
+                {props.secondaryActionTitle && (
+                  <Button.Secondary
+                    title={props.secondaryActionTitle}
+                    onPress={props.onSecondaryAction ?? defaultDissmiss}
+                  />
+                )}
+              </View>
+            </>
+          )}
+        </BottomSheetView>
       </BottomSheetModal>
     )
   }

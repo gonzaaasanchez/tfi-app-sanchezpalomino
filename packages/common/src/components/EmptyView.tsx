@@ -18,8 +18,12 @@ const EmptyView: React.FC<EmptyViewProps> = ({ title, subtitle, type }) => {
   return (
     <View style={styles.container}>
       <View style={styles.messageContainer}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.subtitle}>{subtitle}</Text>
+        <Text style={LabelStyle.title1({ color: Color.black[700] })}>
+          {title}
+        </Text>
+        <Text style={LabelStyle.body({ color: Color.black[500] })}>
+          {subtitle}
+        </Text>
       </View>
       <AnimatedView
         filePath={
@@ -41,14 +45,6 @@ const styles = StyleSheet.create({
   messageContainer: {
     alignItems: 'center',
     gap: 10,
-  },
-  title: {
-    ...LabelStyle.title1(),
-    color: Color.black[700],
-  },
-  subtitle: {
-    ...LabelStyle.body(),
-    color: Color.black[500],
   },
 })
 

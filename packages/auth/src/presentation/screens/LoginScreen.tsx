@@ -48,22 +48,13 @@ const LoginScreen: FC<Props> = () => {
 
   useEffect(() => {
     if (state.error === 'login-invalid-email') {
-      showAlert(
-        t('general.ups'),
-        t('loginScreen.error.emailMessage')
-      )
+      showAlert(t('general.ups'), t('loginScreen.error.emailMessage'))
       return
     } else if (state.error === 'login-invalid-password') {
-      showAlert(
-        t('general.ups'),
-        t('loginScreen.error.passwordMessage')
-      )
+      showAlert(t('general.ups'), t('loginScreen.error.passwordMessage'))
       return
     } else if (state.error === 'login-missing-fields') {
-      showAlert(
-        t('general.ups'),
-        t('loginScreen.error.generalMessage')
-      )
+      showAlert(t('general.ups'), t('loginScreen.error.generalMessage'))
       return
     } else if (state.error !== null) {
       ShowToast({
@@ -127,9 +118,7 @@ const LoginScreen: FC<Props> = () => {
                   )
                 }
               >
-                <Text style={{ ...LabelStyle.link(), ...styles.linkText }}>
-                  {t('loginScreen.register')}
-                </Text>
+                <Text style={styles.linkText}>{t('loginScreen.register')}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -141,7 +130,7 @@ const LoginScreen: FC<Props> = () => {
                   )
                 }
               >
-                <Text style={{ ...LabelStyle.link(), ...styles.linkText }}>
+                <Text style={styles.linkText}>
                   {t('loginScreen.forgotPassword')}
                 </Text>
               </TouchableOpacity>
@@ -149,7 +138,7 @@ const LoginScreen: FC<Props> = () => {
           </View>
         </KeyboardAvoidingView>
       </View>
-      <PPBottomSheet.Layout
+      <PPBottomSheet.Dialog
         ref={bottomSheetModalRef}
         title={alertTitle}
         subtitle={alertSubtitle}
@@ -192,6 +181,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   linkText: {
+    ...LabelStyle.link(),
     marginVertical: 8,
   },
 })

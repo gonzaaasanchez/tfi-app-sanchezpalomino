@@ -5,7 +5,7 @@ type PetType = {
 
 type PetCharacteristic = {
   id?: string
-  characteristic?: string
+  name?: string
   value?: string
 }
 

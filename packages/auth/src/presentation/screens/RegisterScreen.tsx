@@ -16,6 +16,7 @@ import {
   Loader,
   PPBottomSheet,
   PPBottomSheetContainer,
+  useBottomSheetModalRef,
   useI18n,
 } from '@app/common'
 
@@ -32,7 +33,7 @@ const RegisterScreen = ({ route }: Props): JSX.Element => {
   } = useRegisterViewModel()
   const { email } = route.params
   const { t } = useI18n()
-  const bottomSheetModalRef = useRef(null)
+  const bottomSheetModalRef = useBottomSheetModalRef()
   const [alertTitle, setAlertTitle] = useState('')
   const [alertSubtitle, setAlertSubtitle] = useState('')
 
@@ -146,7 +147,7 @@ const RegisterScreen = ({ route }: Props): JSX.Element => {
           </View>
         </KeyboardAvoidingView>
       </View>
-      <PPBottomSheet
+      <PPBottomSheet.Layout
         ref={bottomSheetModalRef}
         title={alertTitle}
         subtitle={alertSubtitle}
@@ -160,7 +161,7 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
     justifyContent: 'center',
-    backgroundColor: Color.brand2[200],
+    backgroundColor: Color.authBackground,
   },
   keyboardContainer: {
     flex: 1,

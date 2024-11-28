@@ -55,8 +55,6 @@ const useReservesViewModel = (): ReservesViewModel => {
     }))
 
     try {
-      console.log('selectedType ' + state.selectedType)
-      console.log('selectedStatus ' + state.selectedStatus)
       const reserves: ReservationModel[] = (
         await getReservesUseCase.execute(
           state.selectedType,

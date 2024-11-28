@@ -1,6 +1,16 @@
-import { Color, LabelStyle, ShowToast, useI18n } from '@packages/common'
+import {
+  Color,
+  LabelStyle,
+  ShowToast,
+  useI18n,
+  PetModel,
+  PPBottomSheetContainer,
+  PPBottomSheet,
+  useBottomSheetModalRef,
+} from '@packages/common'
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import { useReservesViewModel } from '../viewModels/ReservesViewModel'
 import { PlaceType, ReservationModel } from '../../data/models/ReservationModel'
@@ -15,13 +25,17 @@ type ReservationDetailScreenRouteProp = RouteProp<
   'reservationDetail'
 >
 
+type MaterialIconsName = keyof typeof MaterialIcons.glyphMap
+type MaterialCommunityIconsName = keyof typeof MaterialCommunityIcons.glyphMap
+type MaterialIconName = MaterialIconsName | MaterialCommunityIconsName
+
 const ReservationDetailScreen: FC = (): JSX.Element => {
   const { state } = useReservesViewModel()
   const { t } = useI18n()
   const route = useRoute<ReservationDetailScreenRouteProp>()
   const reservation = route.params.reservation
-
-  type MaterialIconName = keyof typeof MaterialIcons.glyphMap
+  const [petDetail, setPetDetail] = useState<PetModel>(null)
+  const petDetailModalRef = useBottomSheetModalRef()
 
   useEffect(() => {
     if (state.error !== null) {
@@ -33,106 +47,160 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
     }
   }, [state.error])
 
+  useEffect(() => {
+    if (petDetail) {
+      petDetailModalRef.current?.present()
+    }
+  }, [petDetail])
+
   const detailItem = ({
-    index,
+    index = null,
     icon,
-    title,
+    title = null,
     value,
+    onPress = null,
   }: {
     index?: number
     icon: MaterialIconName
     title?: string
     value: string
+    onPress?: () => void
   }) => {
+    const renderIcon = (
+      icon: MaterialIconName,
+      size: number,
+      color: string
+    ) => {
+      if (icon in MaterialCommunityIcons.glyphMap) {
+        return (
+          <MaterialCommunityIcons
+            name={icon as MaterialCommunityIconsName}
+            size={size}
+            color={color}
+          />
+        )
+      } else if (icon in MaterialIcons.glyphMap) {
+        return (
+          <MaterialIcons
+            name={icon as MaterialIconsName}
+            size={size}
+            color={color}
+          />
+        )
+      } else {
+        console.warn(`The icon "${icon}" was not found.`)
+        return null
+      }
+    }
+
     return (
-      <View
-        {...(index != null ? { key: index } : {})}
-        style={styles.detailContainerItem}
+      <TouchableOpacity
+        activeOpacity={onPress ? 0.6 : 1}
+        onPress={onPress || undefined}
       >
-        <View style={{ marginTop: 1 }}>
-          <MaterialIcons name={icon} size={15} color={Color.black[500]} />
+        <View
+          {...(index != null ? { key: index } : {})}
+          style={styles.detailContainerItem}
+        >
+          <View style={{ marginTop: 1 }}>
+            {renderIcon(icon, 15, Color.black[500])}
+          </View>
+          <View style={styles.detailContainerTitleSubtitle}>
+            {title && (
+              <Text style={styles.detailContainerTitleText}>{title}</Text>
+            )}
+            <Text
+              style={{
+                ...styles.detailContainerValueText,
+                ...(title && { paddingLeft: 0 }),
+              }}
+            >
+              {value}
+            </Text>
+          </View>
         </View>
-        <View style={{ flexDirection: 'row' }}>
-          {title && (
-            <Text style={styles.detailContainerTitleText}>{title}</Text>
-          )}
-          <Text
-            style={{
-              ...styles.detailContainerValueText,
-              ...(title && { paddingLeft: 0 }),
-            }}
-          >
-            {value}
-          </Text>
-        </View>
-      </View>
+      </TouchableOpacity>
     )
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.card}>
-        <View style={styles.userContainer}>
-          <Image
-            source={{ uri: reservation.userOwner?.avatar }}
-            style={styles.avatar}
-          />
-          <View>
-            <Text style={LabelStyle.title2()}>
-              {reservation.userOwner?.fullName}
-            </Text>
-            <Text style={LabelStyle.callout2()}>
-              {reservation.userOwner?.phoneNumber}
-            </Text>
+    <PPBottomSheetContainer>
+      <View style={styles.container}>
+        <View style={styles.card}>
+          <View style={styles.userContainer}>
+            <Image
+              source={{ uri: reservation.userOwner?.avatar }}
+              style={styles.avatar}
+            />
+            <View>
+              <Text style={LabelStyle.title2()}>
+                {reservation.userOwner?.fullName}
+              </Text>
+              <Text style={LabelStyle.callout2()}>
+                {reservation.userOwner?.phoneNumber}
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>{t('reserveDetailScreen.pets')}</Text>
+          <View style={styles.detailContainer}>
+            {reservation.pets?.map((pet, index) =>
+              detailItem({
+                index: index,
+                icon: 'pets',
+                value: `${pet.name} (${pet.type.name})`,
+                onPress: () => setPetDetail(pet),
+              })
+            )}
+          </View>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>
+            {t('reserveDetailScreen.details')}
+          </Text>
+
+          <View style={styles.detailContainer}>
+            {detailItem({
+              icon: 'home-filled',
+              title: t('reserveDetailScreen.placeType'),
+              value:
+                reservation.placeType === PlaceType.Home
+                  ? t('reserveDetailScreen.placeTypeHome')
+                  : reservation.pets?.length === 1
+                    ? t('reserveDetailScreen.placeTypeVisit')
+                    : t('reserveDetailScreen.placeTypeVisitPlural'),
+            })}
+            {reservation.placeType === PlaceType.Visit &&
+              detailItem({
+                icon: 'map-marker',
+                title: t('reserveDetailScreen.where'),
+                value: `${reservation.location} (a ${reservation.distance} km)`,
+              })}
+            {detailItem({
+              icon: 'calendar-today',
+              title: t('reserveDetailScreen.date'),
+              value: reservation.visitsRangeDate,
+            })}
+            {reservation.placeType === PlaceType.Visit &&
+              detailItem({
+                icon: 'numbers',
+                title: t('reserveDetailScreen.visitsPerDay'),
+                value: reservation.visitsPerDay.toString(),
+              })}
           </View>
         </View>
       </View>
-
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>{t('reserveDetailScreen.pets')}</Text>
-        <View style={styles.detailContainer}>
-          {reservation.pets?.map((pet, index) =>
-            detailItem({
-              index: index,
-              icon: 'pets',
-              value: `${pet.name} (${pet.type})`,
-            })
-          )}
-        </View>
-      </View>
-
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>{t('reserveDetailScreen.details')}</Text>
-
-        <View style={styles.detailContainer}>
-          {detailItem({
-            icon: 'home',
-            title: t('reserveDetailScreen.placeType'),
-            value:
-              reservation.placeType === PlaceType.Home
-                ? t('reserveDetailScreen.placeTypeHome')
-                : t('reserveDetailScreen.placeTypeVisit'),
-          })}
-          {reservation.placeType === PlaceType.Visit &&
-            detailItem({
-              icon: 'location-pin',
-              title: t('reserveDetailScreen.where'),
-              value: reservation.location,
-            })}
-          {detailItem({
-            icon: 'calendar-month',
-            title: t('reserveDetailScreen.date'),
-            value: reservation.visitsRangeDate,
-          })}
-          {reservation.placeType === PlaceType.Visit &&
-            detailItem({
-              icon: 'numbers',
-              title: t('reserveDetailScreen.visitsPerDay'),
-              value: reservation.visitsPerDay.toString(),
-            })}
-        </View>
-      </View>
-    </View>
+      <PPBottomSheet.Layout
+        ref={petDetailModalRef}
+        title={petDetail?.name}
+        subtitle={petDetail?.name}
+        dismisseable={true}
+        onDismiss={() => setPetDetail(null)}
+      />
+    </PPBottomSheetContainer>
   )
 }
 
@@ -165,15 +233,25 @@ const styles = StyleSheet.create({
   detailContainerItem: {
     flexDirection: 'row',
   },
+  detailContainerTitleSubtitle: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
+    paddingRight: 20,
+  },
   detailContainerTitleText: {
     ...LabelStyle.body2(500),
     color: Color.black[700],
     paddingLeft: 5,
+    flexShrink: 0,
   },
   detailContainerValueText: {
     ...LabelStyle.callout2(),
     color: Color.black[500],
     paddingLeft: 5,
+    flexShrink: 1,
+    flexGrow: 1,
+    minWidth: 0,
   },
   /* User */
   userContainer: {

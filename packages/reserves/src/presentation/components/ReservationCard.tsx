@@ -1,18 +1,62 @@
-import { Color, LabelStyle } from '@packages/common'
+import { Color, LabelStyle, useI18n } from '@packages/common'
 import React from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
-import MaterialIcons from '@expo/vector-icons/MaterialCommunityIcons'
-import { ReservationModel } from '../../data/models/ReservationModel'
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { PlaceType, ReservationModel } from '../../data/models/ReservationModel'
 
 type ReservationCardProps = {
   reservation: ReservationModel
   onReservationSelected: () => void
 }
 
+type IconTextProps = {
+  iconName: MaterialIconName
+  text: string
+}
+
+type MaterialIconsName = keyof typeof MaterialIcons.glyphMap
+type MaterialCommunityIconsName = keyof typeof MaterialCommunityIcons.glyphMap
+type MaterialIconName = MaterialIconsName | MaterialCommunityIconsName
+
 const ReservationCard: React.FC<ReservationCardProps> = ({
   reservation,
   onReservationSelected,
 }) => {
+  const { t } = useI18n()
+
+  const IconText: React.FC<IconTextProps> = ({ iconName, text }) => {
+    let IconComponent: React.ReactNode = null
+
+    if (iconName in MaterialCommunityIcons.glyphMap) {
+      IconComponent = (
+        <MaterialCommunityIcons
+          name={iconName as keyof typeof MaterialCommunityIcons.glyphMap}
+          size={16}
+          color={Color.black[400]}
+        />
+      )
+    } else if (iconName in MaterialIcons.glyphMap) {
+      IconComponent = (
+        <MaterialIcons
+          name={iconName as keyof typeof MaterialIcons.glyphMap}
+          size={16}
+          color={Color.black[400]}
+        />
+      )
+    } else {
+      console.warn(`The icon "${iconName}" was not found.`)
+      IconComponent = null
+    }
+
+    return (
+      <View style={styles.row}>
+        {IconComponent}
+        <Text style={styles.date}>{text}</Text>
+      </View>
+    )
+  }
+
   return (
     <TouchableOpacity activeOpacity={0.85} onPress={onReservationSelected}>
       <View style={styles.cardContainer}>
@@ -22,38 +66,26 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
             style={styles.profileImage}
           />
         </View>
-
         <View style={styles.rightContainer}>
-          <Text style={{ ...LabelStyle.body(600), color: Color.black[700] }}>
-            {reservation.userOwner?.fullName}
-          </Text>
-
-          <View style={styles.row}>
-            <MaterialIcons
-              style={{ marginTop: 2 }}
-              name="calendar-today"
-              size={16}
-              color={Color.black[400]}
-            />
-            <Text style={{ ...LabelStyle.body2(), ...styles.date }}>
-              {reservation.visitsRangeDate}
-            </Text>
-          </View>
-
-          <View style={styles.row}>
-            <MaterialIcons
-              style={{ marginTop: 2 }}
-              name="map-marker"
-              size={16}
-              color={Color.black[400]}
-            />
-            <Text style={{ ...LabelStyle.body2(), ...styles.address }}>
-              {reservation.location}
-              <Text style={styles.distance}>
-                {' (a ' + reservation.distance + ' km)'}
-              </Text>
-            </Text>
-          </View>
+          <Text style={styles.userName}>{reservation.userOwner?.fullName}</Text>
+          <IconText
+            iconName={'calendar-today'}
+            text={reservation.visitsRangeDate}
+          />
+          <IconText
+            iconName={'pets'}
+            text={`${reservation.pets?.length} ${reservation.pets?.length === 1 ? t('reservesScreen.card.pet') : t('reservesScreen.card.pets')}`}
+          />
+          <IconText
+            iconName={'map-marker'}
+            text={
+              reservation.placeType === PlaceType.Home
+                ? t('reserveDetailScreen.placeTypeHome')
+                : reservation.pets?.length === 1
+                  ? t('reserveDetailScreen.placeTypeVisit')
+                  : t('reserveDetailScreen.placeTypeVisitPlural')
+            }
+          />
         </View>
       </View>
     </TouchableOpacity>
@@ -89,6 +121,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     marginTop: 5,
+  },
+  userName: {
+    ...LabelStyle.body(600),
+    color: Color.black[700],
   },
   date: {
     color: Color.black[400],

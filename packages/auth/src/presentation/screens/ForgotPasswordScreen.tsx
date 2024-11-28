@@ -19,6 +19,7 @@ import {
   PPBottomSheet,
   PPBottomSheetContainer,
   ShowToast,
+  useBottomSheetModalRef,
   useI18n,
 } from '@app/common'
 import catSuccess from '@app/assets/lottie-json/success-cat.json'
@@ -30,7 +31,7 @@ const ForgotPasswordScreen = ({ route }: Props): JSX.Element => {
   const { state, forgotPassword, setEmail } = useForgotPasswordViewModel()
   const { email } = route.params
   const { t } = useI18n()
-  const bottomSheetModalRef = useRef(null)
+  const bottomSheetModalRef = useBottomSheetModalRef()
   const [alertTitle, setAlertTitle] = useState('')
   const [alertSubtitle, setAlertSubtitle] = useState('')
   const [alertAnimation, setAlertAnimation] = useState(null)
@@ -52,10 +53,7 @@ const ForgotPasswordScreen = ({ route }: Props): JSX.Element => {
 
   useEffect(() => {
     if (state.error === 'forgot-password-missing-fields') {
-      showAlert(
-        t('general.ups'),
-        t('forgotPasswordScreen.error.message')
-      )
+      showAlert(t('general.ups'), t('forgotPasswordScreen.error.message'))
       return
     } else if (state.error !== null) {
       ShowToast({
@@ -109,7 +107,7 @@ const ForgotPasswordScreen = ({ route }: Props): JSX.Element => {
           </View>
         </KeyboardAvoidingView>
       </View>
-      <PPBottomSheet
+      <PPBottomSheet.Layout
         ref={bottomSheetModalRef}
         title={alertTitle}
         subtitle={alertSubtitle}
@@ -124,7 +122,7 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
     justifyContent: 'center',
-    backgroundColor: Color.brand2[200],
+    backgroundColor: Color.authBackground,
   },
   keyboardContainer: {
     flex: 1,

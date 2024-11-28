@@ -124,7 +124,7 @@ const ReservesScreen: FC = (): JSX.Element => {
           )}
         </ScrollView>
       </View>
-      <PPBottomSheet
+      <PPBottomSheet.Layout
         ref={bottomSheetModalRef}
         title={alertTitle}
         subtitle={alertSubtitle}

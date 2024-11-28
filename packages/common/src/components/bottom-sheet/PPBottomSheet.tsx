@@ -10,7 +10,15 @@ import { LabelStyle } from '../../style/Styles'
 import { Button } from '../Button'
 import LottieView, { AnimationObject } from 'lottie-react-native'
 
-type PPBottomSheetProps = {
+type PPBottomSheetEmptyProps = {
+  variant?: 'empty'
+  dismisseable?: boolean
+  onDismiss?: () => void
+  children?: JSX.Element
+}
+
+type PPBottomSheetLayoutProps = {
+  variant?: 'layout'
   title: string
   subtitle?: string
   lottieFile?: string | AnimationObject | { uri: string }
@@ -21,21 +29,24 @@ type PPBottomSheetProps = {
   dismisseable?: boolean
   onDismiss?: () => void
 }
-const PPBottomSheet = forwardRef<BottomSheetModal, PPBottomSheetProps>(
-  (
-    {
-      title,
-      subtitle,
-      lottieFile,
-      primaryActionTitle,
-      secondaryActionTitle,
-      onPrimaryAction,
-      onSecondaryAction,
-      dismisseable = true,
-      onDismiss,
-    },
-    ref
-  ) => {
+
+type PPBottomSheetProps = PPBottomSheetEmptyProps | PPBottomSheetLayoutProps
+
+const PPBottomSheet = {
+  Empty: forwardRef<BottomSheetModal, Omit<PPBottomSheetEmptyProps, 'variant'>>(
+    (props, ref) => <BasePPBottomSheet {...props} ref={ref} variant="empty" />
+  ),
+  Layout: forwardRef<
+    BottomSheetModal,
+    Omit<PPBottomSheetLayoutProps, 'variant'>
+  >((props, ref) => (
+    <BasePPBottomSheet {...props} ref={ref} variant="layout" />
+  )),
+}
+
+const BasePPBottomSheet = forwardRef<BottomSheetModal, PPBottomSheetProps>(
+  (props, ref) => {
+    const { variant } = props
     const { t } = useI18n()
     const animation = useRef<LottieView>(null)
 
@@ -48,10 +59,10 @@ const PPBottomSheet = forwardRef<BottomSheetModal, PPBottomSheetProps>(
     return (
       <BottomSheetModal
         ref={ref}
-        onDismiss={onDismiss ?? defaultDissmiss}
+        onDismiss={props.onDismiss ?? defaultDissmiss}
         backdropComponent={(backdropProps) => (
           <BottomSheetBackdrop
-            pressBehavior={dismisseable === true ? 'close' : 'none'}
+            pressBehavior={props.dismisseable === true ? 'close' : 'none'}
             animatedIndex={backdropProps.animatedIndex}
             animatedPosition={backdropProps.animatedPosition}
             style={[backdropProps.style]}
@@ -60,43 +71,47 @@ const PPBottomSheet = forwardRef<BottomSheetModal, PPBottomSheetProps>(
           />
         )}
       >
-        <BottomSheetView style={styles.view}>
-          <View style={styles.textContainer}>
-            {lottieFile && (
-              <LottieView
-                autoPlay={true}
-                ref={animation}
-                style={styles.animation}
-                source={lottieFile}
+        {variant === 'empty' && props?.children}
+
+        {variant === 'layout' && (
+          <BottomSheetView style={styles.view}>
+            <View style={styles.textContainer}>
+              {props.lottieFile && (
+                <LottieView
+                  autoPlay={true}
+                  ref={animation}
+                  style={styles.animation}
+                  source={props.lottieFile}
+                />
+              )}
+
+              {props.title && (
+                <Text style={[LabelStyle.title1(), { textAlign: 'center' }]}>
+                  {props.title}
+                </Text>
+              )}
+              {props.subtitle && (
+                <Text style={[LabelStyle.callout(), { textAlign: 'center' }]}>
+                  {props.subtitle}
+                </Text>
+              )}
+            </View>
+
+            <View>
+              <Button.Primary
+                title={props.primaryActionTitle ?? t('general.accept')}
+                onPress={props.onPrimaryAction ?? defaultDissmiss}
               />
-            )}
 
-            {title && (
-              <Text style={[LabelStyle.title1(), { textAlign: 'center' }]}>
-                {title}
-              </Text>
-            )}
-            {subtitle && (
-              <Text style={[LabelStyle.callout(), { textAlign: 'center' }]}>
-                {subtitle}
-              </Text>
-            )}
-          </View>
-
-          <View>
-            <Button.Primary
-              title={primaryActionTitle ?? t('general.accept')}
-              onPress={onPrimaryAction ?? defaultDissmiss}
-            />
-
-            {secondaryActionTitle && (
-              <Button.Secondary
-                title={secondaryActionTitle}
-                onPress={onSecondaryAction ?? defaultDissmiss}
-              />
-            )}
-          </View>
-        </BottomSheetView>
+              {props.secondaryActionTitle && (
+                <Button.Secondary
+                  title={props.secondaryActionTitle}
+                  onPress={props.onSecondaryAction ?? defaultDissmiss}
+                />
+              )}
+            </View>
+          </BottomSheetView>
+        )}
       </BottomSheetModal>
     )
   }
@@ -118,4 +133,5 @@ const styles = StyleSheet.create({
   },
 })
 
-export { PPBottomSheet }
+const useBottomSheetModalRef = () => useRef<BottomSheetModal>(null)
+export { PPBottomSheet, useBottomSheetModalRef }

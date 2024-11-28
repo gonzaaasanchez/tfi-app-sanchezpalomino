@@ -50,6 +50,7 @@ const Color = {
     500: '#ef5da8',
     700: '#bf1760',
   },
+  authBackground: '#f3d6bb',
   mainBackground: '#f9eadb',
 }
 

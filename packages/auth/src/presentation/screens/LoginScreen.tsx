@@ -22,6 +22,7 @@ import {
   PPBottomSheet,
   PPBottomSheetContainer,
   ShowToast,
+  useBottomSheetModalRef,
   useI18n,
 } from '@app/common'
 
@@ -31,7 +32,7 @@ const LoginScreen: FC<Props> = () => {
   const { state, login, setEmail, setPassword } = useLoginViewModel()
   const navigation = useNavigation()
   const { t } = useI18n()
-  const bottomSheetModalRef = useRef(null)
+  const bottomSheetModalRef = useBottomSheetModalRef()
   const [alertTitle, setAlertTitle] = useState('')
   const [alertSubtitle, setAlertSubtitle] = useState('')
 
@@ -148,7 +149,7 @@ const LoginScreen: FC<Props> = () => {
           </View>
         </KeyboardAvoidingView>
       </View>
-      <PPBottomSheet
+      <PPBottomSheet.Layout
         ref={bottomSheetModalRef}
         title={alertTitle}
         subtitle={alertSubtitle}
@@ -162,7 +163,7 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
     justifyContent: 'center',
-    backgroundColor: Color.brand2[200],
+    backgroundColor: Color.authBackground,
   },
   keyboardContainer: {
     flex: 1,

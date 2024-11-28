@@ -7,9 +7,9 @@ import {
   PPBottomSheetContainer,
   PPBottomSheet,
   useBottomSheetModalRef,
+  PPMaterialIcon,
+  PPMaterialIconsName,
 } from '@packages/common'
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { FC, useEffect, useState } from 'react'
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import { useReservesViewModel } from '../viewModels/ReservesViewModel'
@@ -24,10 +24,6 @@ type ReservationDetailScreenRouteProp = RouteProp<
   RootStackParamList,
   'reservationDetail'
 >
-
-type MaterialIconsName = keyof typeof MaterialIcons.glyphMap
-type MaterialCommunityIconsName = keyof typeof MaterialCommunityIcons.glyphMap
-type MaterialIconName = MaterialIconsName | MaterialCommunityIconsName
 
 const ReservationDetailScreen: FC = (): JSX.Element => {
   const { state } = useReservesViewModel()
@@ -61,38 +57,11 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
     onPress = null,
   }: {
     index?: number
-    icon: MaterialIconName
+    icon: PPMaterialIconsName
     title?: string
     value: string
     onPress?: () => void
   }) => {
-    const renderIcon = (
-      icon: MaterialIconName,
-      size: number,
-      color: string
-    ) => {
-      if (icon in MaterialCommunityIcons.glyphMap) {
-        return (
-          <MaterialCommunityIcons
-            name={icon as MaterialCommunityIconsName}
-            size={size}
-            color={color}
-          />
-        )
-      } else if (icon in MaterialIcons.glyphMap) {
-        return (
-          <MaterialIcons
-            name={icon as MaterialIconsName}
-            size={size}
-            color={color}
-          />
-        )
-      } else {
-        console.warn(`The icon "${icon}" was not found.`)
-        return null
-      }
-    }
-
     return (
       <TouchableOpacity
         activeOpacity={onPress ? 0.6 : 1}
@@ -103,7 +72,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
           style={styles.detailContainerItem}
         >
           <View style={{ marginTop: 1 }}>
-            {renderIcon(icon, 15, Color.black[500])}
+            <PPMaterialIcon icon={icon} />
           </View>
           <View style={styles.detailContainerTitleSubtitle}>
             {title && (

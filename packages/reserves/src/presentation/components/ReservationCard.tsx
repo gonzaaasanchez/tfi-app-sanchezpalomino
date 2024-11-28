@@ -1,8 +1,6 @@
-import { Color, LabelStyle, useI18n } from '@packages/common'
+import { Color, LabelStyle, PPMaterialIcon, PPMaterialIconsName, useI18n } from '@packages/common'
 import React from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { PlaceType, ReservationModel } from '../../data/models/ReservationModel'
 
 type ReservationCardProps = {
@@ -11,13 +9,9 @@ type ReservationCardProps = {
 }
 
 type IconTextProps = {
-  iconName: MaterialIconName
+  iconName: PPMaterialIconsName
   text: string
 }
-
-type MaterialIconsName = keyof typeof MaterialIcons.glyphMap
-type MaterialCommunityIconsName = keyof typeof MaterialCommunityIcons.glyphMap
-type MaterialIconName = MaterialIconsName | MaterialCommunityIconsName
 
 const ReservationCard: React.FC<ReservationCardProps> = ({
   reservation,
@@ -26,32 +20,9 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
   const { t } = useI18n()
 
   const IconText: React.FC<IconTextProps> = ({ iconName, text }) => {
-    let IconComponent: React.ReactNode = null
-
-    if (iconName in MaterialCommunityIcons.glyphMap) {
-      IconComponent = (
-        <MaterialCommunityIcons
-          name={iconName as keyof typeof MaterialCommunityIcons.glyphMap}
-          size={16}
-          color={Color.black[400]}
-        />
-      )
-    } else if (iconName in MaterialIcons.glyphMap) {
-      IconComponent = (
-        <MaterialIcons
-          name={iconName as keyof typeof MaterialIcons.glyphMap}
-          size={16}
-          color={Color.black[400]}
-        />
-      )
-    } else {
-      console.warn(`The icon "${iconName}" was not found.`)
-      IconComponent = null
-    }
-
     return (
       <View style={styles.row}>
-        {IconComponent}
+        <PPMaterialIcon icon={iconName} size={16} color={Color.black[400]} />
         <Text style={styles.date}>{text}</Text>
       </View>
     )

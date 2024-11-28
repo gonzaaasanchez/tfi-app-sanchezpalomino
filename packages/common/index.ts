@@ -36,6 +36,10 @@ import {
   GenericToast,
   ShowToast,
 } from './src/components/Toast'
+import {
+  PPMaterialIconsName,
+  PPMaterialIcon,
+} from './src/components/PPMaterialIcon'
 
 export {
   Resolver,
@@ -74,4 +78,6 @@ export {
   GenericToastType,
   GenericToast,
   ShowToast,
+  PPMaterialIconsName,
+  PPMaterialIcon,
 }

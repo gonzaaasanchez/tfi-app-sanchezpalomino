@@ -7,14 +7,19 @@ import {
   PPBottomSheetContainer,
   PPBottomSheet,
   useBottomSheetModalRef,
-  PPMaterialIcon,
-  PPMaterialIconsName,
+  Button,
 } from '@packages/common'
 import { FC, useEffect, useState } from 'react'
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
-import { useReservesViewModel } from '../viewModels/ReservesViewModel'
-import { PlaceType, ReservationModel } from '../../data/models/ReservationModel'
+import { View, Text, Image, StyleSheet } from 'react-native'
+import {
+  PlaceType,
+  ReservationModel,
+  ReservationStatus,
+} from '../../../data/models/ReservationModel'
 import { RouteProp, useRoute } from '@react-navigation/native'
+import { DetailItem } from './DetailItem'
+import { PetDetail } from './PetDetail'
+import { useReserveDetailViewModel } from '../../viewModels/ReserveDetailViewModel'
 
 type RootStackParamList = {
   reservationDetail: { reservation: ReservationModel }
@@ -26,7 +31,13 @@ type ReservationDetailScreenRouteProp = RouteProp<
 >
 
 const ReservationDetailScreen: FC = (): JSX.Element => {
-  const { state } = useReservesViewModel()
+  const {
+    state,
+    acceptReserve,
+    rejectReserve,
+    cancelReserveCarer,
+    cancelReserveOwner,
+  } = useReserveDetailViewModel()
   const { t } = useI18n()
   const route = useRoute<ReservationDetailScreenRouteProp>()
   const reservation = route.params.reservation
@@ -49,69 +60,63 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
     }
   }, [petDetail])
 
-  const DetailItem: React.FC<{
-    icon: PPMaterialIconsName
-    iconSize?: number
-    iconTopPadding?: number
-    title?: string
-    value: string
-    onPress?: () => void
-  }> = ({
-    iconSize = 15,
-    iconTopPadding: neededIconPadding = 1,
-    icon,
-    title = null,
-    value,
-    onPress = null,
-  }) => {
-    return (
-      <TouchableOpacity
-        activeOpacity={onPress ? 0.6 : 1}
-        onPress={onPress || undefined}
-      >
-        <View style={styles.detailContainerItem}>
-          <View style={{ marginTop: neededIconPadding }}>
-            <PPMaterialIcon icon={icon} size={iconSize} />
-          </View>
-          <View style={styles.detailContainerTitleSubtitle}>
-            {title && (
-              <Text style={styles.detailContainerTitleText}>{title}</Text>
-            )}
-            <Text
-              style={{
-                ...styles.detailContainerValueText,
-                ...(title && { paddingLeft: 0 }),
-              }}
-            >
-              {value}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-    )
-  }
+  const ReceivedButtonsContainer: FC = () => {
+    const primaryButtonTitle = 'Aceptar reserva'
 
-  const PetDetailSheet: FC = () => {
+    const secondaryButtonTitle = (() => {
+      switch (reservation.status) {
+        case ReservationStatus.Pending:
+          return 'Rechazar reserva'
+        case ReservationStatus.Started:
+        case ReservationStatus.Confirmed:
+          return 'Cancelar reserva'
+        default:
+          return ''
+      }
+    })()
+
+    const primaryButtonNedded = (): boolean => {
+      return reservation.status === ReservationStatus.Pending
+    }
+
+    const secondaryButtonNedded = (): boolean => {
+      return (
+        reservation.status === ReservationStatus.Pending ||
+        reservation.status === ReservationStatus.Started ||
+        reservation.status === ReservationStatus.Confirmed
+      )
+    }
+
+    const primaryButtonTapped = (): void => {
+      acceptReserve()
+    }
+
+    const secondaryButtonTapped = (): void => {
+      switch (reservation.status) {
+        case ReservationStatus.Pending:
+          rejectReserve()
+          break
+        case ReservationStatus.Confirmed:
+        case ReservationStatus.Started:
+          cancelReserveCarer()
+          break
+      }
+    }
+
     return (
-      <View style={{paddingBottom: 20}}>
-        <Image style={styles.petImage} source={{ uri: petDetail?.photoUrl }} />
-        <Text style={styles.petName}>{petDetail?.name}</Text>
-        <Text style={styles.petType}>{`(${petDetail?.type.name})`}</Text>
-        <Text style={styles.petComment}>{petDetail?.comment}</Text>
-        <Text style={styles.petCharacteristicsTitle}>
-          {t('reserveDetailScreen.petDetails')}
-        </Text>
-        {petDetail.characteristics?.map((characteristic) => (
-          <View key={characteristic.id}>
-            <DetailItem
-              icon="pets"
-              iconSize={14}
-              iconTopPadding={2}
-              title={`${characteristic.name}: `}
-              value={`${characteristic.value}`}
-            />
-          </View>
-        ))}
+      <View>
+        {primaryButtonNedded() && (
+          <Button.Primary
+            title={primaryButtonTitle}
+            onPress={primaryButtonTapped}
+          />
+        )}
+        {secondaryButtonNedded() && (
+          <Button.Secondary
+            title={secondaryButtonTitle}
+            onPress={secondaryButtonTapped}
+          />
+        )}
       </View>
     )
   }
@@ -188,13 +193,15 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
             )}
           </View>
         </View>
+
+        <ReceivedButtonsContainer />
       </View>
       <PPBottomSheet.Empty
         ref={petDetailModalRef}
         dismisseable={true}
         onDismiss={() => setPetDetail(null)}
       >
-        <PetDetailSheet />
+        <PetDetail pet={petDetail} />
       </PPBottomSheet.Empty>
     </PPBottomSheetContainer>
   )
@@ -226,27 +233,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     gap: 5,
   },
-  detailContainerItem: {
-    flexDirection: 'row',
-  },
-  detailContainerTitleSubtitle: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-start',
-    paddingRight: 20,
-  },
-  detailContainerTitleText: {
-    ...LabelStyle.body2({ fontWeight: 500, color: Color.black[700] }),
-    paddingLeft: 5,
-    flexShrink: 0,
-  },
-  detailContainerValueText: {
-    ...LabelStyle.callout2({ color: Color.black[500] }),
-    paddingLeft: 5,
-    flexShrink: 1,
-    flexGrow: 1,
-    minWidth: 0,
-  },
   /* User */
   userContainer: {
     flexDirection: 'row',
@@ -257,32 +243,6 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 35,
     marginRight: 10,
-  },
-  /* Pet sheet detail */
-  petImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    alignSelf: 'center',
-  },
-  petName: {
-    ...LabelStyle.title1(),
-    textAlign: 'center',
-  },
-  petType: {
-    ...LabelStyle.callout2(),
-    textAlign: 'center',
-    color: Color.black[500],
-  },
-  petComment: {
-    ...LabelStyle.callout2({ fontWeight: 200 }),
-    paddingVertical: 20,
-    color: Color.black[800],
-  },
-  petCharacteristicsTitle: {
-    ...LabelStyle.body({ textAlign: 'center' }),
-    paddingBottom: 10,
-    color: Color.black[800],
   },
 })
 

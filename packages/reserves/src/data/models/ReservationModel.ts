@@ -17,6 +17,7 @@ enum ReservationStatus {
 class ReservationModel {
   id?: string
   userOwner?: UserModel
+  userCarer?: UserModel
   placeType: PlaceType
   visitsPerDay: number
   pets?: PetModel[]
@@ -29,6 +30,7 @@ class ReservationModel {
   constructor(data: Partial<ReservationModel>) {
     this.id = data.id
     this.userOwner = data.userOwner
+    this.userCarer = data.userCarer
     this.placeType = data.placeType
     this.visitsPerDay = data.visitsPerDay
     this.pets = data.pets

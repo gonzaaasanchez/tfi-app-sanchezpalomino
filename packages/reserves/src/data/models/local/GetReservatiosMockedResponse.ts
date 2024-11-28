@@ -6,6 +6,14 @@ export const GetReservatiosMockedResponse = {
   confirmed: [
     {
       id: 'c1',
+      userCarer: new UserModel({
+        id: 'u100',
+        firstname: 'Gonzalo',
+        lastname: 'Sanchez',
+        phoneNumber: '+54 341 5891365',
+        avatar:
+          'https://scontent.fros2-2.fna.fbcdn.net/v/t1.6435-9/38507167_10155672692512286_2925648923655667712_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=Emq1wkR3QpEQ7kNvgFsELag&_nc_zt=23&_nc_ht=scontent.fros2-2.fna&_nc_gid=AXI9zPAM28CVAN7nBukIZrC&oh=00_AYAKjeQ0WIJ0uAF-egyeNR3X8Udn8mgCplhMVh9VVQBpZA&oe=67705451',
+      }),
       userOwner: new UserModel({
         id: 'u1',
         firstname: 'Juan',
@@ -51,7 +59,7 @@ export const GetReservatiosMockedResponse = {
       startDate: '2024-11-20',
       endDate: '2024-11-21',
       location: 'Av. Pellegrini 1234, Rosario, Argentina',
-      status: 'Confirmed',
+      status: 'confirmed',
       distance: 2.5,
     },
     {
@@ -85,7 +93,7 @@ export const GetReservatiosMockedResponse = {
       startDate: '2024-11-22',
       endDate: '2024-11-23',
       location: 'Calle Córdoba 567, Rosario, Argentina',
-      status: 'Confirmed',
+      status: 'confirmed',
       distance: 1.8,
     },
     {
@@ -119,7 +127,7 @@ export const GetReservatiosMockedResponse = {
       startDate: '2024-11-23',
       endDate: '2024-11-24',
       location: 'Bv. Oroño 890, Rosario, Argentina',
-      status: 'Confirmed',
+      status: 'confirmed',
       distance: 3.0,
     },
     {
@@ -154,7 +162,7 @@ export const GetReservatiosMockedResponse = {
       startDate: '2024-11-24',
       endDate: '2024-11-25',
       location: 'Calle Mendoza 2345, Rosario, Argentina',
-      status: 'Confirmed',
+      status: 'confirmed',
       distance: 4.1,
     },
     {
@@ -203,7 +211,7 @@ export const GetReservatiosMockedResponse = {
       startDate: '2024-11-26',
       endDate: '2024-11-27',
       location: 'Av. Francia 1234, Rosario, Argentina',
-      status: 'Confirmed',
+      status: 'confirmed',
       distance: 1.2,
     },
     {
@@ -237,7 +245,7 @@ export const GetReservatiosMockedResponse = {
       startDate: '2024-11-28',
       endDate: '2024-11-30',
       location: 'San Lorenzo 800, Rosario, Argentina',
-      status: 'Confirmed',
+      status: 'confirmed',
       distance: 2.7,
     },
     {
@@ -271,7 +279,7 @@ export const GetReservatiosMockedResponse = {
       startDate: '2024-12-01',
       endDate: '2024-12-02',
       location: 'Sarmiento 500, Rosario, Argentina',
-      status: 'Confirmed',
+      status: 'confirmed',
       distance: 0.9,
     },
     {
@@ -305,7 +313,7 @@ export const GetReservatiosMockedResponse = {
       startDate: '2024-12-03',
       endDate: '2024-12-05',
       location: 'Entre Ríos 1234, Rosario, Argentina',
-      status: 'Confirmed',
+      status: 'confirmed',
       distance: 3.2,
     },
     {
@@ -339,7 +347,7 @@ export const GetReservatiosMockedResponse = {
       startDate: '2024-12-06',
       endDate: '2024-12-08',
       location: 'Córdoba 123, Rosario, Argentina',
-      status: 'Confirmed',
+      status: 'confirmed',
       distance: 4.5,
     },
     {
@@ -373,7 +381,7 @@ export const GetReservatiosMockedResponse = {
       startDate: '2024-12-09',
       endDate: '2024-12-11',
       location: 'Mitre 890, Rosario, Argentina',
-      status: 'Confirmed',
+      status: 'confirmed',
       distance: 1.7,
     },
   ],

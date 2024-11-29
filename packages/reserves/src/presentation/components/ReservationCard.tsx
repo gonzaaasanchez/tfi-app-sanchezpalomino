@@ -41,12 +41,12 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
       <View style={styles.cardContainer}>
         <View style={styles.leftContainer}>
           <Image
-            source={{ uri: reservation.userOwner?.avatar }}
+            source={{ uri: reservation.placeDetailAvatar}}
             style={styles.profileImage}
           />
         </View>
         <View style={styles.rightContainer}>
-          <Text style={styles.userName}>{reservation.userOwner?.fullName}</Text>
+          <Text style={styles.userName}>{reservation.placeDetailUsername}</Text>
           <IconText
             iconName={'calendar-today'}
             text={reservation.visitsRangeDate}

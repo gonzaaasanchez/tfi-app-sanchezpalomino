@@ -75,15 +75,15 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
         <View style={styles.card}>
           <View style={styles.userContainer}>
             <Image
-              source={{ uri: state.currentReserve?.userOwner?.avatar }}
+              source={{ uri: state.currentReserve?.placeDetailAvatar }}
               style={styles.avatar}
             />
             <View>
               <Text style={LabelStyle.title2()}>
-                {state.currentReserve?.userOwner?.fullName}
+                {state.currentReserve?.placeDetailUsername}
               </Text>
               <Text style={LabelStyle.callout2()}>
-                {state.currentReserve?.userOwner?.phoneNumber}
+                {state.currentReserve?.placeDetailPhoneNumber}
               </Text>
             </View>
           </View>

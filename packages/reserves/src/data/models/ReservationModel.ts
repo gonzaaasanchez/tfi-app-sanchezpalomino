@@ -53,6 +53,10 @@ class ReservationModel {
     return `${this.formattedStartDate} - ${this.formattedEndDate}`
   }
 
+  /*
+  / The following methods decides whether to show userOwner | userCarer info in reservation detail screens
+  */
+
   get createdByUser(): boolean {
     const createdByUser = this.userOwner?.id === 'u100'
     return createdByUser
@@ -94,6 +98,22 @@ class ReservationModel {
     }
 
     return getTranslationKey(this.createdByUser, isCarerHome, isSinglePet)
+  }
+
+  get placeDetailAvatar(): string {
+    return this.createdByUser ? this.userCarer?.avatar : this.userOwner?.avatar
+  }
+
+  get placeDetailUsername(): string {
+    return this.createdByUser
+      ? this.userCarer?.fullName
+      : this.userOwner?.fullName
+  }
+
+  get placeDetailPhoneNumber(): string {
+    return this.createdByUser
+      ? this.userCarer?.phoneNumber
+      : this.userOwner?.phoneNumber
   }
 }
 

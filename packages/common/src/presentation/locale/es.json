@@ -80,7 +80,7 @@
     "reserveDetailScreen": {
       "title": "Detalle de la reserva",
       "user": "Usuario",
-      "pets": "Vas a estar cuidando a: ",
+      "pets": "Mascotas que se van a cuidar: ",
       "details": "Detalles de la visita:",
       "date": "Cuándo: ",
       "placeType": "Dónde: ",

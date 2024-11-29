@@ -1,31 +1,11 @@
 import React, { FC } from 'react'
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-} from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons' // Para los íconos de like y comentarios
-import { Color, useI18n, LabelStyle, DateUtils } from '@packages/common'
+import { FlatList, StyleSheet, View } from 'react-native'
+import { Color, LabelStyle, FeedModel } from '@packages/common'
+import { FeedItem } from './FeedItem'
 
-type FeedItem = {
-  id: string
-  title: string
-  description: string
-  date: string
-  imageUrl: string
-  likes: number
-  comments: number
-  userLiked: boolean
-  user: {
-    firstname: string
-    lastname: string
-  }
-}
+const tabbarAproxHeight = 150
 
-const mockData: FeedItem[] = [
+const mockData: FeedModel[] = [
   {
     id: '1',
     title: '"Sacame una así como que no me di cuenta"',
@@ -76,52 +56,13 @@ const mockData: FeedItem[] = [
   },
 ]
 
-const tabbarAproxHeight = 150
-
 const FeedScreen: FC = (): JSX.Element => {
-  const { t } = useI18n()
-
-  const renderItem = ({ item }: { item: FeedItem }) => {
-    const fullName = `${item.user.firstname} ${item.user.lastname}`
-
-    return (
-      <View style={styles.card}>
-        <Image source={{ uri: item.imageUrl }} style={styles.image} />
-        <View style={styles.nameContainer}>
-          <Text style={LabelStyle.callout2({ color: Color.black[500] })}>
-            {fullName}
-          </Text>
-          <Text style={LabelStyle.link2({ color: Color.black[500] })}>
-            {DateUtils.MMDDYYYY(item.date)}
-          </Text>
-        </View>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.description}>{item.description}</Text>
-        <View style={styles.divider} />
-        <View style={styles.actionsContainer}>
-          <TouchableOpacity style={styles.actionButton}>
-            <MaterialIcons
-              name="thumb-up"
-              size={16}
-              color={item.userLiked ? Color.brand1[600] : Color.black[300]}
-            />
-            <Text style={styles.actionText}>{item.likes}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton}>
-            <MaterialIcons name="comment" size={16} color={Color.black[300]} />
-            <Text style={styles.actionText}>{item.comments}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    )
-  }
-
   return (
     <View style={styles.container}>
       <FlatList
         data={mockData}
         keyExtractor={(item) => item.id}
-        renderItem={renderItem}
+        renderItem={({ item }) => <FeedItem item={item} />}
         contentContainerStyle={styles.list}
       />
     </View>
@@ -138,59 +79,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
     gap: 16,
-  },
-  card: {
-    backgroundColor: 'white',
-    borderRadius: 16,
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  image: {
-    width: '100%',
-    aspectRatio: 1.3,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-  },
-  nameContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'baseline',
-    paddingHorizontal: 12,
-    paddingTop: 10,
-  },
-  title: {
-    ...LabelStyle.title3({ fontSize: 15 }),
-    paddingHorizontal: 12,
-    paddingTop: 8,
-  },
-  description: {
-    ...LabelStyle.callout2({ color: Color.black[600] }),
-    paddingTop: 2,
-    paddingHorizontal: 12,
-  },
-  divider: {
-    borderTopWidth: 1,
-    borderTopColor: Color.black[100],
-    marginTop: 7,
-    marginHorizontal: 12,
-  },
-  actionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    gap: 15,
-  },
-  actionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  actionText: {
-    marginLeft: 4,
-    ...LabelStyle.link2({ color: Color.black[400] }),
   },
 })
 

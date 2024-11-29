@@ -55,16 +55,7 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
             iconName={'pets'}
             text={`${reservation.pets?.length} ${reservation.pets?.length === 1 ? t('reservesScreen.card.pet') : t('reservesScreen.card.pets')}`}
           />
-          <IconText
-            iconName={'map-marker'}
-            text={
-              reservation.placeType === PlaceType.Home
-                ? t('reserveDetailScreen.placeTypeHome')
-                : reservation.pets?.length === 1
-                  ? t('reserveDetailScreen.placeTypeVisit')
-                  : t('reserveDetailScreen.placeTypeVisitPlural')
-            }
-          />
+          <IconText iconName={'home-filled'} text={t(reservation.placeDetailText)} />
         </View>
       </View>
     </TouchableOpacity>

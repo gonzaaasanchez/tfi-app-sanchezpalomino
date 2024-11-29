@@ -53,6 +53,48 @@ class ReservationModel {
     return `${this.formattedStartDate} - ${this.formattedEndDate}`
   }
 
+  get createdByUser(): boolean {
+    const createdByUser = this.userOwner?.id === 'u100'
+    return createdByUser
+  }
+
+  get createdForUser(): boolean {
+    const createdForUser = this.userCarer?.id === 'u100'
+    return createdForUser
+  }
+
+  get placeDetailText(): string {
+    const isCarerHome = this.placeType === PlaceType.Home
+    const isSinglePet = this.pets?.length === 1
+
+    const getTranslationKey = (
+      createdByUser: boolean,
+      isCarerHome: boolean,
+      isSinglePet: boolean
+    ) => {
+      if (createdByUser) {
+        if (isCarerHome) {
+          return isSinglePet
+            ? 'reserveDetailScreen.placeTypeCarerHome'
+            : 'reserveDetailScreen.placeTypeCarerHomePlural'
+        }
+        return isSinglePet
+          ? 'reserveDetailScreen.placeTypeCarerVisit'
+          : 'reserveDetailScreen.placeTypeCarerVisitPlural'
+      }
+
+      if (isCarerHome) {
+        return isSinglePet
+          ? 'reserveDetailScreen.placeTypeOwnerHome'
+          : 'reserveDetailScreen.placeTypeOwnerHomePlural'
+      }
+      return isSinglePet
+        ? 'reserveDetailScreen.placeTypeOwnerVisit'
+        : 'reserveDetailScreen.placeTypeOwnerVisitPlural'
+    }
+
+    return getTranslationKey(this.createdByUser, isCarerHome, isSinglePet)
+  }
 }
 
 export { UserModel, PlaceType, ReservationStatus, ReservationModel }

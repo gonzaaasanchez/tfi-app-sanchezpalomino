@@ -1,6 +1,7 @@
-import { HttpClient, UserModel } from '@app/common'
+import { HttpClient
+ } from '@app/common'
 import { ReservationModel } from '../../models/ReservationModel'
-import { GetReservatiosMockedResponse } from '../../models/local/GetReservatiosMockedResponse'
+import { GetReceivedReservatiosMockedResponse, GetSentReservatiosMockedResponse } from '../../models/local/GetReservatiosMockedResponse'
 import { ReserveStatus, ReserveType } from '../../models/local/Types'
 
 interface ReservesApi {
@@ -28,16 +29,16 @@ class ReservesApiImpl implements ReservesApi {
     // const response = await this.httpClient.get<ReservationModel[]>('/reserves')
     // return response
     await this.delay(2000)
-    if (type === 'sent') {
-      return []
+    if (type === 'sent' ) {
+      return status === 'pending' ? GetSentReservatiosMockedResponse.pending : []
     }
     switch (status) {
       case 'cancelled':
-        return GetReservatiosMockedResponse.cancelled
+        return GetReceivedReservatiosMockedResponse.cancelled
       case 'confirmed':
-        return GetReservatiosMockedResponse.confirmed
+        return GetReceivedReservatiosMockedResponse.confirmed
       case 'pending':
-        return GetReservatiosMockedResponse.pending
+        return GetReceivedReservatiosMockedResponse.pending
     }
   }
 }

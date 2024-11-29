@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   },
   secondaryButton: {
     backgroundColor: Color.brand1[50],
-    borderColor: Color.brand1[100],
+    borderColor: Color.brand1[200],
     borderWidth: 1,
   },
   secondaryPressed: {

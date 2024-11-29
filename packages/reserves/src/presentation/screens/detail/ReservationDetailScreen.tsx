@@ -20,6 +20,10 @@ import { RouteProp, useRoute } from '@react-navigation/native'
 import { DetailItem } from './DetailItem'
 import { PetDetail } from './PetDetail'
 import { useReserveDetailViewModel } from '../../viewModels/ReserveDetailViewModel'
+import {
+  CarerReservationActions,
+  OwnerReservationActions,
+} from './ReservationActionButtons'
 
 type RootStackParamList = {
   reservationDetail: { reservation: ReservationModel }
@@ -33,6 +37,7 @@ type ReservationDetailScreenRouteProp = RouteProp<
 const ReservationDetailScreen: FC = (): JSX.Element => {
   const {
     state,
+    setCurrentReserve,
     acceptReserve,
     rejectReserve,
     cancelReserveCarer,
@@ -43,6 +48,10 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
   const reservation = route.params.reservation
   const [petDetail, setPetDetail] = useState<PetModel>(null)
   const petDetailModalRef = useBottomSheetModalRef()
+
+  useEffect(() => {
+    setCurrentReserve(reservation)
+  }, [])
 
   useEffect(() => {
     if (state.error !== null) {
@@ -60,82 +69,21 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
     }
   }, [petDetail])
 
-  const ReceivedButtonsContainer: FC = () => {
-    const primaryButtonTitle = 'Aceptar reserva'
-
-    const secondaryButtonTitle = (() => {
-      switch (reservation.status) {
-        case ReservationStatus.Pending:
-          return 'Rechazar reserva'
-        case ReservationStatus.Started:
-        case ReservationStatus.Confirmed:
-          return 'Cancelar reserva'
-        default:
-          return ''
-      }
-    })()
-
-    const primaryButtonNedded = (): boolean => {
-      return reservation.status === ReservationStatus.Pending
-    }
-
-    const secondaryButtonNedded = (): boolean => {
-      return (
-        reservation.status === ReservationStatus.Pending ||
-        reservation.status === ReservationStatus.Started ||
-        reservation.status === ReservationStatus.Confirmed
-      )
-    }
-
-    const primaryButtonTapped = (): void => {
-      acceptReserve()
-    }
-
-    const secondaryButtonTapped = (): void => {
-      switch (reservation.status) {
-        case ReservationStatus.Pending:
-          rejectReserve()
-          break
-        case ReservationStatus.Confirmed:
-        case ReservationStatus.Started:
-          cancelReserveCarer()
-          break
-      }
-    }
-
-    return (
-      <View>
-        {primaryButtonNedded() && (
-          <Button.Primary
-            title={primaryButtonTitle}
-            onPress={primaryButtonTapped}
-          />
-        )}
-        {secondaryButtonNedded() && (
-          <Button.Secondary
-            title={secondaryButtonTitle}
-            onPress={secondaryButtonTapped}
-          />
-        )}
-      </View>
-    )
-  }
-
   return (
     <PPBottomSheetContainer>
       <View style={styles.container}>
         <View style={styles.card}>
           <View style={styles.userContainer}>
             <Image
-              source={{ uri: reservation.userOwner?.avatar }}
+              source={{ uri: state.currentReserve?.userOwner?.avatar }}
               style={styles.avatar}
             />
             <View>
               <Text style={LabelStyle.title2()}>
-                {reservation.userOwner?.fullName}
+                {state.currentReserve?.userOwner?.fullName}
               </Text>
               <Text style={LabelStyle.callout2()}>
-                {reservation.userOwner?.phoneNumber}
+                {state.currentReserve?.userOwner?.phoneNumber}
               </Text>
             </View>
           </View>
@@ -144,7 +92,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
         <View style={styles.card}>
           <Text style={styles.cardTitle}>{t('reserveDetailScreen.pets')}</Text>
           <View style={styles.detailContainer}>
-            {reservation.pets?.map((pet) => (
+            {state.currentReserve?.pets?.map((pet) => (
               <View key={pet.id}>
                 <DetailItem
                   icon="pets"
@@ -164,37 +112,42 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
             <DetailItem
               icon="home-filled"
               title={t('reserveDetailScreen.where')}
-              value={
-                reservation.placeType === PlaceType.Home
-                  ? t('reserveDetailScreen.placeTypeHome')
-                  : reservation.pets?.length === 1
-                    ? t('reserveDetailScreen.placeTypeVisit')
-                    : t('reserveDetailScreen.placeTypeVisitPlural')
-              }
+              value={t(state.currentReserve?.placeDetailText)}
             />
-            {reservation.placeType === PlaceType.Visit && (
+            {state.currentReserve?.placeType === PlaceType.Visit && (
               <DetailItem
                 icon="map-marker"
                 title={t('reserveDetailScreen.location')}
-                value={`${reservation.location} (a ${reservation.distance} km)`}
+                value={`${state.currentReserve?.location} (a ${state.currentReserve?.distance} km)`}
               />
             )}
             <DetailItem
               icon="calendar-today"
               title={t('reserveDetailScreen.date')}
-              value={reservation.visitsRangeDate}
+              value={state.currentReserve?.visitsRangeDate}
             />
-            {reservation.placeType === PlaceType.Visit && (
+            {state.currentReserve?.placeType === PlaceType.Visit && (
               <DetailItem
                 icon="numbers"
                 title={t('reserveDetailScreen.visitsPerDay')}
-                value={reservation.visitsPerDay.toString()}
+                value={state.currentReserve?.visitsPerDay.toString()}
               />
             )}
           </View>
         </View>
 
-        <ReceivedButtonsContainer />
+        {state.currentReserve?.createdByUser && (
+          <OwnerReservationActions cancel={cancelReserveOwner} />
+        )}
+
+        {state.currentReserve?.createdForUser && (
+          <CarerReservationActions
+            reservation={state.currentReserve}
+            accept={acceptReserve}
+            reject={rejectReserve}
+            cancel={cancelReserveCarer}
+          />
+        )}
       </View>
       <PPBottomSheet.Empty
         ref={petDetailModalRef}

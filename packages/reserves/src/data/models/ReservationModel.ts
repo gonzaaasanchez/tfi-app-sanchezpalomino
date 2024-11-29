@@ -42,11 +42,11 @@ class ReservationModel {
   }
 
   get formattedStartDate(): string {
-    return DateUtils.formatFromString(this.startDate)
+    return DateUtils.MMDDYYYY(this.startDate)
   }
 
   get formattedEndDate(): string {
-    return DateUtils.formatFromString(this.endDate)
+    return DateUtils.MMDDYYYY(this.endDate)
   }
 
   get visitsRangeDate(): string {

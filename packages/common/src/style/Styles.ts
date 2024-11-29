@@ -220,7 +220,7 @@ const LabelStyle = {
   }),
 
   caption1: ({
-    fontWeight = 400,
+    fontWeight = 300,
     fontSize = 11,
     textAlign = 'left',
     color = Color.black[900],
@@ -237,7 +237,7 @@ const LabelStyle = {
   }),
 
   caption2: ({
-    fontWeight = 400,
+    fontWeight = 300,
     fontSize = 10,
     textAlign = 'left',
     color = Color.black[900],

@@ -7,14 +7,12 @@ import {
   PPBottomSheetContainer,
   PPBottomSheet,
   useBottomSheetModalRef,
-  Button,
 } from '@packages/common'
 import { FC, useEffect, useState } from 'react'
 import { View, Text, Image, StyleSheet } from 'react-native'
 import {
   PlaceType,
   ReservationModel,
-  ReservationStatus,
 } from '../../../data/models/ReservationModel'
 import { RouteProp, useRoute } from '@react-navigation/native'
 import { DetailItem } from './DetailItem'

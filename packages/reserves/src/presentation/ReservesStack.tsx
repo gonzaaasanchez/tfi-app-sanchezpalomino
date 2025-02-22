@@ -7,10 +7,12 @@ import { ReservationModel } from '../data/models/ReservationModel'
 import { useNavigation } from '@react-navigation/native'
 import MaterialIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { TouchableOpacity } from 'react-native'
+import { ReservationNewScreen } from './screens/new/ReservationNewScreen'
 
 type ReservesStackParamList = {
   reservesStack: undefined
   reservationDetail: { reservation: ReservationModel }
+  reservationNew: undefined
 }
 
 const Stack = createNativeStackNavigator<ReservesStackParamList>()
@@ -31,6 +33,22 @@ const ReservesStack: FC = (): JSX.Element => {
         component={ReservationDetailScreen}
         options={{
           headerTitle: t('reserveDetailScreen.title'),
+          presentation: 'modal',
+          headerRight: () => {
+            const navigation = useNavigation()
+            return (
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <MaterialIcons name="close" size={24} color="white" />
+              </TouchableOpacity>
+            )
+          },
+        }}
+      />
+       <Stack.Screen
+        name="reservationNew"
+        component={ReservationNewScreen}
+        options={{
+          headerTitle: t('reserveNewScreen.title'),
           presentation: 'modal',
           headerRight: () => {
             const navigation = useNavigation()

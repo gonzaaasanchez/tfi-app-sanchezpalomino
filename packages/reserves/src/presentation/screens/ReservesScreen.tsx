@@ -3,6 +3,7 @@ import {
   Loader,
   PPBottomSheet,
   ShowToast,
+  PPMaterialIcon,
   useI18n,
 } from '@packages/common'
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
@@ -12,6 +13,7 @@ import {
   StyleSheet,
   View,
   LayoutChangeEvent,
+  TouchableOpacity,
 } from 'react-native'
 import ReservationsHeader from '../components/ReservationsHeader'
 import { useReservesViewModel } from '../viewModels/ReservesViewModel'
@@ -19,10 +21,13 @@ import { EmptyView } from '@packages/common/src/components/EmptyView'
 import ReservationCard from '../components/ReservationCard'
 import { AnimationObject } from 'lottie-react-native'
 import { StackActions, useNavigation } from '@react-navigation/native'
+import { HomeTabsHeight } from '@packages/home/src/presentation/screens/HomeTabs'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const ReservesScreen: FC = (): JSX.Element => {
   const { state, setReserveType, setReserveStatus, getReserves } =
     useReservesViewModel()
+  const insets = useSafeAreaInsets()
   const navigation = useNavigation()
   const bottomSheetModalRef = useRef(null)
   const [alertTitle, setAlertTitle] = useState('')
@@ -124,6 +129,21 @@ const ReservesScreen: FC = (): JSX.Element => {
           )}
         </ScrollView>
       </View>
+
+      {state.selectedType === 'sent' && (
+        <TouchableOpacity
+          style={{
+            ...styles.add,
+            bottom: HomeTabsHeight + insets.bottom + 20,
+          }}
+          onPress={() =>
+            navigation.dispatch(StackActions.push('reservationNew'))
+          }
+        >
+          <PPMaterialIcon icon="add" size={30} color={'white'} />
+        </TouchableOpacity>
+      )}
+
       <PPBottomSheet.Dialog
         ref={bottomSheetModalRef}
         title={alertTitle}
@@ -146,6 +166,21 @@ const styles = StyleSheet.create({
   scrollContainer: {
     padding: 20,
     paddingBottom: 80 + 30, //tabbar aprox height + padding
+  },
+  add: {
+    position: 'absolute',
+    right: 20,
+    backgroundColor: Color.brand1[700],
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
   },
 })
 

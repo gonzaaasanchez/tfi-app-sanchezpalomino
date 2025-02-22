@@ -17,6 +17,7 @@ import {
 } from '@packages/common'
 
 const Tab = createBottomTabNavigator()
+const HomeTabsHeight =  82
 
 type Props = {
   feed?: FC
@@ -271,4 +272,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export { HomeTabs }
+export { HomeTabs, HomeTabsHeight }

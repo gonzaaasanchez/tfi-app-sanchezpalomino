@@ -100,6 +100,9 @@
       "cancelReserve": "Cancelar reserva",
       "petDetails": "Más detalles:"
     },
+    "reserveNewScreen": {
+      "title": "Crear nueva reserva"
+    },
     "servicesScreen": {
       "title": "Servicios"
     }

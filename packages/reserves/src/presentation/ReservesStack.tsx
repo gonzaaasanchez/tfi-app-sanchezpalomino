@@ -19,8 +19,9 @@ const Stack = createNativeStackNavigator<ReservesStackParamList>()
 
 const ReservesStack: FC = (): JSX.Element => {
   const { t } = useI18n()
+  const navigation = useNavigation()
   return (
-    <Stack.Navigator screenOptions={GeneralStyle.header}>
+    <Stack.Navigator id={navigation.getParent()} screenOptions={GeneralStyle.header}>
       <Stack.Screen
         name="reservesStack"
         component={ReservesScreen}

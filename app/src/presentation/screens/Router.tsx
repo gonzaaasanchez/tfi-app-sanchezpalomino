@@ -15,10 +15,7 @@ import { LightTheme } from '@packages/common'
 
 const HomeStack = createNativeStackNavigator<HomeParamsList>()
 
-type HomeParamsList = {
-  homeScreen: undefined
-  detailScreen: undefined
-}
+type HomeParamsList = { homeScreen: undefined; detailScreen: undefined }
 
 const Router = (): JSX.Element => {
   const { state } = useRouterViewModel()
@@ -30,7 +27,7 @@ const Router = (): JSX.Element => {
   return (
     <NavigationContainer linking={linking} theme={LightTheme}>
       {!state.isLoggedIn ? (
-        <HomeStack.Navigator>
+        <HomeStack.Navigator id={undefined}>
           <HomeStack.Screen
             name="homeScreen"
             component={HomeScreen}

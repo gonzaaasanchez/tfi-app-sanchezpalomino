@@ -15,16 +15,12 @@ import {
   PPBottomSheetContainer,
   useI18n,
 } from '@packages/common'
+import { useNavigation } from '@react-navigation/native'
 
 const Tab = createBottomTabNavigator()
-const HomeTabsHeight =  82
+const HomeTabsHeight = 82
 
-type Props = {
-  feed?: FC
-  reserves?: FC
-  services?: FC
-  more?: FC
-}
+type Props = { feed?: FC; reserves?: FC; services?: FC; more?: FC }
 
 const indicatorWidth = 32
 const focusedColor = Color.brand1[800]
@@ -37,6 +33,7 @@ const HomeTabs: FC<Props> = ({
   more,
 }): JSX.Element => {
   const { t } = useI18n()
+  const navigation = useNavigation()
 
   const insets = useSafeAreaInsets()
   const indicatorPosition = useRef(new Animated.Value(0)).current
@@ -57,6 +54,7 @@ const HomeTabs: FC<Props> = ({
   return (
     <PPBottomSheetContainer>
       <Tab.Navigator
+        id={navigation.getParent()}
         tabBar={({ state, descriptors, navigation }) => (
           <View style={[styles.tabBar, { bottom: insets.bottom + 10 }]}>
             {/* Tabs */}
@@ -108,9 +106,7 @@ const HomeTabs: FC<Props> = ({
             <Animated.View
               style={[
                 styles.indicatorContainer,
-                {
-                  transform: [{ translateX: indicatorPosition }],
-                },
+                { transform: [{ translateX: indicatorPosition }] },
               ]}
             >
               <View style={styles.indicator} />
@@ -251,22 +247,13 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: focusedColor,
   },
-  tabItemWrapper: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-  },
-  tabLabelContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  tabItemWrapper: { alignItems: 'center', justifyContent: 'center', flex: 1 },
+  tabLabelContainer: { alignItems: 'center', justifyContent: 'center' },
   tabLabelCommon: {
     marginTop: 5,
     ...LabelStyle.subhead({ textAlign: 'center' }),
   },
-  tabLabelUnselected: {
-    color: unfocusedColor,
-  },
+  tabLabelUnselected: { color: unfocusedColor },
   tabLabelSelected: {
     ...LabelStyle.subhead({ fontWeight: 500, color: focusedColor }),
   },

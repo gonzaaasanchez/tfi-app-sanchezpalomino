@@ -21,45 +21,41 @@ const ReservesStack: FC = (): JSX.Element => {
   const { t } = useI18n()
   const navigation = useNavigation()
   return (
-    <Stack.Navigator id={navigation.getParent()} screenOptions={GeneralStyle.header}>
+    <Stack.Navigator
+      id={navigation.getParent()}
+      screenOptions={GeneralStyle.header}
+    >
       <Stack.Screen
         name="reservesStack"
         component={ReservesScreen}
-        options={{
-          headerTitle: t('reservesScreen.title'),
-        }}
+        options={{ headerTitle: t('reservesScreen.title') }}
       />
       <Stack.Screen
         name="reservationDetail"
         component={ReservationDetailScreen}
-        options={{
+        options={({ navigation }) => ({
           headerTitle: t('reserveDetailScreen.title'),
           presentation: 'modal',
-          headerRight: () => {
-            const navigation = useNavigation()
-            return (
-              <TouchableOpacity onPress={() => navigation.goBack()}>
-                <MaterialIcons name="close" size={24} color="white" />
-              </TouchableOpacity>
-            )
-          },
-        }}
+          headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <MaterialIcons name="close" size={24} color="white" />
+            </TouchableOpacity>
+          ),
+        })}
       />
-       <Stack.Screen
+
+      <Stack.Screen
         name="reservationNew"
         component={ReservationNewScreen}
-        options={{
+        options={({ navigation }) => ({
           headerTitle: t('reserveNewScreen.title'),
-          presentation: 'modal',
-          headerRight: () => {
-            const navigation = useNavigation()
-            return (
-              <TouchableOpacity onPress={() => navigation.goBack()}>
-                <MaterialIcons name="close" size={24} color="white" />
-              </TouchableOpacity>
-            )
-          },
-        }}
+          presentation: 'fullScreenModal',
+          headerRight: () => (
+            <TouchableOpacity onPress={navigation.goBack}>
+              <MaterialIcons name="close" size={24} color="white" />
+            </TouchableOpacity>
+          ),
+        })}
       />
     </Stack.Navigator>
   )

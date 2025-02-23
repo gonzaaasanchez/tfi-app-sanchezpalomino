@@ -14,12 +14,12 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Image,
 } from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { useReserveNewViewModel } from '../../viewModels/ReserveNewViewModel'
 import { AnimationObject } from 'lottie-react-native'
 import { PlaceType } from '@packages/reserves/src/data/models/ReservationModel'
+import Slider from '@react-native-community/slider'
 
 const ReservationNewScreen: FC = (): JSX.Element => {
   const {
@@ -28,6 +28,8 @@ const ReservationNewScreen: FC = (): JSX.Element => {
     setEndDate,
     setPlaceType,
     setReviewsFrom,
+    setMaxDistance,
+    setMaxPrice,
     createReserve,
   } = useReserveNewViewModel()
   const bottomSheetModalRef = useRef(null)
@@ -36,7 +38,6 @@ const ReservationNewScreen: FC = (): JSX.Element => {
   const [alertAnimation, setAlertAnimation] = useState<AnimationObject | null>(
     null
   )
-
   const { t } = useI18n()
 
   const showAlert = (
@@ -67,18 +68,22 @@ const ReservationNewScreen: FC = (): JSX.Element => {
   const DateSelection = () => {
     const dates = [
       {
-        label: t('Fecha inicio'),
+        label: t('reserveNewScreen.dateFrom'),
         value: state.fromDate,
         setDate: setStartDate,
       },
-      { label: t('Fecha fin'), value: state.fromDate, setDate: setEndDate },
+      {
+        label: t('reserveNewScreen.dateTo'),
+        value: state.fromDate,
+        setDate: setEndDate,
+      },
     ]
 
     return (
       <View style={styles.datePickersContainer}>
         {dates.map(({ label, value, setDate }, index) => (
           <View key={index}>
-            <Text style={LabelStyle.title3({ fontWeight: 400 })}>{label}</Text>
+            <Text style={styles.sectionTitle}>{label}</Text>
             <View style={styles.datePicker}>
               <DateTimePicker
                 value={value || new Date()}
@@ -97,15 +102,13 @@ const ReservationNewScreen: FC = (): JSX.Element => {
 
   const PlaceSelection = () => {
     const options = [
-      { label: t('Domicilio del cuidador'), value: PlaceType.Home },
-      { label: t('Mi domicilio'), value: PlaceType.Visit },
+      { label: t('reserveNewScreen.placeHome'), value: PlaceType.Home },
+      { label: t('reserveNewScreen.placeVisit'), value: PlaceType.Visit },
     ]
 
     return (
       <View>
-        <Text style={LabelStyle.title3({ fontWeight: 400 })}>
-          {t('Lugar de cuidado')}
-        </Text>
+        <Text style={styles.sectionTitle}>{t('reserveNewScreen.place')}</Text>
         <View style={styles.radioGroup}>
           {options.map(({ label, value }) => (
             <TouchableOpacity
@@ -131,21 +134,124 @@ const ReservationNewScreen: FC = (): JSX.Element => {
     const stars = [1, 2, 3, 4, 5]
     return (
       <View>
-        <Text style={LabelStyle.title3({ fontWeight: 400 })}>
-          {t('Evaluaciones desde')}
+        <Text style={styles.sectionTitle}>
+          {t('reserveNewScreen.rateFrom')}
         </Text>
         <View style={styles.starContainer}>
           {stars.map((star) => (
             <TouchableOpacity key={star} onPress={() => setReviewsFrom(star)}>
               {state.reviewsFrom >= star ? (
-                <PPMaterialIcon icon="star" size={28} color={Color.brand1[600]} />
+                <PPMaterialIcon
+                  icon="star"
+                  size={28}
+                  color={Color.brand1[600]}
+                />
               ) : (
-                <PPMaterialIcon icon="star-border" size={28} color={Color.brand1[600]} />
+                <PPMaterialIcon
+                  icon="star-border"
+                  size={28}
+                  color={Color.brand1[600]}
+                />
               )}
             </TouchableOpacity>
           ))}
         </View>
       </View>
+    )
+  }
+
+  const SliderSelection: FC<{
+    labelKey: string
+    unitKey: string
+    minValue: number
+    maxValue: number
+    step: number
+    value: number
+    onValueChange: (value: number) => void
+    onSlidingComplete: (value: number) => void
+  }> = ({
+    labelKey,
+    unitKey,
+    minValue,
+    maxValue,
+    step,
+    value,
+    onValueChange,
+    onSlidingComplete,
+  }) => {
+    return (
+      <View>
+        <Text style={styles.sectionTitle}>{t(labelKey)}</Text>
+        <Slider
+          minimumValue={minValue}
+          maximumValue={maxValue}
+          step={step}
+          tapToSeek
+          minimumTrackTintColor={Color.brand1[600]}
+          maximumTrackTintColor={Color.brand1[100]}
+          value={value}
+          onValueChange={onValueChange}
+          onSlidingComplete={onSlidingComplete}
+        />
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Text style={LabelStyle.callout2()}>
+            {t(unitKey, { value: minValue.toString() })}
+          </Text>
+          <Text style={LabelStyle.callout2()}>
+            {t(unitKey, { value: value.toString() })}
+          </Text>
+        </View>
+      </View>
+    )
+  }
+
+  const DistanceSelection = () => {
+    const [sliderValue, setSliderValue] = useState(state.maxDistance)
+
+    const handleValueChange = (value: number) => {
+      setSliderValue(value)
+    }
+
+    const handleSlidingComplete = (value: number) => {
+      setMaxDistance(value)
+    }
+
+    return (
+      <SliderSelection
+        labelKey="reserveNewScreen.distance"
+        unitKey="reserveNewScreen.kms"
+        minValue={0}
+        maxValue={10}
+        step={0.5}
+        value={sliderValue}
+        onValueChange={handleValueChange}
+        onSlidingComplete={handleSlidingComplete}
+      />
+    )
+  }
+
+  const PriceSelection = () => {
+    const [sliderValue, setSliderValue] = useState(state.maxPrice)
+
+    const handleValueChange = (value: number) => {
+      setSliderValue(value)
+    }
+
+    const handleSlidingComplete = (value: number) => {
+      setMaxPrice(value)
+    }
+
+    return (
+      <SliderSelection
+        labelKey="reserveNewScreen.maxPrice"
+        unitKey="reserveNewScreen.price"
+        minValue={0}
+        maxValue={100000}
+        step={1}
+        value={sliderValue}
+        onValueChange={handleValueChange}
+        onSlidingComplete={handleSlidingComplete}
+      />
     )
   }
 
@@ -159,6 +265,8 @@ const ReservationNewScreen: FC = (): JSX.Element => {
           <DateSelection />
           <PlaceSelection />
           <RateSelection />
+          <DistanceSelection />
+          <PriceSelection />
         </ScrollView>
       </View>
 
@@ -174,7 +282,8 @@ const ReservationNewScreen: FC = (): JSX.Element => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Color.mainBackground },
-  scrollContainer: { padding: 20, gap: 25 },
+  scrollContainer: { padding: 20, gap: 30 },
+  sectionTitle: { ...LabelStyle.title3({ fontWeight: 400 }) },
   datePickersContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

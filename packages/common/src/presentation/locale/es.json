@@ -101,7 +101,17 @@
       "petDetails": "Más detalles:"
     },
     "reserveNewScreen": {
-      "title": "Crear nueva reserva"
+      "title": "Crear nueva reserva",
+      "dateFrom": "Fecha desde",
+      "dateTo": "Fecha hasta",
+      "place": "Lugar de cuidado",
+      "placeHome": "Mi domicilio",
+      "placeVisit": "Domicilio del Cuidador",
+      "rateFrom": "Evaluaciones desde",
+      "distance": "Distancia",
+      "kms": "{{value}} km",
+      "maxPrice": "Rango de precios",
+      "price": "$ {{value}}"
     },
     "servicesScreen": {
       "title": "Servicios"

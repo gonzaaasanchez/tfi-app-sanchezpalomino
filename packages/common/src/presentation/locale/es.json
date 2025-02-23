@@ -108,10 +108,12 @@
       "placeHome": "Mi domicilio",
       "placeVisit": "Domicilio del Cuidador",
       "rateFrom": "Evaluaciones desde",
-      "distance": "Distancia",
+      "visitsPerDay": "Cantidad de visitas por día",
+      "distance": "Distancia máxima",
       "kms": "{{value}} km",
-      "maxPrice": "Rango de precios",
-      "price": "$ {{value}}"
+      "maxPrice": "Precio máximo",
+      "price": "$ {{value}}",
+      "button": "Enviar pedido de reserva"
     },
     "servicesScreen": {
       "title": "Servicios"

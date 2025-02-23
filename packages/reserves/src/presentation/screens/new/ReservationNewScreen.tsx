@@ -1,4 +1,5 @@
 import {
+  Button,
   Color,
   LabelStyle,
   Loader,
@@ -14,12 +15,14 @@ import {
   View,
   Text,
   TouchableOpacity,
+  TextInput,
 } from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { useReserveNewViewModel } from '../../viewModels/ReserveNewViewModel'
 import { AnimationObject } from 'lottie-react-native'
 import { PlaceType } from '@packages/reserves/src/data/models/ReservationModel'
 import Slider from '@react-native-community/slider'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const ReservationNewScreen: FC = (): JSX.Element => {
   const {
@@ -30,6 +33,7 @@ const ReservationNewScreen: FC = (): JSX.Element => {
     setReviewsFrom,
     setMaxDistance,
     setMaxPrice,
+    setVisitsPerDay,
     createReserve,
   } = useReserveNewViewModel()
   const bottomSheetModalRef = useRef(null)
@@ -39,6 +43,13 @@ const ReservationNewScreen: FC = (): JSX.Element => {
     null
   )
   const { t } = useI18n()
+
+  const [open, setOpen] = useState(false)
+  const [items, setItems] = useState([
+    { label: '1', value: 1 },
+    { label: '2', value: 2 },
+    { label: '3', value: 3 },
+  ])
 
   const showAlert = (
     title: string,
@@ -84,7 +95,7 @@ const ReservationNewScreen: FC = (): JSX.Element => {
         {dates.map(({ label, value, setDate }, index) => (
           <View key={index}>
             <Text style={styles.sectionTitle}>{label}</Text>
-            <View style={styles.datePicker}>
+            <View style={styles.fieldContainer}>
               <DateTimePicker
                 value={value || new Date()}
                 minimumDate={new Date()}
@@ -255,19 +266,55 @@ const ReservationNewScreen: FC = (): JSX.Element => {
     )
   }
 
+  const VisitsPerDay = () => {
+    const [inputVisits, setInputVisits] = useState(state.visits.toString())
+    const handleChangeText = (text: string) => {
+      if (/^\d*$/.test(text)) {
+        setInputVisits(text)
+      }
+    }
+
+    const handleBlur = () => {
+      setVisitsPerDay(Number(inputVisits))
+    }
+    return (
+      <View>
+        <Text style={styles.sectionTitle}>
+          {t('reserveNewScreen.visitsPerDay')}
+        </Text>
+        <TextInput
+          style={{
+            ...styles.fieldContainer,
+            paddingVertical: 10,
+            ...LabelStyle.body2(),
+          }}
+          keyboardType="numeric"
+          value={inputVisits}
+          onChangeText={handleChangeText}
+          onBlur={handleBlur}
+        />
+      </View>
+    )
+  }
+
   return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.container}>
-        {state.loading && (
-          <Loader loading={state.loading} opacity={0.85} animal="dog" />
-        )}
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <DateSelection />
-          <PlaceSelection />
-          <RateSelection />
-          <DistanceSelection />
-          <PriceSelection />
-        </ScrollView>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
+      {state.loading && (
+        <Loader loading={state.loading} opacity={0.85} animal="dog" />
+      )}
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <DateSelection />
+        <PlaceSelection />
+        <RateSelection />
+        <VisitsPerDay />
+        <DistanceSelection />
+        <PriceSelection />
+      </ScrollView>
+      <View style={{ paddingHorizontal: 20 }}>
+        <Button.Primary
+          title={t('reserveNewScreen.button')}
+          onPress={createReserve}
+        ></Button.Primary>
       </View>
 
       <PPBottomSheet.Dialog
@@ -276,7 +323,7 @@ const ReservationNewScreen: FC = (): JSX.Element => {
         subtitle={alertSubtitle}
         lottieFile={alertAnimation}
       />
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -288,7 +335,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  datePicker: {
+  fieldContainer: {
     backgroundColor: Color.mainBackground,
     borderRadius: 8,
     borderWidth: 1,

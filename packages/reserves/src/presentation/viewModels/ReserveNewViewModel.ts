@@ -10,6 +10,7 @@ type ReserveNewViewModel = {
   setReviewsFrom: (reviewsFrom: number) => void
   setMaxDistance: (maxDistance: number) => void
   setMaxPrice: (maxPrice: number) => void
+  setVisitsPerDay: (visits: number) => void
   createReserve: () => Promise<void>
 }
 
@@ -20,6 +21,7 @@ type ReserveNewState = {
   reviewsFrom: number
   maxDistance: number
   maxPrice: number
+  visits: number
 } & UIState
 
 const initialState: ReserveNewState = {
@@ -30,6 +32,7 @@ const initialState: ReserveNewState = {
   reviewsFrom: 1,
   maxDistance: 10,
   maxPrice: 100000,
+  visits: 1,
   toDate: null,
 }
 
@@ -76,6 +79,13 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
     }))
   }
 
+  const setVisitsPerDay = (visits: number) => {
+    setState((previous: ReserveNewState) => ({
+      ...previous,
+      visits: visits,
+    }))
+  }
+
   return {
     state,
     setStartDate,
@@ -84,6 +94,7 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
     setReviewsFrom,
     setMaxDistance,
     setMaxPrice,
+    setVisitsPerDay,
     createReserve,
   }
 }

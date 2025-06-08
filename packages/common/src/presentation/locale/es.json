@@ -98,7 +98,8 @@
       "acceptReserve": "Aceptar reserva",
       "rejectReserve": "Rechazar reserva",
       "cancelReserve": "Cancelar reserva",
-      "petDetails": "Más detalles:"
+      "petDetails": "Más detalles:",
+      "distanceFormat": "{{location}} (a {{distance}} km)"
     },
     "reserveNewScreen": {
       "title": "Crear nueva reserva",
@@ -115,10 +116,13 @@
       "kms": "{{value}} km",
       "maxPrice": "Precio máximo",
       "price": "$ {{value}}",
-      "button": "Enviar pedido de reserva"
+      "button": "Buscar cuidadores"
     },
     "servicesScreen": {
       "title": "Servicios"
+    },
+    "reserveResultsScreen": {
+      "title": "Resultados"
     }
   }
 }

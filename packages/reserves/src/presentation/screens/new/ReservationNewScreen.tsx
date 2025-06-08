@@ -38,7 +38,7 @@ const ReservationNewScreen: FC = (): JSX.Element => {
     setMaxPrice,
     setVisitsPerDay,
     setSelectedPets,
-    createReserve,
+    searchResults,
   } = useReserveNewViewModel()
   const bottomSheetModalRef = useRef(null)
   const [alertTitle, setAlertTitle] = useState('')
@@ -73,12 +73,12 @@ const ReservationNewScreen: FC = (): JSX.Element => {
     const dates = [
       {
         label: t('reserveNewScreen.dateFrom'),
-        value: state.fromDate,
+        value: state.searchCriteria.fromDate,
         setDate: setStartDate,
       },
       {
         label: t('reserveNewScreen.dateTo'),
-        value: state.toDate,
+        value: state.searchCriteria.toDate,
         setDate: setEndDate,
       },
     ]
@@ -123,7 +123,7 @@ const ReservationNewScreen: FC = (): JSX.Element => {
               <View
                 style={[
                   styles.radioCircle,
-                  state.placeType === value && styles.radioSelected,
+                  state.searchCriteria.placeType === value && styles.radioSelected,
                 ]}
               />
               <Text style={LabelStyle.body({ fontWeight: 300 })}>{label}</Text>
@@ -169,7 +169,7 @@ const ReservationNewScreen: FC = (): JSX.Element => {
             value: pet.id,
             label: pet.name,
           }))}
-          initialValue={state.selectedPets.map((pet) => ({
+          initialValue={state.searchCriteria.selectedPets.map((pet) => ({
             value: pet.id,
             label: pet.name,
           }))}
@@ -188,7 +188,7 @@ const ReservationNewScreen: FC = (): JSX.Element => {
         <View style={styles.starContainer}>
           {stars.map((star) => (
             <TouchableOpacity key={star} onPress={() => setReviewsFrom(star)}>
-              {state.reviewsFrom >= star ? (
+              {state.searchCriteria.reviewsFrom >= star ? (
                 <PPMaterialIcon
                   icon="star"
                   size={28}
@@ -254,11 +254,11 @@ const ReservationNewScreen: FC = (): JSX.Element => {
   }
 
   const DistanceSelection = () => {
-    const [sliderValue, setSliderValue] = useState(state.maxDistance)
+    const [sliderValue, setSliderValue] = useState(state.searchCriteria.maxDistance)
 
     useEffect(() => {
-      setSliderValue(state.maxDistance)
-    }, [state.maxDistance])
+      setSliderValue(state.searchCriteria.maxDistance)
+    }, [state.searchCriteria.maxDistance])
 
     const handleValueChange = (value: number) => {
       setSliderValue(value)
@@ -283,11 +283,11 @@ const ReservationNewScreen: FC = (): JSX.Element => {
   }
 
   const PriceSelection = () => {
-    const [sliderValue, setSliderValue] = useState(state.maxPrice)
+    const [sliderValue, setSliderValue] = useState(state.searchCriteria.maxPrice)
 
     useEffect(() => {
-      setSliderValue(state.maxPrice)
-    }, [state.maxPrice])
+      setSliderValue(state.searchCriteria.maxPrice)
+    }, [state.searchCriteria.maxPrice])
 
     const handleValueChange = (value: number) => {
       setSliderValue(value)
@@ -312,11 +312,11 @@ const ReservationNewScreen: FC = (): JSX.Element => {
   }
 
   const VisitsPerDay = () => {
-    const [inputVisits, setInputVisits] = useState(state.visits.toString())
+      const [inputVisits, setInputVisits] = useState(state.searchCriteria.visits.toString())
 
     useEffect(() => {
-      setInputVisits(state.visits.toString())
-    }, [state.visits])
+      setInputVisits(state.searchCriteria.visits.toString())
+    }, [state.searchCriteria.visits])
 
     const handleChangeText = (text: string) => {
       if (/^\d*$/.test(text)) {
@@ -364,7 +364,7 @@ const ReservationNewScreen: FC = (): JSX.Element => {
       <View style={{ paddingHorizontal: 20 }}>
         <Button.Primary
           title={t('reserveNewScreen.button')}
-          onPress={createReserve}
+          onPress={searchResults}
         />
       </View>
       <PPBottomSheet.Dialog

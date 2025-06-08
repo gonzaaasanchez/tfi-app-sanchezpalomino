@@ -116,7 +116,10 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
               <DetailItem
                 icon="map-marker"
                 title={t('reserveDetailScreen.location')}
-                value={`${state.currentReserve?.location} (a ${state.currentReserve?.distance} km)`}
+                value={t('reserveDetailScreen.distanceFormat', {
+                  location: state.currentReserve?.location,
+                  distance: state.currentReserve?.distance.toString()
+                })}
               />
             )}
             <DetailItem

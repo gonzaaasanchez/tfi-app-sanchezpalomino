@@ -1,6 +1,8 @@
 import { UIState, PetModel } from '@packages/common'
 import { useState } from 'react'
 import { PlaceType } from '../../data/models/ReservationModel'
+import { StackActions, useNavigation } from '@react-navigation/native'
+import { SearchCriteria } from '../../data/models/SearchCriteria'
 
 type ReserveNewViewModel = {
   state: ReserveNewState
@@ -12,23 +14,14 @@ type ReserveNewViewModel = {
   setMaxPrice: (maxPrice: number) => void
   setVisitsPerDay: (visits: number) => void
   setSelectedPets: (pets: PetModel[]) => void
-  createReserve: () => Promise<void>
+  searchResults: () => Promise<void>
 }
 
 type ReserveNewState = {
-  fromDate: Date
-  toDate: Date
-  placeType: PlaceType
-  reviewsFrom: number
-  maxDistance: number
-  maxPrice: number
-  visits: number
-  selectedPets: PetModel[]
+  searchCriteria: SearchCriteria
 } & UIState
 
-const initialState: ReserveNewState = {
-  loading: false,
-  error: null,
+const initialSearchCriteria: SearchCriteria = {
   fromDate: new Date(),
   toDate: new Date(new Date().setDate(new Date().getDate() + 1)),
   placeType: PlaceType.Home,
@@ -39,32 +32,40 @@ const initialState: ReserveNewState = {
   selectedPets: [],
 }
 
+const initialState: ReserveNewState = {
+  loading: false,
+  error: null,
+  searchCriteria: initialSearchCriteria,
+}
+
 const useReserveNewViewModel = (): ReserveNewViewModel => {
   const [state, setState] = useState<ReserveNewState>(initialState)
+  const navigation = useNavigation()
 
   const validateData: () => [boolean, string?] = () => {
-    if (state.fromDate > state.toDate) {
+    const { searchCriteria } = state
+    if (searchCriteria.fromDate > searchCriteria.toDate) {
       return [false, 'La fecha de inicio debe ser anterior a la fecha de fin']
     }
-    if (state.reviewsFrom < 1) {
+    if (searchCriteria.reviewsFrom < 1) {
       return [false, 'El número de reseñas debe ser mayor a 0']
     }
-    if (state.maxDistance <= 0) {
+    if (searchCriteria.maxDistance <= 0) {
       return [false, 'La distancia máxima debe ser mayor a 0']
     }
-    if (state.maxPrice <= 0) {
+    if (searchCriteria.maxPrice <= 0) {
       return [false, 'El precio máximo debe ser mayor a 0']
     }
-    if (state.visits < 1) {
+    if (searchCriteria.visits < 1) {
       return [false, 'El número de visitas por día debe ser mayor a 0']
     }
-    if (state.selectedPets.length === 0) {
+    if (searchCriteria.selectedPets.length === 0) {
       return [false, 'Debes seleccionar al menos una mascota']
     }
     return [true]
   }
 
-  const createReserve = async (): Promise<void> => {
+  const searchResults = async (): Promise<void> => {
     const [isValid, error] = validateData()
     if (!isValid) {
       setState((previous: ReserveNewState) => ({
@@ -74,70 +75,66 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
       return
     }
 
-    console.log('Reserva creada con los siguientes valores:', {
-      fechaInicio: state.fromDate,
-      fechaFin: state.toDate,
-      tipoLugar: state.placeType,
-      reseñasDesde: state.reviewsFrom,
-      distanciaMaxima: state.maxDistance,
-      precioMaximo: state.maxPrice,
-      visitasPorDia: state.visits,
-      mascotasSeleccionadas: state.selectedPets,
-    })
-
-    setState((previous: ReserveNewState) => ({
-      ...previous,
-      loading: true,
-    }))
+    navigation.dispatch(
+      StackActions.push('reservationResults', {
+        searchCriteria: state.searchCriteria
+      })
+    )
   }
 
   const setStartDate = (date: Date) => {
-    setState((previous: ReserveNewState) => ({ ...previous, fromDate: date }))
+    setState((previous: ReserveNewState) => ({
+      ...previous,
+      searchCriteria: { ...previous.searchCriteria, fromDate: date },
+    }))
   }
 
   const setEndDate = (date: Date) => {
-    setState((previous: ReserveNewState) => ({ ...previous, toDate: date }))
+    setState((previous: ReserveNewState) => ({
+      ...previous,
+      searchCriteria: { ...previous.searchCriteria, toDate: date },
+    }))
   }
 
   const setPlaceType = (placeType: PlaceType) => {
     setState((previous: ReserveNewState) => ({
       ...previous,
-      placeType: placeType,
+      searchCriteria: { ...previous.searchCriteria, placeType },
     }))
   }
 
   const setReviewsFrom = (reviewsFrom: number) => {
     setState((previous: ReserveNewState) => ({
       ...previous,
-      reviewsFrom: reviewsFrom,
+      searchCriteria: { ...previous.searchCriteria, reviewsFrom },
     }))
   }
 
   const setMaxDistance = (maxDistance: number) => {
     setState((previous: ReserveNewState) => ({
       ...previous,
-      maxDistance: maxDistance,
+      searchCriteria: { ...previous.searchCriteria, maxDistance },
     }))
   }
 
   const setMaxPrice = (maxPrice: number) => {
     setState((previous: ReserveNewState) => ({
       ...previous,
-      maxPrice: maxPrice,
+      searchCriteria: { ...previous.searchCriteria, maxPrice },
     }))
   }
 
   const setVisitsPerDay = (visits: number) => {
     setState((previous: ReserveNewState) => ({
       ...previous,
-      visits: visits,
+      searchCriteria: { ...previous.searchCriteria, visits },
     }))
   }
 
   const setSelectedPets = (pets: PetModel[]) => {
     setState((previous: ReserveNewState) => ({
       ...previous,
-      selectedPets: pets,
+      searchCriteria: { ...previous.searchCriteria, selectedPets: pets },
     }))
   }
 
@@ -151,7 +148,7 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
     setMaxPrice,
     setVisitsPerDay,
     setSelectedPets,
-    createReserve,
+    searchResults,
   }
 }
 

@@ -137,7 +137,7 @@ const ReservesScreen: FC = (): JSX.Element => {
             bottom: HomeTabsHeight + insets.bottom + 20,
           }}
           onPress={() =>
-            navigation.dispatch(StackActions.push('reservationNew'))
+            navigation.dispatch(StackActions.push('reservationNewSteps'))
           }
         >
           <PPMaterialIcon icon="add" size={30} color={'white'} />

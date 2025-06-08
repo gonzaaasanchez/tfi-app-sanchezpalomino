@@ -1,4 +1,4 @@
-import { Color, DateUtils, FeedModel, LabelStyle } from '@packages/common'
+import { Color, DateUtils, FeedModel, GeneralStyle, LabelStyle } from '@packages/common'
 import { View, Image, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import { FC } from 'react'
@@ -44,13 +44,7 @@ const FeedItem: FC<FeedItemProps> = ({ item }) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: 'white',
-    borderRadius: 16,
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    ...GeneralStyle.card,
   },
   image: {
     width: '100%',

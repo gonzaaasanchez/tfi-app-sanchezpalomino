@@ -1,5 +1,6 @@
 import {
   Color,
+  GeneralStyle,
   LabelStyle,
   PPMaterialIcon,
   PPMaterialIconsName,
@@ -64,16 +65,8 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
 
 const styles = StyleSheet.create({
   cardContainer: {
+    ...GeneralStyle.card,
     flexDirection: 'row',
-    padding: 16,
-    backgroundColor: 'white',
-    borderRadius: 12,
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    marginBottom: 12,
-    elevation: 3,
   },
   leftContainer: {
     marginRight: 12,

@@ -7,6 +7,7 @@ import {
   PPBottomSheetContainer,
   PPBottomSheet,
   useBottomSheetModalRef,
+  GeneralStyle,
 } from '@packages/common'
 import { FC, useEffect, useState } from 'react'
 import { View, Text, Image, StyleSheet } from 'react-native'
@@ -169,15 +170,8 @@ const styles = StyleSheet.create({
   },
   /* Card */
   card: {
-    backgroundColor: 'white',
-    padding: 16,
+    ...GeneralStyle.card,
     marginBottom: 16,
-    borderRadius: 8,
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
   },
   cardTitle: {
     ...LabelStyle.body({ fontWeight: 500 }),

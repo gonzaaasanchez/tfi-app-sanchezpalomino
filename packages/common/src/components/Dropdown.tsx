@@ -8,7 +8,7 @@ import {
 import React, { useCallback, useRef, useState, useEffect } from 'react'
 import { AntDesign } from '@expo/vector-icons'
 import { Color } from '../style/Color'
-import { LabelStyle } from '../style/Styles'
+import { GeneralStyle, LabelStyle } from '../style/Styles'
 
 type DropdownOptionItem = {
   value: string
@@ -169,19 +169,13 @@ const styles = StyleSheet.create({
     opacity: 0.4,
   },
   options: {
-    position: 'absolute',
-    backgroundColor: 'white',
-    padding: 10,
+    ...GeneralStyle.card,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: Color.black[10],
+    position: 'absolute',
+    padding: 10,
     maxHeight: 150,
     top: buttonHeight + buttonMarginTop + 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 4,
   },
   button: {
     height: buttonHeight,

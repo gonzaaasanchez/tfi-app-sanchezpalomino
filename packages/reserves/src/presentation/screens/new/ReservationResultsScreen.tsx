@@ -8,13 +8,16 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
-import { Color, LabelStyle, PPMaterialIcon, Loader } from '@packages/common'
+import {
+  Color,
+  LabelStyle,
+  PPMaterialIcon,
+  Loader,
+  GeneralStyle,
+} from '@packages/common'
 import { useReservationResultsViewModel } from '../../viewModels/ReservationResultsViewModel'
 
 const ResultCard: FC<{ result: any }> = ({ result }) => {
-  console.log('Result card data:', result)
-  console.log('Avatar URL:', result.user.avatar)
-  console.log('User model:', result.user)
   return (
     <TouchableOpacity activeOpacity={0.85}>
       <View style={styles.cardContainer}>
@@ -23,8 +26,6 @@ const ResultCard: FC<{ result: any }> = ({ result }) => {
             source={{ uri: result.user.avatar }}
             style={styles.profileImage}
             resizeMode="cover"
-            onError={(e) => console.log('Error loading image:', e.nativeEvent.error)}
-            onLoad={() => console.log('Image loaded successfully')}
           />
         </View>
         <View style={styles.rightContainer}>
@@ -35,7 +36,9 @@ const ResultCard: FC<{ result: any }> = ({ result }) => {
           </View>
           <View style={styles.row}>
             <PPMaterialIcon icon="star" size={16} color={Color.brand1[600]} />
-            <Text style={styles.detail}>{result.rate} ({result.reviews} reviews)</Text>
+            <Text style={styles.detail}>
+              {result.rate} ({result.reviews} reviews)
+            </Text>
           </View>
         </View>
       </View>
@@ -70,16 +73,10 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Color.mainBackground },
   content: { flex: 1, padding: 20 },
   cardContainer: {
+    ...GeneralStyle.card,
     flexDirection: 'row',
     padding: 16,
-    backgroundColor: 'white',
-    borderRadius: 12,
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
     marginBottom: 12,
-    elevation: 3,
   },
   leftContainer: {
     marginRight: 12,

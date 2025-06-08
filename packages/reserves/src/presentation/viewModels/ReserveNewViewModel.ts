@@ -29,13 +29,13 @@ type ReserveNewState = {
 const initialState: ReserveNewState = {
   loading: false,
   error: null,
-  fromDate: null,
+  fromDate: new Date(),
+  toDate: new Date(new Date().setDate(new Date().getDate() + 1)),
   placeType: PlaceType.Home,
   reviewsFrom: 1,
-  maxDistance: 10,
-  maxPrice: 100000,
+  maxDistance: 5,
+  maxPrice: 50000,
   visits: 1,
-  toDate: null,
   selectedPets: [],
 }
 
@@ -43,12 +43,6 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
   const [state, setState] = useState<ReserveNewState>(initialState)
 
   const validateData: () => [boolean, string?] = () => {
-    if (!state.fromDate) {
-      return [false, 'La fecha de inicio es requerida']
-    }
-    if (!state.toDate) {
-      return [false, 'La fecha de fin es requerida']
-    }
     if (state.fromDate > state.toDate) {
       return [false, 'La fecha de inicio debe ser anterior a la fecha de fin']
     }
@@ -79,6 +73,18 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
       }))
       return
     }
+
+    console.log('Reserva creada con los siguientes valores:', {
+      fechaInicio: state.fromDate,
+      fechaFin: state.toDate,
+      tipoLugar: state.placeType,
+      reseñasDesde: state.reviewsFrom,
+      distanciaMaxima: state.maxDistance,
+      precioMaximo: state.maxPrice,
+      visitasPorDia: state.visits,
+      mascotasSeleccionadas: state.selectedPets,
+    })
+
     setState((previous: ReserveNewState) => ({
       ...previous,
       loading: true,

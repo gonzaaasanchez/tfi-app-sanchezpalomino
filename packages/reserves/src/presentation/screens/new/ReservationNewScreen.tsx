@@ -78,7 +78,7 @@ const ReservationNewScreen: FC = (): JSX.Element => {
       },
       {
         label: t('reserveNewScreen.dateTo'),
-        value: state.fromDate,
+        value: state.toDate,
         setDate: setEndDate,
       },
     ]
@@ -151,32 +151,28 @@ const ReservationNewScreen: FC = (): JSX.Element => {
       },
     ]
 
-    const handlePetChange = (item: { value: string; label: string }) => {
-      const selectedPet = mockPets.find((pet) => pet.id === item.value)
-      if (selectedPet) {
-        setSelectedPets([selectedPet])
-      }
+    const handlePetChange = (items: { value: string; label: string }[]) => {
+      const selectedPets = items
+        .map((item) => mockPets.find((pet) => pet.id === item.value))
+        .filter((pet): pet is PetModel => pet !== undefined)
+      setSelectedPets(selectedPets)
     }
 
     return (
       <View>
         <Text style={styles.sectionTitle}>{t('reserveNewScreen.pets')}</Text>
         <Dropdown
-          allowsMultiSelection
+          allowsMultiSelection={true}
+          placeholder={t('reserveNewScreen.selectPets')}
+          onFinishSelection={handlePetChange}
           data={mockPets.map((pet) => ({
             value: pet.id,
             label: pet.name,
           }))}
-          onChange={handlePetChange}
-          placeholder={t('reserveNewScreen.selectPets')}
-          initialValue={
-            state.selectedPets[0]
-              ? {
-                  value: state.selectedPets[0].id,
-                  label: state.selectedPets[0].name,
-                }
-              : undefined
-          }
+          initialValue={state.selectedPets.map((pet) => ({
+            value: pet.id,
+            label: pet.name,
+          }))}
         />
       </View>
     )
@@ -260,6 +256,10 @@ const ReservationNewScreen: FC = (): JSX.Element => {
   const DistanceSelection = () => {
     const [sliderValue, setSliderValue] = useState(state.maxDistance)
 
+    useEffect(() => {
+      setSliderValue(state.maxDistance)
+    }, [state.maxDistance])
+
     const handleValueChange = (value: number) => {
       setSliderValue(value)
     }
@@ -285,6 +285,10 @@ const ReservationNewScreen: FC = (): JSX.Element => {
   const PriceSelection = () => {
     const [sliderValue, setSliderValue] = useState(state.maxPrice)
 
+    useEffect(() => {
+      setSliderValue(state.maxPrice)
+    }, [state.maxPrice])
+
     const handleValueChange = (value: number) => {
       setSliderValue(value)
     }
@@ -309,6 +313,11 @@ const ReservationNewScreen: FC = (): JSX.Element => {
 
   const VisitsPerDay = () => {
     const [inputVisits, setInputVisits] = useState(state.visits.toString())
+
+    useEffect(() => {
+      setInputVisits(state.visits.toString())
+    }, [state.visits])
+
     const handleChangeText = (text: string) => {
       if (/^\d*$/.test(text)) {
         setInputVisits(text)

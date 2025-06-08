@@ -3,10 +3,6 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  FlatList,
-  Modal,
-  TouchableWithoutFeedback,
-  Platform,
   ScrollView,
 } from 'react-native'
 import React, { useCallback, useRef, useState, useEffect } from 'react'
@@ -21,7 +17,7 @@ type DropdownOptionItem = {
 
 interface DropDownProps {
   data: DropdownOptionItem[]
-  onChange: (item: DropdownOptionItem | DropdownOptionItem[]) => void
+  onFinishSelection: (item: DropdownOptionItem | DropdownOptionItem[]) => void
   placeholder: string
   initialValue?: DropdownOptionItem | DropdownOptionItem[]
   allowsMultiSelection?: boolean
@@ -32,13 +28,12 @@ const buttonMarginTop = 5
 
 export default function Dropdown({
   data,
-  onChange,
+  onFinishSelection,
   placeholder,
   initialValue,
   allowsMultiSelection = false,
 }: DropDownProps) {
   const [expanded, setExpanded] = useState(false)
-  const toggleExpanded = useCallback(() => setExpanded(!expanded), [expanded])
   const [selectedItems, setSelectedItems] = useState<DropdownOptionItem[]>(
     Array.isArray(initialValue)
       ? initialValue
@@ -49,6 +44,14 @@ export default function Dropdown({
   const buttonRef = useRef<View>(null)
   const [buttonWidth, setButtonWidth] = useState(0)
 
+  const toggleExpanded = useCallback(() => {
+    const newExpanded = !expanded
+    if (!newExpanded && allowsMultiSelection) {
+      onFinishSelection(selectedItems)
+    }
+    setExpanded(newExpanded)
+  }, [expanded, allowsMultiSelection, onFinishSelection, selectedItems])
+
   useEffect(() => {
     if (initialValue) {
       setSelectedItems(
@@ -57,7 +60,7 @@ export default function Dropdown({
     }
   }, [initialValue])
 
-  const onSelect = useCallback(
+  const onSelectItem = useCallback(
     (item: DropdownOptionItem) => {
       if (allowsMultiSelection) {
         const isSelected = selectedItems.some(
@@ -67,14 +70,13 @@ export default function Dropdown({
           ? selectedItems.filter((selected) => selected.value !== item.value)
           : [...selectedItems, item]
         setSelectedItems(newSelectedItems)
-        onChange(newSelectedItems)
       } else {
         setSelectedItems([item])
-        onChange(item)
         setExpanded(false)
+        onFinishSelection(item)
       }
     },
-    [allowsMultiSelection, selectedItems, onChange]
+    [allowsMultiSelection, selectedItems, onFinishSelection]
   )
 
   const getDisplayValue = useCallback(() => {
@@ -124,7 +126,7 @@ export default function Dropdown({
                 key={item.value}
                 activeOpacity={0.8}
                 style={styles.optionItem}
-                onPress={() => onSelect(item)}
+                onPress={() => onSelectItem(item)}
               >
                 {allowsMultiSelection && (
                   <View style={styles.checkbox}>

@@ -108,12 +108,13 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: 'white',
     borderRadius: 10,
+    borderColor: Color.black[10],
+    borderWidth: 1,
     overflow: 'hidden',
   },
   textContainer: {
     flex: 1,
   },
-
   icon: {
     width: 32,
     aspectRatio: 1,
@@ -126,7 +127,9 @@ const styles = StyleSheet.create({
   },
 })
 
-const GenericToast: React.FC = () => {
+const GenericToast: React.FC<{ overrideOffset?: number }> = ({
+  overrideOffset,
+}) => {
   return (
     <Toast
       config={{
@@ -140,7 +143,7 @@ const GenericToast: React.FC = () => {
           />
         ),
       }}
-      topOffset={Platform.OS === 'ios' ? 60 : 40}
+      topOffset={overrideOffset ?? (Platform.OS === 'ios' ? 60 : 40)}
     />
   )
 }

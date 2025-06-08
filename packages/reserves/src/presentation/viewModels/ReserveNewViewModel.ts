@@ -39,8 +39,22 @@ const initialState: ReserveNewState = {
 const useReserveNewViewModel = (): ReserveNewViewModel => {
   const [state, setState] = useState<ReserveNewState>(initialState)
 
+  const validateData: () => boolean = () => {
+    return false
+  }
+
   const createReserve = async (): Promise<void> => {
-    console.log('createReserve')
+    if (!validateData()) {
+      setState((previous: ReserveNewState) => ({
+        ...previous,
+        error: 'Por favor, verificá los datos ingresados',
+      }))
+      return
+    }
+    setState((previous: ReserveNewState) => ({
+      ...previous,
+      loading: true,
+    }))
   }
 
   const setStartDate = (date: Date) => {

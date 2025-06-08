@@ -1,6 +1,7 @@
 import {
   Button,
   Color,
+  GenericToast,
   LabelStyle,
   Loader,
   PPBottomSheet,
@@ -44,13 +45,6 @@ const ReservationNewScreen: FC = (): JSX.Element => {
   )
   const { t } = useI18n()
 
-  const [open, setOpen] = useState(false)
-  const [items, setItems] = useState([
-    { label: '1', value: 1 },
-    { label: '2', value: 2 },
-    { label: '3', value: 3 },
-  ])
-
   const showAlert = (
     title: string,
     subtitle: string,
@@ -64,15 +58,11 @@ const ReservationNewScreen: FC = (): JSX.Element => {
 
   useEffect(() => {
     if (state.error) {
-      if (state.error === 'MANAGE_ME') {
-        showAlert(t('general.ups'), t('forgotPasswordScreen.error.message'))
-      } else {
-        ShowToast({
-          config: 'error',
-          title: t('general.ups'),
-          subtitle: state.error,
-        })
-      }
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: state.error,
+      })
     }
   }, [state.error])
 
@@ -314,15 +304,15 @@ const ReservationNewScreen: FC = (): JSX.Element => {
         <Button.Primary
           title={t('reserveNewScreen.button')}
           onPress={createReserve}
-        ></Button.Primary>
+        />
       </View>
-
       <PPBottomSheet.Dialog
         ref={bottomSheetModalRef}
         title={alertTitle}
         subtitle={alertSubtitle}
         lottieFile={alertAnimation}
       />
+      <GenericToast overrideOffset={5} />
     </SafeAreaView>
   )
 }

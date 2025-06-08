@@ -35,7 +35,7 @@ const ReservesStack: FC = (): JSX.Element => {
         component={ReservationDetailScreen}
         options={({ navigation }) => ({
           headerTitle: t('reserveDetailScreen.title'),
-          presentation: 'modal',
+          presentation: 'fullScreenModal',
           headerRight: () => (
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <MaterialIcons name="close" size={24} color="white" />
@@ -61,4 +61,4 @@ const ReservesStack: FC = (): JSX.Element => {
   )
 }
 
-export { ReservesStack }
+export { ReservesStack, ReservesStackParamList }

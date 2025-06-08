@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { StyleSheet, View } from 'react-native'
 import { GenericToast, ResolverProvider } from '@app/common'
@@ -6,8 +6,43 @@ import { Router } from './presentation/screens/Router'
 import { store } from './domain/store/Store'
 import { Provider } from 'react-redux'
 import { resolver } from './domain/di/Register'
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
+import { useFonts } from 'expo-font'
+import * as SplashScreen from 'expo-splash-screen'
+
+const AppContent = (): JSX.Element => {
+  const [loaded, error] = useFonts({
+    'SourGummy-Black': require('app/assets/fonts/SourGummy-Black.ttf'),
+    'SourGummy-Bold': require('app/assets/fonts/SourGummy-Bold.ttf'),
+    'SourGummy-ExtraBold': require('app/assets/fonts/SourGummy-ExtraBold.ttf'),
+    'SourGummy-ExtraLight': require('app/assets/fonts/SourGummy-ExtraLight.ttf'),
+    'SourGummy-Light': require('app/assets/fonts/SourGummy-Light.ttf'),
+    'SourGummy-Medium': require('app/assets/fonts/SourGummy-Medium.ttf'),
+    'SourGummy-Regular': require('app/assets/fonts/SourGummy-Regular.ttf'),
+    'SourGummy-SemiBold': require('app/assets/fonts/SourGummy-SemiBold.ttf'),
+    'SourGummy-Thin': require('app/assets/fonts/SourGummy-Thin.ttf'),
+  })
+
+  const hideSplashScreen = useCallback(async () => {
+    if (loaded && !error) {
+      await SplashScreen.hideAsync()
+    }
+  }, [loaded, error])
+
+  useEffect(() => {
+    hideSplashScreen()
+  }, [hideSplashScreen])
+
+  if (!loaded && !error) {
+    return null
+  }
+
+  return (
+    <View style={styles.container}>
+      <StatusBar style="light" />
+      <Router />
+    </View>
+  )
+}
 
 const App = (): JSX.Element => {
   const [loaded, error] = useFonts({
@@ -20,29 +55,27 @@ const App = (): JSX.Element => {
     'SourGummy-Regular': require('app/assets/fonts/SourGummy-Regular.ttf'),
     'SourGummy-SemiBold': require('app/assets/fonts/SourGummy-SemiBold.ttf'),
     'SourGummy-Thin': require('app/assets/fonts/SourGummy-Thin.ttf'),
-  });
+  })
 
   useEffect(() => {
     if (loaded || error) {
-      SplashScreen.hideAsync();
+      SplashScreen.hideAsync()
     }
-  }, [loaded, error]);
+  }, [loaded, error])
 
   if (!loaded && !error) {
-    return null;
+    return null
   }
 
-
   return (
-    <View style={styles.container}>
-      <StatusBar style="light" />
-      <ResolverProvider resolver={resolver}>
-        <Provider store={store}>
-          <Router />
-        </Provider>
-      </ResolverProvider>
+    <>
+      <Provider store={store}>
+        <ResolverProvider resolver={resolver}>
+          <AppContent />
+        </ResolverProvider>
+      </Provider>
       <GenericToast />
-    </View>
+    </>
   )
 }
 

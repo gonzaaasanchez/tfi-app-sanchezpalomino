@@ -8,6 +8,8 @@ import {
   PPMaterialIcon,
   ShowToast,
   useI18n,
+  Dropdown,
+  PetModel,
 } from '@packages/common'
 import React, { FC, useEffect, useRef, useState } from 'react'
 import {
@@ -35,6 +37,7 @@ const ReservationNewScreen: FC = (): JSX.Element => {
     setMaxDistance,
     setMaxPrice,
     setVisitsPerDay,
+    setSelectedPets,
     createReserve,
   } = useReserveNewViewModel()
   const bottomSheetModalRef = useRef(null)
@@ -127,6 +130,54 @@ const ReservationNewScreen: FC = (): JSX.Element => {
             </TouchableOpacity>
           ))}
         </View>
+      </View>
+    )
+  }
+
+  const PetSelection = () => {
+    // TODO: Replace with actual pets from API
+    const mockPets: PetModel[] = [
+      {
+        id: '1',
+        name: 'Firulais',
+        photoUrl: 'https://example.com/firulais.jpg',
+        type: { id: '1', name: 'Perro' },
+      },
+      {
+        id: '2',
+        name: 'Mishu',
+        photoUrl: 'https://example.com/mishu.jpg',
+        type: { id: '2', name: 'Gato' },
+      },
+    ]
+
+    const handlePetChange = (item: { value: string; label: string }) => {
+      const selectedPet = mockPets.find((pet) => pet.id === item.value)
+      if (selectedPet) {
+        setSelectedPets([selectedPet])
+      }
+    }
+
+    return (
+      <View>
+        <Text style={styles.sectionTitle}>{t('reserveNewScreen.pets')}</Text>
+        <Dropdown
+          allowsMultiSelection
+          data={mockPets.map((pet) => ({
+            value: pet.id,
+            label: pet.name,
+          }))}
+          onChange={handlePetChange}
+          placeholder={t('reserveNewScreen.selectPets')}
+          initialValue={
+            state.selectedPets[0]
+              ? {
+                  value: state.selectedPets[0].id,
+                  label: state.selectedPets[0].name,
+                }
+              : undefined
+          }
+        />
       </View>
     )
   }
@@ -295,6 +346,7 @@ const ReservationNewScreen: FC = (): JSX.Element => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <DateSelection />
         <PlaceSelection />
+        <PetSelection />
         <RateSelection />
         <VisitsPerDay />
         <DistanceSelection />
@@ -333,9 +385,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     marginTop: 5,
+    height: 48,
   },
   radioGroup: {
-    // flexDirection: 'row',
     justifyContent: 'space-between',
     gap: 8,
     marginTop: 5,

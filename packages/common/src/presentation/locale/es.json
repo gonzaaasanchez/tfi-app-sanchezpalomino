@@ -107,6 +107,8 @@
       "place": "Lugar de cuidado",
       "placeHome": "Mi domicilio",
       "placeVisit": "Domicilio del Cuidador",
+      "pets": "Mascotas a cuidar",
+      "selectPets": "Seleccionar mascotas",
       "rateFrom": "Evaluaciones desde",
       "visitsPerDay": "Cantidad de visitas por día",
       "distance": "Distancia máxima",

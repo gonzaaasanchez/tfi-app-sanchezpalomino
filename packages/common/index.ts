@@ -41,6 +41,7 @@ import {
   PPMaterialIconsName,
   PPMaterialIcon,
 } from './src/components/PPMaterialIcon'
+import Dropdown from './src/components/Dropdown'
 
 export {
   Resolver,
@@ -82,4 +83,5 @@ export {
   ShowToast,
   PPMaterialIconsName,
   PPMaterialIcon,
+  Dropdown
 }

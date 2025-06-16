@@ -44,6 +44,8 @@ import {
 import Dropdown from './src/components/Dropdown'
 import { FormField } from './src/components/FormField'
 import { createUserSchema, UserFormData } from './src/data/schemas/userSchema'
+import { PetDetail } from './src/components/PetDetail'
+import { DetailItem } from './src/components/DetailItem'
 
 export {
   Resolver,
@@ -89,4 +91,6 @@ export {
   FormField,
   createUserSchema,
   UserFormData,
+  PetDetail,
+  DetailItem,
 }

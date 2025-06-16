@@ -8,6 +8,8 @@ import {
   PPBottomSheet,
   useBottomSheetModalRef,
   GeneralStyle,
+  PetDetail,
+  DetailItem
 } from '@packages/common'
 import { FC, useEffect, useState } from 'react'
 import { View, Text, Image, StyleSheet } from 'react-native'
@@ -16,8 +18,6 @@ import {
   ReservationModel,
 } from '../../../data/models/ReservationModel'
 import { RouteProp, useRoute } from '@react-navigation/native'
-import { DetailItem } from './DetailItem'
-import { PetDetail } from './PetDetail'
 import { useReserveDetailViewModel } from '../../viewModels/ReserveDetailViewModel'
 import {
   CarerReservationActions,

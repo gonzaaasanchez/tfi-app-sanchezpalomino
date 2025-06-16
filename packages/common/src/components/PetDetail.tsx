@@ -1,7 +1,10 @@
-import { Color, LabelStyle, PetModel, useI18n } from '@packages/common'
 import { View, Image, Text, StyleSheet } from 'react-native'
-import { DetailItem } from './DetailItem'
 import { FC } from 'react'
+import { useI18n } from '../domain/hooks/i18n'
+import { PetModel } from '../data/models/PetModel'
+import { DetailItem } from './DetailItem'
+import { LabelStyle } from '../style/Styles'
+import { Color } from '../style/Color'
 
 type PetDetailSheetProps = {
   pet: PetModel

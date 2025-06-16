@@ -1,7 +1,9 @@
-import { Color, LabelStyle, PPMaterialIcon, PPMaterialIconsName } from '@packages/common'
-import { TouchableOpacity, View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { PPMaterialIcon, PPMaterialIconsName } from './PPMaterialIcon'
+import { LabelStyle } from '../style/Styles'
+import { Color } from '../style/Color'
 
-const DetailItem: React.FC<{
+export const DetailItem: React.FC<{
   icon: PPMaterialIconsName
   iconSize?: number
   iconTopPadding?: number
@@ -66,5 +68,3 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
 })
-
-export { DetailItem }

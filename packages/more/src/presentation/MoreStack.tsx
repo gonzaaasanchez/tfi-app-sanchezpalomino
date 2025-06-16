@@ -4,38 +4,41 @@ import { MoreScreen } from './screens/MoreScreen'
 import { useMoreViewModel } from './viewModels/MoreViewModel'
 import MaterialIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { ProfileScreen } from './screens/ProfileScreen'
-import { GeneralStyle } from '@packages/common'
+import { GeneralStyle, useI18n } from '@packages/common'
 import { useNavigation } from '@react-navigation/native'
+import { TouchableOpacity } from 'react-native'
 
 const Stack = createNativeStackNavigator()
 
 const MoreStack: FC = (): JSX.Element => {
   const { logout } = useMoreViewModel()
   const navigation = useNavigation()
+  const { t } = useI18n()
+
   return (
     <Stack.Navigator
       id={navigation.getParent()}
-      screenOptions={GeneralStyle.header}
+      screenOptions={{
+        presentation: 'fullScreenModal',
+        ...GeneralStyle.header,
+      }}
     >
       <Stack.Screen
         name="moreStack"
         component={MoreScreen}
-        options={{ headerTitle: 'More' }}
+        options={{ headerTitle: t('moreScreen.title') }}
       />
       <Stack.Screen
         name="profile"
         component={ProfileScreen}
-        options={{
-          headerTitle: 'Profile',
+        options={({ navigation }) => ({
+          headerTitle: t('moreScreen.menu.profile'),
           headerRight: () => (
-            <MaterialIcons
-              name="logout-variant"
-              color="black"
-              size={24}
-              onPress={logout}
-            />
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <MaterialIcons name="close" size={24} color="white" />
+            </TouchableOpacity>
           ),
-        }}
+        })}
       />
     </Stack.Navigator>
   )

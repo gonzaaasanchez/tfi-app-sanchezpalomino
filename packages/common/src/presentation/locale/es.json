@@ -56,7 +56,7 @@
       "feed": "Feed",
       "reserves": "Reservas",
       "services": "Servicios",
-      "more": "Más"
+      "more": "Menú"
     },
     "feedScreen": {
       "title": "Feed Screen"
@@ -157,6 +157,14 @@
       "success": {
         "title": "¡Felicidades!",
         "message": "Enviaste el pedido de reserva. Recibirás una notificación cuando el cuidador acepte o rechace la reserva."
+      }
+    },
+    "moreScreen": {
+      "title": "Menú",
+      "menu": {
+        "profile": "Mi Perfil",
+        "pets": "Mis Mascotas",
+        "addresses": "Mis Domicilios"
       }
     }
   }

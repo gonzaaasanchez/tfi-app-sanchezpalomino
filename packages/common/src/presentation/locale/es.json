@@ -164,7 +164,29 @@
       "menu": {
         "profile": "Mi Perfil",
         "pets": "Mis Mascotas",
-        "addresses": "Mis Domicilios"
+        "addresses": "Mis Domicilios",
+        "logout": "Cerrar Sesión"
+      },
+      "logoutModal": {
+        "title": "Cerrar sesión",
+        "subtitle": "¿Estás seguro de querer cerrar continuar? Se cerrará la sesión actual y se te redirigirá a la pantalla de inicio de sesión.",
+        "primaryAction": "Cerrar sesión",
+        "secondaryAction": "Cancelar"
+      }
+    },
+    "profileScreen": {
+      "editPhoto": "Editar foto",
+      "firstName": "Nombre",
+      "firstNamePlaceholder": "Ingresá tu nombre",
+      "lastName": "Apellido",
+      "lastNamePlaceholder": "Ingresá tu apellido",
+      "phone": "Teléfono",
+      "phonePlaceholder": "Ingresá tu teléfono",
+      "saveChanges": "Guardar mis datos",
+      "errors": {
+        "firstNameRequired": "El nombre es requerido",
+        "lastNameRequired": "El apellido es requerido",
+        "phoneRequired": "El teléfono debe tener al menos 10 dígitos"
       }
     }
   }

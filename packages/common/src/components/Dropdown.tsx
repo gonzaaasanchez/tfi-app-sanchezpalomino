@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   button: {
     height: buttonHeight,
     justifyContent: 'space-between',
-    backgroundColor: Color.mainBackground,
+    backgroundColor: 'white',
     flexDirection: 'row',
     width: '100%',
     alignItems: 'center',

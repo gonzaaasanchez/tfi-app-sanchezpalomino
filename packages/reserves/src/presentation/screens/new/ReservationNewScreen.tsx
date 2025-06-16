@@ -369,7 +369,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   fieldContainer: {
-    backgroundColor: Color.mainBackground,
+    backgroundColor: 'white',
     borderRadius: 8,
     borderWidth: 1,
     borderColor: Color.brand1[500],

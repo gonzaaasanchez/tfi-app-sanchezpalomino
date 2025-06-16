@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: 'white',
     borderRadius: 10,
-    borderColor: Color.black[10],
+    borderColor: Color.black[200],
     borderWidth: 1,
     overflow: 'hidden',
   },

@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import {
   StyleSheet,
@@ -14,9 +14,15 @@ import {
   PPMaterialIcon,
   Loader,
   GeneralStyle,
+  PPBottomSheet,
+  PPBottomSheetContainer,
+  useBottomSheetModalRef,
+  Button,
 } from '@packages/common'
 import { useI18n } from '@packages/common/src/domain/hooks/i18n'
 import { useReservationResultsViewModel } from '../../viewModels/ReservationResultsViewModel'
+import { useNavigation } from '@react-navigation/native'
+import { SortField, SortOrder } from '../../../data/models/SearchCriteria'
 
 const ResultCard: FC<{ result: any }> = ({ result }) => {
   const { t } = useI18n()
@@ -94,32 +100,159 @@ const ResultCard: FC<{ result: any }> = ({ result }) => {
 }
 
 const ReservationResultsScreen: FC = () => {
-  const { state, searchResults } = useReservationResultsViewModel()
+  const { state, setSortAndOrder } = useReservationResultsViewModel()
+  const [sortField, setSortField] = useState<SortField>(
+    state.searchCriteria?.sortBy?.field || SortField.REVIEWS
+  )
+  const [sortOrder, setSortOrder] = useState<SortOrder>(
+    state.searchCriteria?.sortBy?.order || SortOrder.DESC
+  )
+  const { t } = useI18n()
+  const navigation = useNavigation()
+  const bottomSheetRef = useBottomSheetModalRef()
 
   useEffect(() => {
-    searchResults()
-  }, [])
+    if (state.searchCriteria) {
+      setSortField(state.searchCriteria.sortBy.field)
+      setSortOrder(state.searchCriteria.sortBy.order)
+    }
+  }, [state.searchCriteria])
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={() => bottomSheetRef.current?.present()}>
+          <PPMaterialIcon icon="sort" size={24} color={'white'} />
+        </TouchableOpacity>
+      ),
+    })
+  }, [navigation])
+
+  const confirmSortAndOrder = () => {
+    setSortAndOrder(sortField, sortOrder)
+    bottomSheetRef.current?.dismiss()
+  }
+
+  const BottomSheetContent = () => {
+    const handleSortOptionPress = (field: SortField) => {
+      setSortField(field)
+    }
+
+    const handleSortOrderPress = (field: SortOrder) => {
+      setSortOrder(field)
+    }
+
+    const RadioButton = ({
+      isSelected,
+      onPress,
+    }: {
+      isSelected: boolean
+      onPress: () => void
+    }) => {
+      return (
+        <TouchableOpacity onPress={onPress}>
+          <PPMaterialIcon
+            icon={
+              isSelected ? 'radio-button-checked' : 'radio-button-unchecked'
+            }
+            size={24}
+            color={isSelected ? Color.brand1[600] : Color.black[400]}
+          />
+        </TouchableOpacity>
+      )
+    }
+
+    const SectionOptionsList = <T extends SortField | SortOrder>({
+      title,
+      options,
+      selectedValue,
+      onSelect,
+    }: {
+      title: string
+      options: readonly { readonly field: T; readonly label: string }[]
+      selectedValue: T
+      onSelect: (value: T) => void
+    }) => {
+      return (
+        <>
+          <Text style={styles.bottomSheetTitle}>{title}</Text>
+          {options.map((option, index) => (
+            <View key={option.field}>
+              <TouchableOpacity
+                activeOpacity={0.85}
+                style={styles.sortOption}
+                onPress={() => onSelect(option.field)}
+              >
+                <Text style={LabelStyle.body({ color: Color.black[700] })}>
+                  {t(option.label)}
+                </Text>
+                <RadioButton
+                  isSelected={selectedValue === option.field}
+                  onPress={() => onSelect(option.field)}
+                />
+              </TouchableOpacity>
+              {index < options.length - 1 && <View style={styles.separator} />}
+            </View>
+          ))}
+        </>
+      )
+    }
+
+    return (
+      <View>
+        <SectionOptionsList
+          title={t('reserveResultsScreen.sort.title')}
+          options={state.sortOptions}
+          selectedValue={sortField}
+          onSelect={handleSortOptionPress}
+        />
+        <View style={styles.sectionSeparator} />
+        <SectionOptionsList
+          title={t('reserveResultsScreen.sort.criteria')}
+          options={state.sortOrderOptions}
+          selectedValue={sortOrder}
+          onSelect={handleSortOrderPress}
+        />
+        <Button.Primary
+          style={{ marginTop: 16 }}
+          title={t('reserveResultsScreen.sort.confirm')}
+          onPress={confirmSortAndOrder}
+        />
+      </View>
+    )
+  }
 
   return (
-    <SafeAreaView style={styles.container} edges={['bottom']}>
-      {state.loading && (
-        <Loader loading={state.loading} opacity={0.85} animal="dog" />
-      )}
-      <ScrollView style={styles.content}>
-        {state.results.map((result) => (
-          <ResultCard key={result.user.id} result={result} />
-        ))}
-      </ScrollView>
-      {state.loading && (
-        <Loader loading={state.loading} opacity={0.85} animal="dog" />
-      )}
-    </SafeAreaView>
+    <PPBottomSheetContainer>
+      <SafeAreaView style={styles.container} edges={['bottom']}>
+        {state.loading && (
+          <Loader loading={state.loading} opacity={0.85} animal="dog" />
+        )}
+        <ScrollView style={styles.content}>
+          {state.results.map((result) => (
+            <ResultCard key={result.user.id} result={result} />
+          ))}
+        </ScrollView>
+        {state.loading && (
+          <Loader loading={state.loading} opacity={0.85} animal="dog" />
+        )}
+      </SafeAreaView>
+      <PPBottomSheet.Empty ref={bottomSheetRef} dismisseable={true}>
+        <BottomSheetContent />
+      </PPBottomSheet.Empty>
+    </PPBottomSheetContainer>
   )
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Color.mainBackground },
-  content: { flex: 1, padding: 20 },
+  container: {
+    flex: 1,
+    backgroundColor: Color.mainBackground,
+  },
+  content: {
+    flex: 1,
+    padding: 20,
+  },
   cardContainer: {
     ...GeneralStyle.card,
     flexDirection: 'row',
@@ -174,6 +307,22 @@ const styles = StyleSheet.create({
   totalPrice: {
     color: Color.brand1[600],
     fontWeight: '600',
+  },
+  bottomSheetTitle: {
+    ...LabelStyle.title2({ color: Color.black[700] }),
+    marginBottom: 5,
+  },
+  sortOption: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 16,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: Color.black[100],
+  },
+  sectionSeparator: {
+    height: 16,
   },
 })
 

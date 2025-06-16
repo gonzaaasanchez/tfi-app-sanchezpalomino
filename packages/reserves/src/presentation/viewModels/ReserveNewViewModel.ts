@@ -2,12 +2,16 @@ import { UIState, PetModel } from '@packages/common'
 import { useState } from 'react'
 import { PlaceType } from '../../data/models/ReservationModel'
 import { StackActions, useNavigation } from '@react-navigation/native'
-import { SearchCriteria } from '../../data/models/SearchCriteria'
+import {
+  SearchCriteria,
+  SortField,
+  SortOrder,
+} from '../../data/models/SearchCriteria'
 
 type ReserveNewViewModel = {
   state: ReserveNewState
-  setStartDate: (date: Date) => void
-  setEndDate: (date: Date) => void
+  setFromDate: (date: Date) => void
+  setToDate: (date: Date) => void
   setPlaceType: (placeType: PlaceType) => void
   setReviewsFrom: (reviewsFrom: number) => void
   setMaxDistance: (maxDistance: number) => void
@@ -30,6 +34,10 @@ const initialSearchCriteria: SearchCriteria = {
   maxPrice: 50000,
   visits: 1,
   selectedPets: [],
+  sortBy: {
+    field: SortField.TOTAL_PRICE,
+    order: SortOrder.ASC,
+  },
 }
 
 const initialState: ReserveNewState = {
@@ -75,22 +83,28 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
       return
     }
 
+    const searchCriteriaWithStringDates = {
+      ...state.searchCriteria,
+      fromDate: state.searchCriteria.fromDate.toISOString(),
+      toDate: state.searchCriteria.toDate.toISOString(),
+    }
+
     navigation.dispatch(
       StackActions.push('reservationResults', {
-        searchCriteria: state.searchCriteria
+        searchCriteria: searchCriteriaWithStringDates,
       })
     )
   }
 
-  const setStartDate = (date: Date) => {
-    setState((previous: ReserveNewState) => ({
+  const setFromDate = (date: Date): void => {
+    setState((previous) => ({
       ...previous,
       searchCriteria: { ...previous.searchCriteria, fromDate: date },
     }))
   }
 
-  const setEndDate = (date: Date) => {
-    setState((previous: ReserveNewState) => ({
+  const setToDate = (date: Date): void => {
+    setState((previous) => ({
       ...previous,
       searchCriteria: { ...previous.searchCriteria, toDate: date },
     }))
@@ -140,8 +154,8 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
 
   return {
     state,
-    setStartDate,
-    setEndDate,
+    setFromDate,
+    setToDate,
     setPlaceType,
     setReviewsFrom,
     setMaxDistance,

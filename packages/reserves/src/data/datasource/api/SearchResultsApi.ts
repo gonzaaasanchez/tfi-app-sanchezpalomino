@@ -1,7 +1,7 @@
 import { HttpClient } from '@packages/common'
 import { SearchResultModel } from '../../models/SearchResultModel'
 import { UserModel } from '@packages/common'
-import { SearchCriteria } from '../../models/SearchCriteria'
+import { SearchCriteria, SortField, SortOrder } from '../../models/SearchCriteria'
 
 export interface SearchResultsApi {
   getSearchResults(searchCriteria: SearchCriteria): Promise<SearchResultModel[]>
@@ -12,7 +12,11 @@ export class SearchResultsApiImpl implements SearchResultsApi {
 
   async getSearchResults(searchCriteria: SearchCriteria): Promise<SearchResultModel[]> {
     // TODO: Implement real API call
-    // const response = await this.httpClient.post('/search', searchCriteria)
+    // const response = await this.httpClient.post('/search', {
+    //   ...searchCriteria,
+    //   fromDate: new Date(searchCriteria.fromDate),
+    //   toDate: new Date(searchCriteria.toDate)
+    // })
     // return response.data
 
     // Mock data for testing
@@ -76,8 +80,25 @@ export class SearchResultsApiImpl implements SearchResultsApi {
       }
     ]
 
+    // Sort the results based on the criteria
+    const sortedResults = [...mockData].sort((a, b) => {
+      const { field, order } = searchCriteria.sortBy
+      const multiplier = order === SortOrder.ASC ? 1 : -1
+
+      switch (field) {
+        case SortField.DISTANCE:
+          return (a.distance - b.distance) * multiplier
+        case SortField.REVIEWS:
+          return (a.rate.value - b.rate.value) * multiplier
+        case SortField.TOTAL_PRICE:
+          return (a.price.total - b.price.total) * multiplier
+        default:
+          return 0
+      }
+    })
+
     // Add 1 second delay
     await new Promise(resolve => setTimeout(resolve, 1000))
-    return mockData
+    return sortedResults
   }
 } 

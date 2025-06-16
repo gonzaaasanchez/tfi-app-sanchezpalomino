@@ -128,7 +128,17 @@
         "commission": "Comisión",
         "total": "Total"
       },
-      "reviews": "reviews"
+      "reviews": "reviews",
+      "sort": {
+        "title": "Ordenar por",
+        "criteria": "Criterio",
+        "totalPrice": "Precio total",
+        "distance": "Distancia",
+        "reviews": "Evaluaciones",
+        "asc": "Menor a mayor",
+        "desc": "Mayor a menor",
+        "confirm": "Confirmar"
+      }
     }
   }
 }

@@ -11,6 +11,7 @@ import { SearchResultsApi, SearchResultsApiImpl } from '../../data/datasource/ap
 import SearchResultsRepository from '../repository/SearchResultsRepository'
 import { SearchResultsRepositoryImpl } from '../../data/repository/SearchResultsRepository'
 import { SearchResultsUseCase } from '../usecases/SearchResultsUseCase'
+import { SendReservationRequestUseCase } from '../usecases/SendReservationRequestUseCase'
 
 const ReservesRegister = (resolver: Resolver): void => {
   resolver.registerSingleton<ReservesApi>(
@@ -36,6 +37,10 @@ const ReservesRegister = (resolver: Resolver): void => {
   resolver.registerFactory<SearchResultsUseCase>(
     $.SearchResultsUseCase,
     () => new SearchResultsUseCase(resolver.resolve($.SearchResultsRepository))
+  )
+  resolver.registerFactory<SendReservationRequestUseCase>(
+    $.SendReservationRequestUseCase,
+    () => new SendReservationRequestUseCase(resolver.resolve($.ReservesRepository))
   )
 }
 

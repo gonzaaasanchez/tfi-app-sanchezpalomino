@@ -1,12 +1,11 @@
 import {
   Color,
   Loader,
-  PPBottomSheet,
   ShowToast,
   PPMaterialIcon,
   useI18n,
 } from '@packages/common'
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
+import React, { FC, useCallback, useEffect, useState } from 'react'
 import {
   RefreshControl,
   ScrollView,
@@ -19,7 +18,6 @@ import ReservationsHeader from '../components/ReservationsHeader'
 import { useReservesViewModel } from '../viewModels/ReservesViewModel'
 import { EmptyView } from '@packages/common/src/components/EmptyView'
 import ReservationCard from '../components/ReservationCard'
-import { AnimationObject } from 'lottie-react-native'
 import { StackActions, useNavigation } from '@react-navigation/native'
 import { HomeTabsHeight } from '@packages/home/src/presentation/screens/HomeTabs'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -29,32 +27,14 @@ const ReservesScreen: FC = (): JSX.Element => {
     useReservesViewModel()
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
-  const bottomSheetModalRef = useRef(null)
-  const [alertTitle, setAlertTitle] = useState('')
-  const [alertSubtitle, setAlertSubtitle] = useState('')
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [availableHeight, setAvailableHeight] = useState<number>(0)
-  const [alertAnimation, setAlertAnimation] = useState(null)
 
   const { t } = useI18n()
 
-  const showAlert = (
-    title: string,
-    subtitle: string,
-    animation?: AnimationObject | null
-  ) => {
-    setAlertTitle(title)
-    setAlertSubtitle(subtitle)
-    setAlertAnimation(animation)
-    bottomSheetModalRef.current?.present()
-  }
-
   useEffect(() => {
     setIsRefreshing(false)
-    if (state.error === 'MANAGE_ME') {
-      showAlert(t('general.ups'), t('forgotPasswordScreen.error.message'))
-      return
-    } else if (state.error !== null) {
+    if (state.error) {
       ShowToast({
         config: 'error',
         title: t('general.ups'),
@@ -143,13 +123,6 @@ const ReservesScreen: FC = (): JSX.Element => {
           <PPMaterialIcon icon="add" size={30} color={'white'} />
         </TouchableOpacity>
       )}
-
-      <PPBottomSheet.Dialog
-        ref={bottomSheetModalRef}
-        title={alertTitle}
-        subtitle={alertSubtitle}
-        lottieFile={alertAnimation}
-      />
     </View>
   )
 }

@@ -148,11 +148,15 @@
         "caregiverFee": "Honorarios cuidador:",
         "commission": "Comisión:",
         "total": "TOTAL:",
-        "confirm": "Confirmar",
+        "confirm": "Enviar pedido de reserva",
         "back": "Volver",
         "ownerHome": "Tu domicilio",
         "carerHome": "Domicilio del cuidador",
         "carer": "Cuidador:"
+      },
+      "success": {
+        "title": "¡Felicidades!",
+        "message": "Enviaste el pedido de reserva. Recibirás una notificación cuando el cuidador acepte o rechace la reserva."
       }
     }
   }

@@ -1,33 +1,27 @@
 import React, { FC, useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import {
-  StyleSheet,
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native'
+import { StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import {
   Color,
-  LabelStyle,
   Loader,
   PPBottomSheet,
   PPBottomSheetContainer,
   useBottomSheetModalRef,
   useI18n,
-  Button,
   PPMaterialIcon,
+  ShowToast,
 } from '@packages/common'
 import { useReservationResultsViewModel } from '../../viewModels/ReservationResultsViewModel'
 import { useNavigation } from '@react-navigation/native'
 import { SortField, SortOrder } from '../../../data/models/SearchCriteria'
-import { PlaceType } from '../../../data/models/ReservationModel'
 import { SearchResultCard } from './components/SearchResultCard'
 import { FilterSheetContent } from './components/FilterSheetContent'
 import { ConfirmationSheetContent } from './components/ConfirmationSheetContent'
+import catSuccess from '@app/assets/lottie-json/success-cat.json'
+import { CommonActions } from '@react-navigation/native'
 
 const ReservationResultsScreen: FC = () => {
-  const { state, setSortAndOrder, setUserToRequest } =
+  const { state, setSortAndOrder, setUserToRequest, sendReservationRequest } =
     useReservationResultsViewModel()
   const [sortField, setSortField] = useState<SortField>(
     state.searchCriteria?.sortBy?.field || SortField.REVIEWS
@@ -39,6 +33,7 @@ const ReservationResultsScreen: FC = () => {
   const navigation = useNavigation()
   const filterBottomSheetRef = useBottomSheetModalRef()
   const confirmationBottomSheetRef = useBottomSheetModalRef()
+  const sucessBottomSheetRef = useBottomSheetModalRef()
 
   useEffect(() => {
     if (state.searchCriteria) {
@@ -54,6 +49,12 @@ const ReservationResultsScreen: FC = () => {
   }, [state.userToRequest])
 
   useEffect(() => {
+    if (state.requestSent) {
+      sucessBottomSheetRef.current?.present()
+    }
+  }, [state.requestSent])
+
+  useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity onPress={filterBottomSheetRef.current?.present}>
@@ -62,6 +63,16 @@ const ReservationResultsScreen: FC = () => {
       ),
     })
   }, [navigation])
+
+  useEffect(() => {
+    if (state.error !== null) {
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: state.error,
+      })
+    }
+  }, [state.error])
 
   const confirmSortAndOrder = () => {
     setSortAndOrder(sortField, sortOrder)
@@ -103,7 +114,9 @@ const ReservationResultsScreen: FC = () => {
           userToRequest={state.userToRequest}
           searchCriteria={state.searchCriteria}
           onConfirm={() => {
-            console.log('onConfirm')
+            confirmationBottomSheetRef.current?.dismiss()
+            setUserToRequest(null)
+            sendReservationRequest()
           }}
           onBack={() => {
             confirmationBottomSheetRef.current?.dismiss()
@@ -111,6 +124,13 @@ const ReservationResultsScreen: FC = () => {
           }}
         />
       </PPBottomSheet.Empty>
+      <PPBottomSheet.Dialog
+        ref={sucessBottomSheetRef}
+        title={t('reserveResultsScreen.success.title')}
+        subtitle={t('reserveResultsScreen.success.message')}
+        lottieFile={catSuccess}
+        onPrimaryAction={() => navigation.getParent()?.goBack()}
+      />
     </PPBottomSheetContainer>
   )
 }

@@ -6,6 +6,7 @@ interface ReservesRepository {
     type: ReserveType,
     status: ReserveStatus
   ): Promise<ReservationModel[]>
+  sendReservationRequest(): Promise<void>
 }
 
 export default ReservesRepository

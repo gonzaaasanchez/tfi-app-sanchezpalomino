@@ -33,11 +33,11 @@ export const ConfirmationSheetContent = ({
   }) => (
     <View style={styles.confirmationSection}>
       <Text
-        style={LabelStyle.body({ color: Color.black[700], fontSize: 17 })}
+        style={LabelStyle.body({ color: Color.black[700], fontSize: 15 })}
       >
         {title}
       </Text>
-      <Text style={LabelStyle.body({ color: Color.black[500] })}>
+      <Text style={LabelStyle.callout({ color: Color.black[500] })}>
         {content}
       </Text>
     </View>
@@ -57,7 +57,7 @@ export const ConfirmationSheetContent = ({
         style={
           isTotal
             ? LabelStyle.title3({ color: Color.black[700] })
-            : LabelStyle.body({ color: Color.black[700] })
+            : LabelStyle.body({ color: Color.black[700], fontSize: 15  })
         }
       >
         {label}
@@ -66,7 +66,7 @@ export const ConfirmationSheetContent = ({
         style={
           isTotal
             ? LabelStyle.title3({ color: Color.black[700] })
-            : LabelStyle.body({ color: Color.black[700] })
+            : LabelStyle.body({ color: Color.black[700], fontSize: 15  })
         }
       >
         ${amount}
@@ -139,7 +139,6 @@ const styles = StyleSheet.create({
   confirmationTitle: {
     ...LabelStyle.title2({
       color: Color.black[700],
-      fontSize: 20,
       textAlign: 'center',
     }),
     marginBottom: 10,

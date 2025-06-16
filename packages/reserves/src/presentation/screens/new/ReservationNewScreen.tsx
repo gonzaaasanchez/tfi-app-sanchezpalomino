@@ -4,14 +4,13 @@ import {
   GenericToast,
   LabelStyle,
   Loader,
-  PPBottomSheet,
   PPMaterialIcon,
   ShowToast,
   useI18n,
   Dropdown,
   PetModel,
 } from '@packages/common'
-import React, { FC, useEffect, useRef, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import {
   ScrollView,
   StyleSheet,
@@ -22,10 +21,9 @@ import {
 } from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { useReserveNewViewModel } from '../../viewModels/ReserveNewViewModel'
-import { AnimationObject } from 'lottie-react-native'
-import { PlaceType } from '@packages/reserves/src/data/models/ReservationModel'
 import Slider from '@react-native-community/slider'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { PlaceType } from '../../../data/models/ReservationModel'
 
 const ReservationNewScreen: FC = (): JSX.Element => {
   const {
@@ -40,24 +38,7 @@ const ReservationNewScreen: FC = (): JSX.Element => {
     setSelectedPets,
     searchResults,
   } = useReserveNewViewModel()
-  const bottomSheetModalRef = useRef(null)
-  const [alertTitle, setAlertTitle] = useState('')
-  const [alertSubtitle, setAlertSubtitle] = useState('')
-  const [alertAnimation, setAlertAnimation] = useState<AnimationObject | null>(
-    null
-  )
   const { t } = useI18n()
-
-  const showAlert = (
-    title: string,
-    subtitle: string,
-    animation?: AnimationObject | null
-  ) => {
-    setAlertTitle(title)
-    setAlertSubtitle(subtitle)
-    setAlertAnimation(animation)
-    bottomSheetModalRef.current?.present()
-  }
 
   useEffect(() => {
     if (state.error) {
@@ -123,7 +104,8 @@ const ReservationNewScreen: FC = (): JSX.Element => {
               <View
                 style={[
                   styles.radioCircle,
-                  state.searchCriteria.placeType === value && styles.radioSelected,
+                  state.searchCriteria.placeType === value &&
+                    styles.radioSelected,
                 ]}
               />
               <Text style={LabelStyle.body({ fontWeight: 300 })}>{label}</Text>
@@ -254,7 +236,9 @@ const ReservationNewScreen: FC = (): JSX.Element => {
   }
 
   const DistanceSelection = () => {
-    const [sliderValue, setSliderValue] = useState(state.searchCriteria.maxDistance)
+    const [sliderValue, setSliderValue] = useState(
+      state.searchCriteria.maxDistance
+    )
 
     useEffect(() => {
       setSliderValue(state.searchCriteria.maxDistance)
@@ -283,7 +267,9 @@ const ReservationNewScreen: FC = (): JSX.Element => {
   }
 
   const PriceSelection = () => {
-    const [sliderValue, setSliderValue] = useState(state.searchCriteria.maxPrice)
+    const [sliderValue, setSliderValue] = useState(
+      state.searchCriteria.maxPrice
+    )
 
     useEffect(() => {
       setSliderValue(state.searchCriteria.maxPrice)
@@ -312,7 +298,9 @@ const ReservationNewScreen: FC = (): JSX.Element => {
   }
 
   const VisitsPerDay = () => {
-      const [inputVisits, setInputVisits] = useState(state.searchCriteria.visits.toString())
+    const [inputVisits, setInputVisits] = useState(
+      state.searchCriteria.visits.toString()
+    )
 
     useEffect(() => {
       setInputVisits(state.searchCriteria.visits.toString())
@@ -367,12 +355,6 @@ const ReservationNewScreen: FC = (): JSX.Element => {
           onPress={searchResults}
         />
       </View>
-      <PPBottomSheet.Dialog
-        ref={bottomSheetModalRef}
-        title={alertTitle}
-        subtitle={alertSubtitle}
-        lottieFile={alertAnimation}
-      />
       <GenericToast overrideOffset={5} />
     </SafeAreaView>
   )

@@ -11,6 +11,7 @@ interface ReservesApi {
     type: ReserveType,
     status: ReserveStatus
   ): Promise<ReservationModel[]>
+  sendReservationRequest(): Promise<void>
 }
 
 class ReservesApiImpl implements ReservesApi {
@@ -44,6 +45,13 @@ class ReservesApiImpl implements ReservesApi {
       case 'pending':
         return GetReceivedReservatiosMockedResponse.pending
     }
+  }
+
+  async sendReservationRequest(): Promise<void> {
+    // TODO: Implement real API call
+    // await this.httpClient.post('/reserves/request', {})
+    await this.delay(3000)
+    return Promise.resolve()
   }
 }
 

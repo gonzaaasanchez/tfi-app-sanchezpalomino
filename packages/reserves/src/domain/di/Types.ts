@@ -8,6 +8,7 @@ const $ = {
   SearchResultsApi: Symbol.for('SearchResultsApi'),
   SearchResultsRepository: Symbol.for('SearchResultsRepository'),
   SearchResultsUseCase: Symbol.for('SearchResultsUseCase'),
+  SendReservationRequestUseCase: Symbol.for('SendReservationRequestUseCase'),
 }
 
 export { $ }

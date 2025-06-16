@@ -1,5 +1,4 @@
 import { FC } from 'react'
-import { SearchResultModel } from '../../data/models/SearchResultModel'
 import { TouchableOpacity, View, Text, Image, StyleSheet } from 'react-native'
 import {
   Color,
@@ -8,6 +7,7 @@ import {
   PPMaterialIcon,
   useI18n,
 } from '@packages/common'
+import { SearchResultModel } from '../../../../data/models/SearchResultModel'
 
 export const SearchResultCard: FC<{
   result: SearchResultModel

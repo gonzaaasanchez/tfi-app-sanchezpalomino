@@ -10,6 +10,7 @@ import {
   SortOrder,
 } from '../../data/models/SearchCriteria'
 import { PlaceType } from '../../data/models/ReservationModel'
+import { SendReservationRequestUseCase } from '../../domain/usecases/SendReservationRequestUseCase'
 
 type ReservationResultsScreenProps = {
   reservationResults: {
@@ -27,19 +28,13 @@ export type OrderOptionDatasource = {
   label: string
 }
 
-type ReservationResultsViewModel = {
-  state: ReservationResultsState
-  searchResults: () => Promise<void>
-  setSortAndOrder: (field: SortField, order: SortOrder) => void
-  setUserToRequest: (user: SearchResultModel) => void
-}
-
 type ReservationResultsState = {
   results: SearchResultModel[]
   searchCriteria: SearchCriteria
   sortOptions: readonly SortOptionDatasource[]
   sortOrderOptions: readonly OrderOptionDatasource[]
   userToRequest: SearchResultModel | null
+  requestSent: boolean
 } & UIState
 
 const initialState: ReservationResultsState = {
@@ -72,6 +67,15 @@ const initialState: ReservationResultsState = {
       label: 'reserveResultsScreen.sort.desc',
     },
   ] as const,
+  requestSent: false,
+}
+
+type ReservationResultsViewModel = {
+  state: ReservationResultsState
+  searchResults: () => Promise<void>
+  setSortAndOrder: (field: SortField, order: SortOrder) => void
+  setUserToRequest: (user: SearchResultModel) => void
+  sendReservationRequest: () => Promise<void>
 }
 
 const useReservationResultsViewModel = (): ReservationResultsViewModel => {
@@ -79,6 +83,8 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
   const searchResultsUseCase: SearchResultsUseCase = useInjection(
     $.SearchResultsUseCase
   )
+  const sendReservationRequestUseCase: SendReservationRequestUseCase =
+    useInjection($.SendReservationRequestUseCase)
   const route =
     useRoute<RouteProp<ReservationResultsScreenProps, 'reservationResults'>>()
   const { searchCriteria } = route.params
@@ -129,7 +135,37 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
     setState((prev) => ({ ...prev, userToRequest: user }))
   }
 
-  return { state, searchResults, setSortAndOrder, setUserToRequest }
+  const sendReservationRequest = async (): Promise<void> => {
+    setState((previous) => ({
+      ...previous,
+      loading: true,
+      error: null,
+    }))
+
+    try {
+      await sendReservationRequestUseCase.execute()
+      setState((previous) => ({
+        ...previous,
+        loading: false,
+        error: null,
+        requestSent: true,
+      }))
+    } catch (error) {
+      setState((previous) => ({
+        ...previous,
+        loading: false,
+        error: error.message,
+      }))
+    }
+  }
+
+  return {
+    state,
+    searchResults,
+    setSortAndOrder,
+    setUserToRequest,
+    sendReservationRequest,
+  }
 }
 
 export { useReservationResultsViewModel }

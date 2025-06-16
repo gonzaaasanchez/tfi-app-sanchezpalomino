@@ -15,6 +15,10 @@ class ReservesRepositoryImpl implements ReservesRepository {
   ): Promise<ReservationModel[]> {
     return this.api.getReserves(type, status)
   }
+
+  async sendReservationRequest(): Promise<void> {
+    return this.api.sendReservationRequest()
+  }
 }
 
 export { ReservesRepositoryImpl }

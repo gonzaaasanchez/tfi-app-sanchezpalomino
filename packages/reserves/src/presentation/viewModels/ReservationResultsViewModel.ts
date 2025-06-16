@@ -40,7 +40,6 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
       setState((previous) => ({
         ...previous,
         loading: false,
-        error: 'No se encontraron criterios de búsqueda',
       }))
       return
     }

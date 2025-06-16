@@ -1,8 +1,8 @@
 {
   "translation": {
     "general": {
-      "comingSoon": "¡Próximamente!",
-      "wereWorking": "Estamos trabajando...",
+      "comingSoon": "Próximamente...",
+      "wereWorking": "¡Estamos trabajando!",
       "ok": "Ok",
       "accept": "Aceptar",
       "cancel": "Cancelar",
@@ -122,7 +122,13 @@
       "title": "Servicios"
     },
     "reserveResultsScreen": {
-      "title": "Resultados"
+      "title": "Resultados",
+      "price": {
+        "caretakerFee": "Honorarios cuidador",
+        "commission": "Comisión",
+        "total": "Total"
+      },
+      "reviews": "reviews"
     }
   }
 }

@@ -25,8 +25,16 @@ export class SearchResultsApiImpl implements SearchResultsApi {
           phoneNumber: '+54 11 1234-5678',
           avatar: 'https://picsum.photos/200?random=1'
         }),
-        rate: 4.5,
-        reviews: 12
+        distance: 30,
+        price: {
+          fee: 100,
+          charge: 10,
+          total: 110
+        },
+        rate: {
+          value: 4.5,
+          count: 12
+        }
       },
       {
         user: new UserModel({
@@ -36,8 +44,16 @@ export class SearchResultsApiImpl implements SearchResultsApi {
           phoneNumber: '+54 11 2345-6789',
           avatar: 'https://picsum.photos/200?random=2'
         }),
-        rate: 4.8,
-        reviews: 8
+        distance: 20,
+        price: {
+          fee: 200,
+          charge: 10,
+          total: 220
+        },
+        rate: {
+          value: 4.8,
+          count: 8
+        }
       },
       {
         user: new UserModel({
@@ -47,11 +63,21 @@ export class SearchResultsApiImpl implements SearchResultsApi {
           phoneNumber: '+54 11 3456-7890',
           avatar: 'https://picsum.photos/200?random=3'
         }),
-        rate: 4.2,
-        reviews: 15
+        distance: 20,
+        price: {
+          fee: 300,
+          charge: 30,
+          total: 330
+        },
+        rate: {
+          value: 4.2,
+          count: 15
+        }
       }
     ]
 
+    // Add 1 second delay
+    await new Promise(resolve => setTimeout(resolve, 1000))
     return mockData
   }
 } 

@@ -166,6 +166,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     padding: 20,
     paddingBottom: 80 + 30, //tabbar aprox height + padding
+    gap: 10,
   },
   add: {
     position: 'absolute',

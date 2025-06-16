@@ -30,7 +30,7 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
     return (
       <View style={styles.row}>
         <View style={{ marginTop: 1 }}>
-          <PPMaterialIcon icon={iconName} size={16} color={Color.black[400]} />
+          <PPMaterialIcon icon={iconName} size={16} />
         </View>
         <Text style={styles.detail}>{text}</Text>
       </View>
@@ -42,7 +42,7 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
       <View style={styles.cardContainer}>
         <View style={styles.leftContainer}>
           <Image
-            source={{ uri: reservation.placeDetailAvatar}}
+            source={{ uri: reservation.placeDetailAvatar }}
             style={styles.profileImage}
           />
         </View>
@@ -56,7 +56,10 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
             iconName={'pets'}
             text={`${reservation.pets?.length} ${reservation.pets?.length === 1 ? t('reservesScreen.card.pet') : t('reservesScreen.card.pets')}`}
           />
-          <IconText iconName={'home-filled'} text={t(reservation.placeDetailText)} />
+          <IconText
+            iconName={'home-filled'}
+            text={t(reservation.placeDetailText)}
+          />
         </View>
       </View>
     </TouchableOpacity>
@@ -89,7 +92,7 @@ const styles = StyleSheet.create({
     ...LabelStyle.body({ fontWeight: 600, color: Color.black[700] }),
   },
   detail: {
-    ...LabelStyle.callout2({ color: Color.black[400] }),
+    ...LabelStyle.callout2({ color: Color.black[500] }),
     marginLeft: 6,
     flexShrink: 1,
   },

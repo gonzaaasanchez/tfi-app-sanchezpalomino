@@ -18,7 +18,6 @@ import { SearchResultCard } from './components/SearchResultCard'
 import { FilterSheetContent } from './components/FilterSheetContent'
 import { ConfirmationSheetContent } from './components/ConfirmationSheetContent'
 import catSuccess from '@app/assets/lottie-json/success-cat.json'
-import { CommonActions } from '@react-navigation/native'
 
 const ReservationResultsScreen: FC = () => {
   const { state, setSortAndOrder, setUserToRequest, sendReservationRequest } =

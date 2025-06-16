@@ -28,20 +28,16 @@ export const SearchResultCard: FC<{
         <View style={styles.rightContainer}>
           <Text style={styles.userName}>{result.user.fullName}</Text>
           <View style={styles.row}>
-            <PPMaterialIcon icon="phone" size={16} color={Color.black[400]} />
+            <PPMaterialIcon icon="phone" size={16} />
             <Text style={styles.detail}>{result.user.phoneNumber}</Text>
           </View>
 
           <View style={styles.row}>
-            <PPMaterialIcon
-              icon="location-on"
-              size={16}
-              color={Color.black[400]}
-            />
+            <PPMaterialIcon icon="location-on" size={16} />
             <Text style={styles.detail}>{result.distance} km</Text>
           </View>
           <View style={styles.row}>
-            <PPMaterialIcon icon="star" size={16} color={Color.black[400]} />
+            <PPMaterialIcon icon="star" size={16} />
             <Text style={styles.detail}>
               {result.rate.value} ({result.rate.count}{' '}
               {t('reserveResultsScreen.reviews')})
@@ -49,33 +45,21 @@ export const SearchResultCard: FC<{
           </View>
           <View style={styles.priceContainer}>
             <View style={styles.priceRow}>
-              <PPMaterialIcon
-                icon="attach-money"
-                size={16}
-                color={Color.black[400]}
-              />
+              <PPMaterialIcon icon="attach-money" size={16} />
               <Text style={styles.detail}>
                 {t('reserveResultsScreen.price.caretakerFee')}: $
                 {result.price.fee}
               </Text>
             </View>
             <View style={styles.priceRow}>
-              <PPMaterialIcon
-                icon="percent"
-                size={16}
-                color={Color.black[400]}
-              />
+              <PPMaterialIcon icon="percent" size={16} />
               <Text style={styles.detail}>
                 {t('reserveResultsScreen.price.commission')}: $
                 {result.price.charge}
               </Text>
             </View>
             <View style={[styles.priceRow, styles.totalPriceRow]}>
-              <PPMaterialIcon
-                icon="payments"
-                size={16}
-                color={Color.brand1[600]}
-              />
+              <PPMaterialIcon icon="payments" size={16} />
               <Text style={[styles.detail, styles.totalPrice]}>
                 {t('reserveResultsScreen.price.total')}: ${result.price.total}
               </Text>
@@ -118,7 +102,7 @@ const styles = StyleSheet.create({
     ...LabelStyle.body({ fontWeight: 600, color: Color.black[700] }),
   },
   detail: {
-    ...LabelStyle.callout2({ color: Color.black[400] }),
+    ...LabelStyle.callout2({ color: Color.black[500] }),
     marginLeft: 6,
     flexShrink: 1,
   },

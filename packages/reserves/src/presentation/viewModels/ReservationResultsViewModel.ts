@@ -17,12 +17,12 @@ type ReservationResultsScreenProps = {
   }
 }
 
-type SortOption = {
+export type SortOptionDatasource = {
   field: SortField
   label: string
 }
 
-type OrderOption = {
+export type OrderOptionDatasource = {
   field: SortOrder
   label: string
 }
@@ -31,13 +31,15 @@ type ReservationResultsViewModel = {
   state: ReservationResultsState
   searchResults: () => Promise<void>
   setSortAndOrder: (field: SortField, order: SortOrder) => void
+  setUserToRequest: (user: SearchResultModel) => void
 }
 
 type ReservationResultsState = {
   results: SearchResultModel[]
   searchCriteria: SearchCriteria
-  sortOptions: readonly SortOption[]
-  sortOrderOptions: readonly OrderOption[]
+  sortOptions: readonly SortOptionDatasource[]
+  sortOrderOptions: readonly OrderOptionDatasource[]
+  userToRequest: SearchResultModel | null
 } & UIState
 
 const initialState: ReservationResultsState = {
@@ -45,6 +47,7 @@ const initialState: ReservationResultsState = {
   error: null,
   results: [],
   searchCriteria: null,
+  userToRequest: null,
   sortOptions: [
     {
       field: SortField.TOTAL_PRICE,
@@ -54,19 +57,19 @@ const initialState: ReservationResultsState = {
       field: SortField.DISTANCE,
       label: 'reserveResultsScreen.sort.distance',
     },
-    { 
-      field: SortField.REVIEWS, 
-      label: 'reserveResultsScreen.sort.reviews' 
+    {
+      field: SortField.REVIEWS,
+      label: 'reserveResultsScreen.sort.reviews',
     },
   ] as const,
   sortOrderOptions: [
-    { 
-      field: SortOrder.ASC, 
-      label: 'reserveResultsScreen.sort.asc' 
+    {
+      field: SortOrder.ASC,
+      label: 'reserveResultsScreen.sort.asc',
     },
-    { 
-      field: SortOrder.DESC, 
-      label: 'reserveResultsScreen.sort.desc' 
+    {
+      field: SortOrder.DESC,
+      label: 'reserveResultsScreen.sort.desc',
     },
   ] as const,
 }
@@ -122,7 +125,11 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
     setState((prev) => ({ ...prev, searchCriteria: updatedCriteria }))
   }
 
-  return { state, searchResults, setSortAndOrder }
+  const setUserToRequest = (user: SearchResultModel) => {
+    setState((prev) => ({ ...prev, userToRequest: user }))
+  }
+
+  return { state, searchResults, setSortAndOrder, setUserToRequest }
 }
 
 export { useReservationResultsViewModel }

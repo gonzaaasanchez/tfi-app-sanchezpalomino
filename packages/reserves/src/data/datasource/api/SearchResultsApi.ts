@@ -51,7 +51,7 @@ export class SearchResultsApiImpl implements SearchResultsApi {
         distance: 20,
         price: {
           fee: 200,
-          charge: 10,
+          charge: 20,
           total: 220
         },
         rate: {

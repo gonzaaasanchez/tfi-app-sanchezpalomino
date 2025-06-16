@@ -1,8 +1,8 @@
 import { DateUtils, PetModel, UserModel } from '@packages/common'
 
 enum PlaceType {
-  Home = 'Home',
-  Visit = 'Visit',
+  OwnerHome = 'OwnerHome',
+  CarerHome = 'CarerHome',
 }
 
 enum ReservationStatus {
@@ -68,7 +68,7 @@ class ReservationModel {
   }
 
   get placeDetailText(): string {
-    const isCarerHome = this.placeType === PlaceType.Home
+    const isCarerHome = this.placeType === PlaceType.OwnerHome
     const isSinglePet = this.pets?.length === 1
 
     const getTranslationKey = (

@@ -30,8 +30,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 const ReservationNewScreen: FC = (): JSX.Element => {
   const {
     state,
-    setStartDate,
-    setEndDate,
+    setFromDate,
+    setToDate,
     setPlaceType,
     setReviewsFrom,
     setMaxDistance,
@@ -74,12 +74,12 @@ const ReservationNewScreen: FC = (): JSX.Element => {
       {
         label: t('reserveNewScreen.dateFrom'),
         value: state.searchCriteria.fromDate,
-        setDate: setStartDate,
+        setDate: setFromDate,
       },
       {
         label: t('reserveNewScreen.dateTo'),
         value: state.searchCriteria.toDate,
-        setDate: setEndDate,
+        setDate: setToDate,
       },
     ]
 
@@ -106,8 +106,8 @@ const ReservationNewScreen: FC = (): JSX.Element => {
 
   const PlaceSelection = () => {
     const options = [
-      { label: t('reserveNewScreen.placeHome'), value: PlaceType.Home },
-      { label: t('reserveNewScreen.placeVisit'), value: PlaceType.Visit },
+      { label: t('reserveNewScreen.ownerHome'), value: PlaceType.OwnerHome },
+      { label: t('reserveNewScreen.carerHome'), value: PlaceType.CarerHome },
     ]
 
     return (

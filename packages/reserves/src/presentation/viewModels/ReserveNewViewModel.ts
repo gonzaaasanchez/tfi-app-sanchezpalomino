@@ -28,7 +28,7 @@ type ReserveNewState = {
 const initialSearchCriteria: SearchCriteria = {
   fromDate: new Date(),
   toDate: new Date(new Date().setDate(new Date().getDate() + 1)),
-  placeType: PlaceType.Home,
+  placeType: PlaceType.OwnerHome,
   reviewsFrom: 1,
   maxDistance: 5,
   maxPrice: 50000,

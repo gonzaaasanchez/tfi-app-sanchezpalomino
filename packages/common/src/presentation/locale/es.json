@@ -106,8 +106,8 @@
       "dateFrom": "Fecha desde",
       "dateTo": "Fecha hasta",
       "place": "Lugar de cuidado",
-      "placeHome": "Mi domicilio",
-      "placeVisit": "Domicilio del Cuidador",
+      "ownerHome": "Mi domicilio",
+      "carerHome": "Domicilio del Cuidador",
       "pets": "Mascotas a cuidar",
       "selectPets": "Seleccionar mascotas",
       "rateFrom": "Evaluaciones desde",
@@ -138,6 +138,21 @@
         "asc": "Menor a mayor",
         "desc": "Mayor a menor",
         "confirm": "Confirmar"
+      },
+      "confirmation": {
+        "title": "¿Deseás enviar este pedido de reserva?",
+        "pets": "Para cuidar a:",
+        "dates": "Fechas:",
+        "location": "Lugar:",
+        "payment": "Vas a pagar:",
+        "caregiverFee": "Honorarios cuidador:",
+        "commission": "Comisión:",
+        "total": "TOTAL:",
+        "confirm": "Confirmar",
+        "back": "Volver",
+        "ownerHome": "Tu domicilio",
+        "carerHome": "Domicilio del cuidador",
+        "carer": "Cuidador:"
       }
     }
   }

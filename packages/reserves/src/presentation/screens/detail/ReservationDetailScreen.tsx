@@ -113,7 +113,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
               title={t('reserveDetailScreen.where')}
               value={t(state.currentReserve?.placeDetailText)}
             />
-            {state.currentReserve?.placeType === PlaceType.Visit && (
+            {state.currentReserve?.placeType === PlaceType.CarerHome && (
               <DetailItem
                 icon="map-marker"
                 title={t('reserveDetailScreen.location')}
@@ -128,7 +128,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
               title={t('reserveDetailScreen.date')}
               value={state.currentReserve?.visitsRangeDate}
             />
-            {state.currentReserve?.placeType === PlaceType.Visit && (
+            {state.currentReserve?.placeType === PlaceType.CarerHome && (
               <DetailItem
                 icon="numbers"
                 title={t('reserveDetailScreen.visitsPerDay')}

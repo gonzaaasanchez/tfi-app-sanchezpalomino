@@ -20,7 +20,12 @@ import { $ as Types } from './src/domain/di/Types'
 import { createResolver } from './src/data/di/Resolver'
 import { CommonRegister } from './src/domain/di/Register'
 import { Color, StateColor } from './src/style/Color'
-import { LabelStyle, LightTheme, GeneralStyle } from './src/style/Styles'
+import {
+  LabelStyle,
+  LightTheme,
+  GeneralStyle,
+  HomeTabsHeight,
+} from './src/style/Styles'
 import { Button, ButtonState } from './src/components/Button'
 import { StringValidator } from './src/utils/StringUtils'
 import { DateUtils } from './src/utils/DateUtils'
@@ -93,4 +98,5 @@ export {
   UserFormData,
   PetDetail,
   DetailItem,
+  HomeTabsHeight,
 }

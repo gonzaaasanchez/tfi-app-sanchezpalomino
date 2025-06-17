@@ -4,7 +4,7 @@ import { LabelStyle } from '../style/Styles'
 import { Color, StateColor } from '../style/Color'
 
 interface FormFieldProps {
-  label: string
+  label?: string
   value: string
   onChangeText: (text: string) => void
   error?: string
@@ -22,7 +22,15 @@ export const FormField: React.FC<FormFieldProps> = ({
 }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
+      {label && (
+        <Text
+          style={{
+            ...LabelStyle.body2({ fontWeight: 500, color: Color.black[700] }),
+          }}
+        >
+          {label}
+        </Text>
+      )}
       <TextInput
         style={[styles.input, error && styles.inputError]}
         value={value}
@@ -40,10 +48,6 @@ const styles = StyleSheet.create({
   container: {
     marginBottom: 16,
     width: '100%',
-  },
-  label: {
-    ...LabelStyle.body2({ fontWeight: 500, color: Color.black[700] }),
-    marginBottom: 8,
   },
   input: {
     ...LabelStyle.body(),

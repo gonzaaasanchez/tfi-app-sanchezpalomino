@@ -1,6 +1,8 @@
-import { TextStyle } from 'react-native'
+import { TextStyle, ViewStyle } from 'react-native'
 import { Color } from './Color'
 import { DefaultTheme } from '@react-navigation/native'
+
+const HomeTabsHeight = 82
 
 const SourGummyWithWeight = {
   100: 'SourGummy-Thin',
@@ -275,6 +277,21 @@ const GeneralStyle = {
     shadowRadius: 4,
     elevation: 3,
   },
+  addFloatingButton: {
+    position: 'absolute',
+    right: 20,
+    backgroundColor: Color.brand1[700],
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  } as ViewStyle,
 }
 
 const LightTheme = {
@@ -285,4 +302,4 @@ const LightTheme = {
   },
 }
 
-export { LabelStyle, LightTheme, GeneralStyle }
+export { LabelStyle, LightTheme, GeneralStyle, HomeTabsHeight }

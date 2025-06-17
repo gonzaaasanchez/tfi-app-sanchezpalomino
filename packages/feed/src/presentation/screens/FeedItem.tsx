@@ -49,8 +49,7 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     aspectRatio: 1.3,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    borderRadius: 10,
   },
   nameContainer: {
     flexDirection: 'row',

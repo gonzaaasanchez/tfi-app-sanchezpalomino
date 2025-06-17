@@ -7,7 +7,7 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
   Color,
   PetModel,
@@ -19,6 +19,7 @@ import {
   PPBottomSheet,
   PPBottomSheetContainer,
 } from '@packages/common'
+import { useNavigation, StackActions } from '@react-navigation/native'
 
 const mockPets: PetModel[] = [
   {
@@ -82,6 +83,8 @@ const PetCard: FC<{ pet: PetModel; onPress: () => void }> = ({
 const PetsScreen: FC = (): JSX.Element => {
   const [petDetail, setPetDetail] = useState<PetModel | null>(null)
   const petDetailModalRef = useBottomSheetModalRef()
+  const insets = useSafeAreaInsets()
+  const navigation = useNavigation()
 
   useEffect(() => {
     if (petDetail) {
@@ -105,6 +108,17 @@ const PetsScreen: FC = (): JSX.Element => {
       >
         <PetDetail pet={petDetail} />
       </PPBottomSheet.Empty>
+      <TouchableOpacity
+        style={{
+          ...GeneralStyle.addFloatingButton,
+          bottom: insets.bottom + 20,
+        }}
+        onPress={() => {
+          navigation.dispatch(StackActions.push('petsNew'))
+        }}
+      >
+        <PPMaterialIcon icon="add" size={30} color={'white'} />
+      </TouchableOpacity>
     </PPBottomSheetContainer>
   )
 }

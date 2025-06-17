@@ -18,7 +18,6 @@ import {
 import { useNavigation } from '@react-navigation/native'
 
 const Tab = createBottomTabNavigator()
-const HomeTabsHeight = 82
 
 type Props = { feed?: FC; reserves?: FC; services?: FC; more?: FC }
 
@@ -259,4 +258,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export { HomeTabs, HomeTabsHeight }
+export { HomeTabs }

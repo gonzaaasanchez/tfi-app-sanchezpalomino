@@ -4,6 +4,9 @@ import {
   ShowToast,
   PPMaterialIcon,
   useI18n,
+  GeneralStyle,
+  HomeTabsHeight,
+  EmptyView,
 } from '@packages/common'
 import React, { FC, useCallback, useEffect, useState } from 'react'
 import {
@@ -16,10 +19,8 @@ import {
 } from 'react-native'
 import ReservationsHeader from '../components/ReservationsHeader'
 import { useReservesViewModel } from '../viewModels/ReservesViewModel'
-import { EmptyView } from '@packages/common/src/components/EmptyView'
 import ReservationCard from '../components/ReservationCard'
 import { StackActions, useNavigation } from '@react-navigation/native'
-import { HomeTabsHeight } from '@packages/home/src/presentation/screens/HomeTabs'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const ReservesScreen: FC = (): JSX.Element => {
@@ -113,7 +114,7 @@ const ReservesScreen: FC = (): JSX.Element => {
       {state.selectedType === 'sent' && (
         <TouchableOpacity
           style={{
-            ...styles.add,
+            ...GeneralStyle.addFloatingButton,
             bottom: HomeTabsHeight + insets.bottom + 20,
           }}
           onPress={() =>
@@ -140,21 +141,6 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 80 + 30, //tabbar aprox height + padding
     gap: 10,
-  },
-  add: {
-    position: 'absolute',
-    right: 20,
-    backgroundColor: Color.brand1[700],
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
   },
 })
 

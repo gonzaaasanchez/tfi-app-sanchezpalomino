@@ -6,8 +6,9 @@ import MaterialIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { ProfileScreen } from './screens/ProfileScreen'
 import { PetsScreen } from './screens/PetsScreen'
 import { GeneralStyle, useI18n } from '@packages/common'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, StackActions } from '@react-navigation/native'
 import { TouchableOpacity } from 'react-native'
+import { PetsNewScreen } from './screens/PetsNewScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -46,6 +47,18 @@ const MoreStack: FC = (): JSX.Element => {
         component={PetsScreen}
         options={({ navigation }) => ({
           headerTitle: t('moreScreen.menu.pets'),
+          headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <MaterialIcons name="close" size={24} color="white" />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="petsNew"
+        component={PetsNewScreen}
+        options={({ navigation }) => ({
+          headerTitle: t('moreScreen.menu.petsNew'),
           headerRight: () => (
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <MaterialIcons name="close" size={24} color="white" />

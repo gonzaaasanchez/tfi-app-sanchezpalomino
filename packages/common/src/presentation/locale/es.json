@@ -164,6 +164,7 @@
       "menu": {
         "profile": "Mi Perfil",
         "pets": "Mis Mascotas",
+        "petsNew": "Nueva Mascota",
         "addresses": "Mis Domicilios",
         "logout": "Cerrar Sesión"
       },
@@ -187,6 +188,26 @@
         "firstNameRequired": "El nombre es requerido",
         "lastNameRequired": "El apellido es requerido",
         "phoneRequired": "El teléfono debe tener al menos 10 dígitos"
+      }
+    },
+    "petsNewScreen": {
+      "title": "Nueva Mascota",
+      "name": "Nombre",
+      "namePlaceholder": "Ingresá el nombre de tu mascota",
+      "type": "Tipo de mascota",
+      "typePlaceholder": "Seleccioná el tipo de mascota",
+      "comment": "Comentario",
+      "commentPlaceholder": "Contanos sobre tu mascota",
+      "characteristics": "Características",
+      "characteristicPlaceholder": "Seleccioná una característica",
+      "valuePlaceholder": "Valor",
+      "addCharacteristic": "Agregar característica",
+      "save": "Guardar",
+      "confirmation": {
+        "title": "Agregar mascota",
+        "subtitle": "¿Confirmás los datos de la mascota?",
+        "confirm": "Confirmar",
+        "cancel": "Cancelar"
       }
     }
   }

@@ -12,7 +12,7 @@ import {
   AppState,
 } from './src/domain/store/AppSlice'
 import { UserModel } from './src/data/models/UserModel'
-import { PetModel } from './src/data/models/PetModel'
+import { PetModel, PetType, PetCharacteristic } from './src/data/models/PetModel'
 import { LocationModel } from './src/data/models/LocationModel'
 import { FeedModel } from './src/data/models/FeedModel'
 import { appMiddleware } from './src/domain/store/AppMiddleware'
@@ -69,6 +69,8 @@ export {
   HttpClient,
   UserModel,
   PetModel,
+  PetType,
+  PetCharacteristic,
   LocationModel,
   FeedModel,
   Types,

@@ -1,10 +1,9 @@
-import React, { FC, useState } from 'react'
+import React, { FC } from 'react'
 import {
   View,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Image,
   Text,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -20,78 +19,23 @@ import {
   PPBottomSheet,
   useBottomSheetModalRef,
 } from '@packages/common'
-
-type PetCharacteristic = {
-  id: string
-  name: string
-  value: string
-}
-
-const mockPetTypes = [
-  { value: '1', label: 'Perro' },
-  { value: '2', label: 'Gato' },
-  { value: '3', label: 'Ave' },
-  { value: '4', label: 'Otro' },
-]
-
-const mockCharacteristics = [
-  { value: '1', label: 'Tamaño' },
-  { value: '2', label: 'Edad' },
-  { value: '3', label: 'Personalidad' },
-  { value: '4', label: 'Necesita medicación' },
-]
+import { usePetsNewViewModel } from '../viewModels/PetsNewViewModel'
 
 const PetsNewScreen: FC = (): JSX.Element => {
   const { t } = useI18n()
-  const [name, setName] = useState('')
-  const [type, setType] = useState('')
-  const [comment, setComment] = useState('')
-  const [characteristics, setCharacteristics] = useState<PetCharacteristic[]>(
-    []
-  )
+  const {
+    state,
+    setName,
+    setComment,
+    addCharacteristic,
+    removeCharacteristic,
+    updateCharacteristic,
+    handleTypeSelection,
+    handleCharacteristicSelection,
+    handleSave,
+  } = usePetsNewViewModel()
+
   const confirmationModalRef = useBottomSheetModalRef()
-
-  const addCharacteristic = () => {
-    setCharacteristics([...characteristics, { id: '', name: '', value: '' }])
-  }
-
-  const removeCharacteristic = (index: number) => {
-    const newCharacteristics = [...characteristics]
-    newCharacteristics.splice(index, 1)
-    setCharacteristics(newCharacteristics)
-  }
-
-  const updateCharacteristic = (
-    index: number,
-    field: 'id' | 'name' | 'value',
-    value: string
-  ) => {
-    const newCharacteristics = [...characteristics]
-    newCharacteristics[index] = {
-      ...newCharacteristics[index],
-      [field]: value,
-      ...(field === 'id' && {
-        name: mockCharacteristics.find((c) => c.value === value)?.label || '',
-      }),
-    }
-    setCharacteristics(newCharacteristics)
-  }
-
-  const handleSave = () => {
-    confirmationModalRef.current?.present()
-  }
-
-  const handleTypeSelection = (value: any) => {
-    if (!Array.isArray(value)) {
-      setType(value.value)
-    }
-  }
-
-  const handleCharacteristicSelection = (index: number, value: any) => {
-    if (!Array.isArray(value)) {
-      updateCharacteristic(index, 'id', value.value)
-    }
-  }
 
   const Avatar = () => {
     return (
@@ -111,7 +55,7 @@ const PetsNewScreen: FC = (): JSX.Element => {
       <View style={{ gap: 5 }}>
         <FormField
           label={t('petsNewScreen.name')}
-          value={name}
+          value={state.name}
           onChangeText={setName}
           placeholder={t('petsNewScreen.namePlaceholder')}
         />
@@ -126,15 +70,26 @@ const PetsNewScreen: FC = (): JSX.Element => {
             {t('petsNewScreen.type')}
           </Text>
           <Dropdown
-            data={mockPetTypes}
+            data={state.petTypesDatasource.map((type) => ({
+              value: type.id || '',
+              label: type.name || '',
+            }))}
             placeholder={t('petsNewScreen.typePlaceholder')}
             onFinishSelection={handleTypeSelection}
+            initialValue={
+              state.selectedPetType
+                ? {
+                    value: state.selectedPetType.id || '',
+                    label: state.selectedPetType.name || '',
+                  }
+                : undefined
+            }
           />
         </View>
 
         <FormField
           label={t('petsNewScreen.comment')}
-          value={comment}
+          value={state.comment}
           onChangeText={setComment}
           placeholder={t('petsNewScreen.commentPlaceholder')}
         />
@@ -148,14 +103,25 @@ const PetsNewScreen: FC = (): JSX.Element => {
         <Text style={styles.sectionTitle}>
           {t('petsNewScreen.characteristics')}
         </Text>
-        {characteristics.map((char, index) => (
+        {state.selectedCharacteristics.map((char, index) => (
           <View key={index} style={styles.characteristicItem}>
             <View style={styles.characteristicInputs}>
               <Dropdown
-                data={mockCharacteristics}
+                data={state.characteristicsDatasource.map((char) => ({
+                  value: char.id || '',
+                  label: char.name || '',
+                }))}
                 placeholder={t('petsNewScreen.characteristicPlaceholder')}
                 onFinishSelection={(value) =>
                   handleCharacteristicSelection(index, value)
+                }
+                initialValue={
+                  state.selectedCharacteristics[index]?.id
+                    ? {
+                        value: state.selectedCharacteristics[index].id || '',
+                        label: state.selectedCharacteristics[index].name || '',
+                      }
+                    : undefined
                 }
               />
               <FormField
@@ -192,7 +158,12 @@ const PetsNewScreen: FC = (): JSX.Element => {
   const SaveButton = () => {
     return (
       <View style={{ paddingHorizontal: 20 }}>
-        <Button.Primary title={t('petsNewScreen.save')} onPress={handleSave} />
+        <Button.Primary
+          title={t('petsNewScreen.save')}
+          onPress={() =>
+            handleSave(() => confirmationModalRef.current?.present())
+          }
+        />
       </View>
     )
   }

@@ -1,11 +1,14 @@
-import { UIState, PetType, PetCharacteristic } from '@packages/common'
+import {
+  UIState,
+  PetType,
+  PetCharacteristic,
+  PetModel,
+  useI18n,
+} from '@packages/common'
 import { useState } from 'react'
 
 type PetsNewState = {
-  name: string
-  comment: string
-  selectedPetType?: PetType
-  selectedCharacteristics: PetCharacteristic[]
+  pet: PetModel
   petTypesDatasource: PetType[]
   characteristicsDatasource: PetCharacteristic[]
 } & UIState
@@ -13,18 +16,18 @@ type PetsNewState = {
 type PetsNewViewModel = {
   state: PetsNewState
   setName: (name: string) => void
-  setType: (type: string) => void
+  setType: (value: any) => void
   setComment: (comment: string) => void
   addCharacteristic: () => void
   removeCharacteristic: (index: number) => void
-  updateCharacteristic: (
+  setCharacteristicType: (index: number, value: any) => void
+  setCharacteristicValue: (
     index: number,
     field: 'id' | 'name' | 'value',
     value: string
   ) => void
-  handleTypeSelection: (value: any) => void
-  handleCharacteristicSelection: (index: number, value: any) => void
   handleSave: (onConfirm: () => void) => void
+  getValidationErrors: () => string[]
 }
 
 const mockPetTypes: PetType[] = [
@@ -42,10 +45,7 @@ const mockCharacteristics: PetCharacteristic[] = [
 ]
 
 const initialState: PetsNewState = {
-  name: '',
-  comment: '',
-  selectedPetType: undefined,
-  selectedCharacteristics: [],
+  pet: {},
   petTypesDatasource: mockPetTypes,
   characteristicsDatasource: mockCharacteristics,
   loading: false,
@@ -54,77 +54,122 @@ const initialState: PetsNewState = {
 
 const usePetsNewViewModel = (): PetsNewViewModel => {
   const [state, setState] = useState<PetsNewState>(initialState)
+  const { t } = useI18n()
 
   const setName = (name: string): void => {
-    setState((previous) => ({ ...previous, name }))
+    setState((previous) => ({
+      ...previous,
+      pet: { ...previous.pet, name },
+    }))
   }
 
-  const setType = (type: string): void => {
-    setState((previous) => ({ ...previous, selectedPetType: mockPetTypes.find(p => p.id === type) }))
+  const setType = (value: any): void => {
+    if (!Array.isArray(value)) {
+      const selectedType = mockPetTypes.find((p) => p.id === value.value)
+      setState((previous) => ({
+        ...previous,
+        pet: { ...previous.pet, type: selectedType },
+      }))
+    }
   }
 
   const setComment = (comment: string): void => {
-    setState((previous) => ({ ...previous, comment }))
+    setState((previous) => ({
+      ...previous,
+      pet: { ...previous.pet, comment },
+    }))
   }
 
   const addCharacteristic = (): void => {
     setState((previous) => ({
       ...previous,
-      selectedCharacteristics: [
-        ...previous.selectedCharacteristics,
-        { id: '', name: '', value: '' },
-      ],
+      pet: {
+        ...previous.pet,
+        characteristics: [
+          ...(previous.pet.characteristics || []),
+          { id: '', name: '', value: '' },
+        ],
+      },
     }))
   }
 
   const removeCharacteristic = (index: number): void => {
     setState((previous) => {
-      const newCharacteristics = [...previous.selectedCharacteristics]
+      const newCharacteristics = [...(previous.pet.characteristics || [])]
       newCharacteristics.splice(index, 1)
-      return { ...previous, selectedCharacteristics: newCharacteristics }
+      return {
+        ...previous,
+        pet: { ...previous.pet, characteristics: newCharacteristics },
+      }
     })
   }
 
-  const updateCharacteristic = (
+  const setCharacteristicType = (index: number, value: any): void => {
+    if (!Array.isArray(value)) {
+      const selectedChar = mockCharacteristics.find((c) => c.id === value.value)
+      setCharacteristicValue(index, 'id', value.value)
+      if (selectedChar) {
+        setCharacteristicValue(index, 'name', selectedChar.name || '')
+      }
+    }
+  }
+
+  const setCharacteristicValue = (
     index: number,
     field: 'id' | 'name' | 'value',
     value: string
   ): void => {
     setState((previous) => {
-      const newCharacteristics = [...previous.selectedCharacteristics]
+      const newCharacteristics = [...(previous.pet.characteristics || [])]
       newCharacteristics[index] = {
         ...newCharacteristics[index],
         [field]: value,
         ...(field === 'id' && {
-          name: mockCharacteristics.find((c) => c.value === value)?.value || '',
+          name: mockCharacteristics.find((c) => c.id === value)?.name || '',
         }),
       }
-      return { ...previous, selectedCharacteristics: newCharacteristics }
+      return {
+        ...previous,
+        pet: { ...previous.pet, characteristics: newCharacteristics },
+      }
     })
   }
 
   const handleSave = (onConfirm: () => void): void => {
-    // Aquí se puede agregar lógica de validación antes de mostrar el modal
-    onConfirm()
-  }
-
-  const handleTypeSelection = (value: any): void => {
-    if (!Array.isArray(value)) {
-      setState((previous) => ({ 
-        ...previous, 
-        selectedPetType: mockPetTypes.find(p => p.id === value.value) 
-      }))
+    if (getValidationErrors().length === 0) {
+      onConfirm()
     }
   }
 
-  const handleCharacteristicSelection = (index: number, value: any): void => {
-    if (!Array.isArray(value)) {
-      const selectedChar = mockCharacteristics.find(c => c.id === value.value)
-      updateCharacteristic(index, 'id', value.value)
-      if (selectedChar) {
-        updateCharacteristic(index, 'name', selectedChar.name || '')
-      }
+  const getValidationErrors = (): string[] => {
+    const errors: string[] = []
+    const { pet } = state
+
+    if (!pet.name?.trim()) {
+      errors.push(t('petsNewScreen.validation.nameRequired'))
     }
+
+    if (!pet.type?.id) {
+      errors.push(t('petsNewScreen.validation.typeRequired'))
+    }
+
+    if (!pet.comment?.trim()) {
+      errors.push(t('petsNewScreen.validation.commentRequired'))
+    }
+
+    if (pet.characteristics && pet.characteristics.length > 0) {
+      pet.characteristics.forEach((char, index) => {
+        if (!char.id || !char.name || !char.value?.trim()) {
+          errors.push(
+            t('petsNewScreen.validation.characteristicIncomplete', {
+              index: String(index + 1),
+            })
+          )
+        }
+      })
+    }
+
+    return errors
   }
 
   return {
@@ -134,12 +179,11 @@ const usePetsNewViewModel = (): PetsNewViewModel => {
     setComment,
     addCharacteristic,
     removeCharacteristic,
-    updateCharacteristic,
-    handleTypeSelection,
-    handleCharacteristicSelection,
+    setCharacteristicValue,
+    setCharacteristicType,
     handleSave,
+    getValidationErrors,
   }
 }
 
 export { usePetsNewViewModel }
-export type { PetCharacteristic }

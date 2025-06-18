@@ -29,10 +29,11 @@ const PetsNewScreen: FC = (): JSX.Element => {
     setComment,
     addCharacteristic,
     removeCharacteristic,
-    updateCharacteristic,
-    handleTypeSelection,
-    handleCharacteristicSelection,
+    setCharacteristicValue,
+    setType,
+    setCharacteristicType,
     handleSave,
+    getValidationErrors,
   } = usePetsNewViewModel()
 
   const confirmationModalRef = useBottomSheetModalRef()
@@ -55,7 +56,7 @@ const PetsNewScreen: FC = (): JSX.Element => {
       <View style={{ gap: 5 }}>
         <FormField
           label={t('petsNewScreen.name')}
-          value={state.name}
+          value={state.pet.name || ''}
           onChangeText={setName}
           placeholder={t('petsNewScreen.namePlaceholder')}
         />
@@ -75,12 +76,12 @@ const PetsNewScreen: FC = (): JSX.Element => {
               label: type.name || '',
             }))}
             placeholder={t('petsNewScreen.typePlaceholder')}
-            onFinishSelection={handleTypeSelection}
+            onFinishSelection={setType}
             initialValue={
-              state.selectedPetType
+              state.pet.type
                 ? {
-                    value: state.selectedPetType.id || '',
-                    label: state.selectedPetType.name || '',
+                    value: state.pet.type.id || '',
+                    label: state.pet.type.name || '',
                   }
                 : undefined
             }
@@ -89,7 +90,7 @@ const PetsNewScreen: FC = (): JSX.Element => {
 
         <FormField
           label={t('petsNewScreen.comment')}
-          value={state.comment}
+          value={state.pet.comment || ''}
           onChangeText={setComment}
           placeholder={t('petsNewScreen.commentPlaceholder')}
         />
@@ -103,7 +104,7 @@ const PetsNewScreen: FC = (): JSX.Element => {
         <Text style={styles.sectionTitle}>
           {t('petsNewScreen.characteristics')}
         </Text>
-        {state.selectedCharacteristics.map((char, index) => (
+        {(state.pet.characteristics || []).map((char, index) => (
           <View key={index} style={styles.characteristicItem}>
             <View style={styles.characteristicInputs}>
               <Dropdown
@@ -113,21 +114,21 @@ const PetsNewScreen: FC = (): JSX.Element => {
                 }))}
                 placeholder={t('petsNewScreen.characteristicPlaceholder')}
                 onFinishSelection={(value) =>
-                  handleCharacteristicSelection(index, value)
+                  setCharacteristicType(index, value)
                 }
                 initialValue={
-                  state.selectedCharacteristics[index]?.id
+                  state.pet.characteristics?.[index]?.id
                     ? {
-                        value: state.selectedCharacteristics[index].id || '',
-                        label: state.selectedCharacteristics[index].name || '',
+                        value: state.pet.characteristics[index].id || '',
+                        label: state.pet.characteristics[index].name || '',
                       }
                     : undefined
                 }
               />
               <FormField
-                value={char.value}
+                value={char.value || ''}
                 onChangeText={(value) =>
-                  updateCharacteristic(index, 'value', value)
+                  setCharacteristicValue(index, 'value', value)
                 }
                 placeholder={t('petsNewScreen.valuePlaceholder')}
               />
@@ -156,8 +157,20 @@ const PetsNewScreen: FC = (): JSX.Element => {
   }
 
   const SaveButton = () => {
+    const errors = getValidationErrors()
+    const hasErrors = errors.length > 0
+
     return (
       <View style={{ paddingHorizontal: 20 }}>
+        {hasErrors && (
+          <View style={styles.errorContainer}>
+            {errors.map((error, index) => (
+              <Text key={index} style={styles.errorText}>
+                • {error}
+              </Text>
+            ))}
+          </View>
+        )}
         <Button.Primary
           title={t('petsNewScreen.save')}
           onPress={() =>
@@ -184,7 +197,11 @@ const PetsNewScreen: FC = (): JSX.Element => {
         subtitle={t('petsNewScreen.confirmation.subtitle')}
         primaryActionTitle={t('petsNewScreen.confirmation.confirm')}
         secondaryActionTitle={t('petsNewScreen.confirmation.cancel')}
-        onPrimaryAction={() => {}}
+        onPrimaryAction={() => {
+          // Aquí puedes acceder al pet model completo: state.pet
+          console.log('Pet model to save:', state.pet)
+          // TODO: Implementar lógica de guardado
+        }}
         onSecondaryAction={() => confirmationModalRef.current?.dismiss()}
       />
     </PPBottomSheetContainer>
@@ -252,6 +269,18 @@ const styles = StyleSheet.create({
   addButtonText: {
     ...LabelStyle.body({ color: Color.brand1[700] }),
     marginLeft: 8,
+  },
+  errorContainer: {
+    backgroundColor: Color.red[50],
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: Color.red[200],
+  },
+  errorText: {
+    ...LabelStyle.body2({ color: Color.red[700] }),
+    marginBottom: 4,
   },
 })
 

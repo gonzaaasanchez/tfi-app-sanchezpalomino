@@ -208,6 +208,12 @@
         "subtitle": "¿Confirmás los datos de la mascota?",
         "confirm": "Confirmar",
         "cancel": "Cancelar"
+      },
+      "validation": {
+        "nameRequired": "El nombre es obligatorio",
+        "typeRequired": "El tipo de mascota es obligatorio",
+        "commentRequired": "El comentario es obligatorio",
+        "characteristicIncomplete": "La característica {{index}} no puede estar vacía"
       }
     }
   }

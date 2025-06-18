@@ -166,6 +166,7 @@
         "pets": "Mis Mascotas",
         "petsNew": "Nueva Mascota",
         "addresses": "Mis Domicilios",
+        "carerPreferences": "Mis preferencias como cuidador",
         "logout": "Cerrar Sesión"
       },
       "logoutModal": {

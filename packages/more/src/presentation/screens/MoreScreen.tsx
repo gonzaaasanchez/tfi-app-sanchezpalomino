@@ -45,6 +45,12 @@ const MoreScreen: FC = (): JSX.Element => {
       testID: 'moreScreen.addresses',
     },
     {
+      title: t('moreScreen.menu.carerPreferences'),
+      icon: 'tune',
+      screen: 'carerPreferences',
+      testID: 'moreScreen.carerPreferences',
+    },
+    {
       title: t('moreScreen.menu.logout'),
       icon: 'logout',
       testID: 'moreScreen.logout',

@@ -7,11 +7,13 @@ import {
   useI18n,
   useBottomSheetModalRef,
   PPBottomSheet,
+  HomeTabsHeight,
 } from '@packages/common'
 import { StackActions, useNavigation } from '@react-navigation/native'
 import React, { FC } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useMoreViewModel } from '../viewModels/MoreViewModel'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const MoreScreen: FC = (): JSX.Element => {
   const navigation = useNavigation()
@@ -59,7 +61,10 @@ const MoreScreen: FC = (): JSX.Element => {
   ]
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView
+      style={{ ...styles.container, paddingBottom: HomeTabsHeight }}
+      edges={['bottom']}
+    >
       {menuItems.map((item) => (
         <TouchableOpacity
           activeOpacity={0.8}
@@ -91,7 +96,7 @@ const MoreScreen: FC = (): JSX.Element => {
         onSecondaryAction={logoutModalRef.current?.dismiss}
         secondaryActionTitle={t('moreScreen.logoutModal.secondaryAction')}
       />
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -100,7 +105,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Color.mainBackground,
     padding: 20,
-    paddingBottom: 100,
     justifyContent: 'center',
   },
   title: {

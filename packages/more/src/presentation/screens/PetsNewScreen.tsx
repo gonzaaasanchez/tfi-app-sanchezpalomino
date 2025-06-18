@@ -186,12 +186,12 @@ const PetsNewScreen: FC = (): JSX.Element => {
   return (
     <PPBottomSheetContainer>
       <SafeAreaView style={styles.container} edges={['bottom']}>
-        <KeyboardAvoidingView 
+        <KeyboardAvoidingView
           style={styles.keyboardAvoidingView}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
         >
-          <ScrollView 
+          <ScrollView
             contentContainerStyle={styles.scrollContainer}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={true}
@@ -224,7 +224,7 @@ const PetsNewScreen: FC = (): JSX.Element => {
         lottieFile={catSuccess}
         onPrimaryAction={() => navigation.goBack()}
       />
-      {state.loading && <Loader loading={state.loading} opacity={0.85}/>}
+      {state.loading && <Loader loading={state.loading} />}
       <GenericToast overrideOffset={10} />
     </PPBottomSheetContainer>
   )

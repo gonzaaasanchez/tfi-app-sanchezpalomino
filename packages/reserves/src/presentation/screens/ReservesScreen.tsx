@@ -62,9 +62,7 @@ const ReservesScreen: FC = (): JSX.Element => {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
-        {state.loading && (
-          <Loader loading={state.loading} opacity={0.85}/>
-        )}
+        {state.loading && <Loader loading={state.loading} />}
         <ReservationsHeader
           defaultSelectedStatus={state.selectedStatus}
           defaultSelectedType={state.selectedType}

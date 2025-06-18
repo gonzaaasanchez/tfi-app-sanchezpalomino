@@ -81,9 +81,6 @@ const ReservationResultsScreen: FC = () => {
   return (
     <PPBottomSheetContainer>
       <SafeAreaView style={styles.container} edges={['bottom']}>
-        {state.loading && (
-          <Loader loading={state.loading} opacity={0.85} animal="dog" />
-        )}
         <ScrollView style={styles.content}>
           {state.results.map((result) => (
             <SearchResultCard
@@ -93,9 +90,7 @@ const ReservationResultsScreen: FC = () => {
             />
           ))}
         </ScrollView>
-        {state.loading && (
-          <Loader loading={state.loading} opacity={0.85} animal="dog" />
-        )}
+        {state.loading && <Loader loading={state.loading} />}
       </SafeAreaView>
       <PPBottomSheet.Empty ref={filterBottomSheetRef} dismisseable={true}>
         <FilterSheetContent

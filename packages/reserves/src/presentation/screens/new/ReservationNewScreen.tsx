@@ -337,9 +337,7 @@ const ReservationNewScreen: FC = (): JSX.Element => {
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
-      {state.loading && (
-        <Loader loading={state.loading} opacity={0.85} animal="dog" />
-      )}
+      {state.loading && <Loader loading={state.loading} />}
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <DateSelection />
         <PlaceSelection />

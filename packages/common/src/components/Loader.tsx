@@ -16,15 +16,16 @@ type LoaderProps = {
 
 const DogLoaders = [dogWalk, dogWaiting]
 const CatLoaders = [catSleep, catPlay]
-const AllLoaders = DogLoaders && CatLoaders
+const AllLoaders = [...DogLoaders, ...CatLoaders]
 
 const Loader: FC<LoaderProps> = ({
   loading,
   animal = 'all',
-  opacity = 0.95,
+  opacity = 0.85,
   message: children,
 }): JSX.Element => {
   const animation = useRef<LottieView>(null)
+
   const randomLoader = (
     animal === 'all' ? AllLoaders : animal === 'cat' ? CatLoaders : DogLoaders
   )[
@@ -37,6 +38,7 @@ const Loader: FC<LoaderProps> = ({
             : DogLoaders.length)
     )
   ]
+
   return (
     <Modal
       transparent={true}

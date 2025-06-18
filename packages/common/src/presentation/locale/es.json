@@ -196,7 +196,7 @@
       "namePlaceholder": "Ingresá el nombre de tu mascota",
       "type": "Tipo de mascota",
       "typePlaceholder": "Seleccioná el tipo de mascota",
-      "comment": "Comentario",
+      "comment": "Descripción breve",
       "commentPlaceholder": "Contanos sobre tu mascota",
       "characteristics": "Características",
       "characteristicPlaceholder": "Seleccioná una característica",
@@ -209,10 +209,14 @@
         "confirm": "Confirmar",
         "cancel": "Cancelar"
       },
+      "success": {
+        "title": "¡Mascota agregada!",
+        "subtitle": "Ahora podés empezar a buscar cuidadores"
+      },
       "validation": {
-        "nameRequired": "El nombre es obligatorio",
-        "typeRequired": "El tipo de mascota es obligatorio",
-        "commentRequired": "El comentario es obligatorio",
+        "nameRequired": "Agregá el nombre de tu mascota",
+        "typeRequired": "Seleccioná el tipo de mascota",
+        "commentRequired": "Dejá una descripción de tu mascota",
         "characteristicIncomplete": "La característica {{index}} no puede estar vacía"
       }
     }

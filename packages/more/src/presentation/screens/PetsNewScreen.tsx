@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import {
   View,
   StyleSheet,
@@ -7,6 +7,7 @@ import {
   Text,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useNavigation } from '@react-navigation/native'
 import {
   Color,
   LabelStyle,
@@ -18,11 +19,15 @@ import {
   PPBottomSheetContainer,
   PPBottomSheet,
   useBottomSheetModalRef,
+  GenericToast,
+  Loader,
 } from '@packages/common'
 import { usePetsNewViewModel } from '../viewModels/PetsNewViewModel'
+import catSuccess from '@app/assets/lottie-json/success-cat.json'
 
 const PetsNewScreen: FC = (): JSX.Element => {
   const { t } = useI18n()
+  const navigation = useNavigation()
   const {
     state,
     setName,
@@ -32,11 +37,18 @@ const PetsNewScreen: FC = (): JSX.Element => {
     setCharacteristicValue,
     setType,
     setCharacteristicType,
-    handleSave,
-    getValidationErrors,
+    validateForm,
+    savePet,
   } = usePetsNewViewModel()
 
   const confirmationModalRef = useBottomSheetModalRef()
+  const successModalRef = useBottomSheetModalRef()
+
+  useEffect(() => {
+    if (state.petSaved) {
+      successModalRef.current?.present()
+    }
+  }, [state.petSaved])
 
   const Avatar = () => {
     return (
@@ -157,24 +169,12 @@ const PetsNewScreen: FC = (): JSX.Element => {
   }
 
   const SaveButton = () => {
-    const errors = getValidationErrors()
-    const hasErrors = errors.length > 0
-
     return (
       <View style={{ paddingHorizontal: 20 }}>
-        {hasErrors && (
-          <View style={styles.errorContainer}>
-            {errors.map((error, index) => (
-              <Text key={index} style={styles.errorText}>
-                • {error}
-              </Text>
-            ))}
-          </View>
-        )}
         <Button.Primary
           title={t('petsNewScreen.save')}
           onPress={() =>
-            handleSave(() => confirmationModalRef.current?.present())
+            validateForm(() => confirmationModalRef.current?.present())
           }
         />
       </View>
@@ -198,12 +198,20 @@ const PetsNewScreen: FC = (): JSX.Element => {
         primaryActionTitle={t('petsNewScreen.confirmation.confirm')}
         secondaryActionTitle={t('petsNewScreen.confirmation.cancel')}
         onPrimaryAction={() => {
-          // Aquí puedes acceder al pet model completo: state.pet
-          console.log('Pet model to save:', state.pet)
-          // TODO: Implementar lógica de guardado
+          confirmationModalRef.current?.dismiss()
+          savePet()
         }}
         onSecondaryAction={() => confirmationModalRef.current?.dismiss()}
       />
+      <PPBottomSheet.Dialog
+        ref={successModalRef}
+        title={t('petsNewScreen.success.title')}
+        subtitle={t('petsNewScreen.success.subtitle')}
+        lottieFile={catSuccess}
+        onPrimaryAction={() => navigation.goBack()}
+      />
+      {state.loading && <Loader loading={state.loading} opacity={0.85}/>}
+      <GenericToast overrideOffset={10} />
     </PPBottomSheetContainer>
   )
 }
@@ -269,18 +277,6 @@ const styles = StyleSheet.create({
   addButtonText: {
     ...LabelStyle.body({ color: Color.brand1[700] }),
     marginLeft: 8,
-  },
-  errorContainer: {
-    backgroundColor: Color.red[50],
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: Color.red[200],
-  },
-  errorText: {
-    ...LabelStyle.body2({ color: Color.red[700] }),
-    marginBottom: 4,
   },
 })
 

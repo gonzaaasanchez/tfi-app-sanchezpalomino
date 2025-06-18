@@ -58,22 +58,13 @@ const RegisterScreen = ({ route }: Props): JSX.Element => {
 
   useEffect(() => {
     if (state.error === 'register-missing-fields') {
-      showAlert(
-        t('general.ups'),
-        t('registerScreen.error.missingFields')
-      )
+      showAlert(t('general.ups'), t('registerScreen.error.missingFields'))
       return
     } else if (state.error === 'register-password-not-match') {
-      showAlert(
-        t('general.ups'),
-        t('registerScreen.error.passwordNotMatch')
-      )
+      showAlert(t('general.ups'), t('registerScreen.error.passwordNotMatch'))
       return
     } else if (state.error === 'register-invalid-email') {
-      showAlert(
-        t('general.ups'),
-        t('registerScreen.error.emailMessage')
-      )
+      showAlert(t('general.ups'), t('registerScreen.error.emailMessage'))
       return
     } else if (state.error !== null) {
       showAlert(t('general.ups'), state.error)
@@ -84,7 +75,7 @@ const RegisterScreen = ({ route }: Props): JSX.Element => {
   return (
     <PPBottomSheetContainer>
       <View style={styles.fullScreenContainer}>
-        {state.loading && <Loader loading={state.loading} animal="all" />}
+        {state.loading && <Loader loading={state.loading} opacity={0.85}/>}
         <KeyboardAvoidingView
           style={styles.keyboardContainer}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

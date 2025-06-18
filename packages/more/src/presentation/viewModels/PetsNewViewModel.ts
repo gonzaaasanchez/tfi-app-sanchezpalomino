@@ -4,6 +4,7 @@ import {
   PetCharacteristic,
   PetModel,
   useI18n,
+  ShowToast,
 } from '@packages/common'
 import { useState } from 'react'
 
@@ -11,6 +12,7 @@ type PetsNewState = {
   pet: PetModel
   petTypesDatasource: PetType[]
   characteristicsDatasource: PetCharacteristic[]
+  petSaved: boolean
 } & UIState
 
 type PetsNewViewModel = {
@@ -26,8 +28,8 @@ type PetsNewViewModel = {
     field: 'id' | 'name' | 'value',
     value: string
   ) => void
-  handleSave: (onConfirm: () => void) => void
-  getValidationErrors: () => string[]
+  validateForm: (onValidated: () => void) => void
+  savePet: () => void
 }
 
 const mockPetTypes: PetType[] = [
@@ -50,6 +52,7 @@ const initialState: PetsNewState = {
   characteristicsDatasource: mockCharacteristics,
   loading: false,
   error: null,
+  petSaved: false,
 }
 
 const usePetsNewViewModel = (): PetsNewViewModel => {
@@ -135,9 +138,19 @@ const usePetsNewViewModel = (): PetsNewViewModel => {
     })
   }
 
-  const handleSave = (onConfirm: () => void): void => {
-    if (getValidationErrors().length === 0) {
-      onConfirm()
+  const validateForm = (onValidated: () => void): void => {
+    const errors = getValidationErrors()
+
+    if (errors.length === 0) {
+      onValidated()
+    } else {
+      const errorMessage = errors.map((error) => `• ${error}`).join('\n')
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: errorMessage,
+        duration: 5000,
+      })
     }
   }
 
@@ -172,6 +185,20 @@ const usePetsNewViewModel = (): PetsNewViewModel => {
     return errors
   }
 
+  const savePet = (): void => {
+    setState((previous) => ({
+      ...previous,
+      loading: true,
+    }))
+    setTimeout(() => {
+      setState((previous) => ({
+        ...previous,
+        loading: false,
+        petSaved: true,
+      }))
+    }, 1000)
+  }
+
   return {
     state,
     setName,
@@ -181,8 +208,8 @@ const usePetsNewViewModel = (): PetsNewViewModel => {
     removeCharacteristic,
     setCharacteristicValue,
     setCharacteristicType,
-    handleSave,
-    getValidationErrors,
+    validateForm,
+    savePet,
   }
 }
 

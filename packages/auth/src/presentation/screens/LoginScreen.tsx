@@ -68,7 +68,7 @@ const LoginScreen: FC<Props> = () => {
   return (
     <PPBottomSheetContainer>
       <View style={styles.fullScreenContainer}>
-        {state.loading && <Loader loading={state.loading} />}
+        {state.loading && <Loader loading={state.loading} opacity={0.85}/>}
         <KeyboardAvoidingView
           style={styles.keyboardContainer}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

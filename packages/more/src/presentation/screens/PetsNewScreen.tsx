@@ -5,6 +5,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Text,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
@@ -184,12 +186,24 @@ const PetsNewScreen: FC = (): JSX.Element => {
   return (
     <PPBottomSheetContainer>
       <SafeAreaView style={styles.container} edges={['bottom']}>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <Avatar />
-          <MainForm />
-          <CharacteristicsForm />
-        </ScrollView>
-        <SaveButton />
+        <KeyboardAvoidingView 
+          style={styles.keyboardAvoidingView}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        >
+          <ScrollView 
+            contentContainerStyle={styles.scrollContainer}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={true}
+            indicatorStyle="black"
+            scrollIndicatorInsets={{ right: 1 }}
+          >
+            <Avatar />
+            <MainForm />
+            <CharacteristicsForm />
+          </ScrollView>
+          <SaveButton />
+        </KeyboardAvoidingView>
       </SafeAreaView>
       <PPBottomSheet.Dialog
         ref={confirmationModalRef}
@@ -223,7 +237,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     padding: 20,
-    paddingBottom: 40,
+    flexGrow: 1,
   },
   avatarContainer: {
     alignItems: 'center',
@@ -277,6 +291,9 @@ const styles = StyleSheet.create({
   addButtonText: {
     ...LabelStyle.body({ color: Color.brand1[700] }),
     marginLeft: 8,
+  },
+  keyboardAvoidingView: {
+    flex: 1,
   },
 })
 

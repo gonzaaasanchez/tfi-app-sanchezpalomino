@@ -162,11 +162,6 @@
     "moreScreen": {
       "title": "Menú",
       "menu": {
-        "profile": "Mi Perfil",
-        "pets": "Mis Mascotas",
-        "petsNew": "Nueva Mascota",
-        "addresses": "Mis Domicilios",
-        "carerPreferences": "Mis preferencias como cuidador",
         "logout": "Cerrar Sesión"
       },
       "logoutModal": {
@@ -177,6 +172,7 @@
       }
     },
     "profileScreen": {
+      "title": "Mi Perfil",
       "editPhoto": "Editar foto",
       "firstName": "Nombre",
       "firstNamePlaceholder": "Ingresá tu nombre",
@@ -190,6 +186,15 @@
         "lastNameRequired": "El apellido es requerido",
         "phoneRequired": "El teléfono debe tener al menos 10 dígitos"
       }
+    },
+    "petsScreen": {
+      "title": "Mis Mascotas"
+    },
+    "addressesScreen": {
+      "title": "Mis Domicilios"
+    },
+    "carerPreferencesScreen": {
+      "title": "Mis preferencias como cuidador"
     },
     "petsNewScreen": {
       "title": "Nueva Mascota",

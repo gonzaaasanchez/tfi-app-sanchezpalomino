@@ -27,25 +27,25 @@ const MoreScreen: FC = (): JSX.Element => {
     onPress?: () => void
   }> = [
     {
-      title: t('moreScreen.menu.profile'),
+      title: t('profileScreen.title'),
       icon: 'person-outline',
       screen: 'profile',
       testID: 'moreScreen.profile',
     },
     {
-      title: t('moreScreen.menu.pets'),
+      title: t('petsScreen.title'),
       icon: 'paw-outline',
       screen: 'pets',
       testID: 'moreScreen.pets',
     },
     {
-      title: t('moreScreen.menu.addresses'),
+      title: t('addressesScreen.title'),
       icon: 'home-outline',
       screen: 'addresses',
       testID: 'moreScreen.addresses',
     },
     {
-      title: t('moreScreen.menu.carerPreferences'),
+      title: t('carerPreferencesScreen.title'),
       icon: 'tune',
       screen: 'carerPreferences',
       testID: 'moreScreen.carerPreferences',

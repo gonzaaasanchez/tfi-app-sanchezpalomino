@@ -9,6 +9,8 @@ import { GeneralStyle, useI18n } from '@packages/common'
 import { useNavigation, StackActions } from '@react-navigation/native'
 import { TouchableOpacity } from 'react-native'
 import { PetsNewScreen } from './screens/PetsNewScreen'
+import { CarerPreferencesScreen } from './screens/CarerPreferencesScreen'
+import { AddressesScreen } from './screens/AddressesScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -34,7 +36,7 @@ const MoreStack: FC = (): JSX.Element => {
         name="profile"
         component={ProfileScreen}
         options={({ navigation }) => ({
-          headerTitle: t('moreScreen.menu.profile'),
+          headerTitle: t('profileScreen.title'),
           headerRight: () => (
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <MaterialIcons name="close" size={24} color="white" />
@@ -46,7 +48,7 @@ const MoreStack: FC = (): JSX.Element => {
         name="pets"
         component={PetsScreen}
         options={({ navigation }) => ({
-          headerTitle: t('moreScreen.menu.pets'),
+          headerTitle: t('petsScreen.title'),
           headerRight: () => (
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <MaterialIcons name="close" size={24} color="white" />
@@ -58,7 +60,31 @@ const MoreStack: FC = (): JSX.Element => {
         name="petsNew"
         component={PetsNewScreen}
         options={({ navigation }) => ({
-          headerTitle: t('moreScreen.menu.petsNew'),
+          headerTitle: t('petsNewScreen.title'),
+          headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <MaterialIcons name="close" size={24} color="white" />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="carerPreferences"
+        component={CarerPreferencesScreen}
+        options={({ navigation }) => ({
+          headerTitle: t('carerPreferencesScreen.title'),
+          headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <MaterialIcons name="close" size={24} color="white" />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="addresses"
+        component={AddressesScreen}
+        options={({ navigation }) => ({
+          headerTitle: t('addressesScreen.title'),
           headerRight: () => (
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <MaterialIcons name="close" size={24} color="white" />

@@ -5,8 +5,10 @@ import { Color, StateColor } from '../style/Color'
 
 interface FormFieldProps {
   label?: string
-  value: string
-  onChangeText: (text: string) => void
+  value?: string
+  defaultValue?: string
+  onChangeText?: (text: string) => void
+  onBlur?: (text: string) => void
   error?: string
   placeholder?: string
   secureTextEntry?: boolean
@@ -15,7 +17,9 @@ interface FormFieldProps {
 export const FormField: React.FC<FormFieldProps> = ({
   label,
   value,
+  defaultValue,
   onChangeText,
+  onBlur,
   error,
   placeholder,
   secureTextEntry,
@@ -34,7 +38,9 @@ export const FormField: React.FC<FormFieldProps> = ({
       <TextInput
         style={[styles.input, error && styles.inputError]}
         value={value}
+        defaultValue={defaultValue}
         onChangeText={onChangeText}
+        onBlur={(e) => onBlur?.(e.nativeEvent.text)}
         placeholder={placeholder}
         secureTextEntry={secureTextEntry}
         placeholderTextColor={Color.black[400]}

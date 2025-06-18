@@ -68,8 +68,8 @@ const PetsNewScreen: FC = (): JSX.Element => {
       <View style={{ gap: 5 }}>
         <FormField
           label={t('petsNewScreen.name')}
-          value={state.pet.name || ''}
-          onChangeText={setName}
+          defaultValue={state.pet.name || ''}
+          onBlur={setName}
           placeholder={t('petsNewScreen.namePlaceholder')}
         />
 
@@ -102,8 +102,8 @@ const PetsNewScreen: FC = (): JSX.Element => {
 
         <FormField
           label={t('petsNewScreen.comment')}
-          value={state.pet.comment || ''}
-          onChangeText={setComment}
+          defaultValue={state.pet.comment || ''}
+          onBlur={setComment}
           placeholder={t('petsNewScreen.commentPlaceholder')}
         />
       </View>
@@ -138,8 +138,8 @@ const PetsNewScreen: FC = (): JSX.Element => {
                 }
               />
               <FormField
-                value={char.value || ''}
-                onChangeText={(value) =>
+                defaultValue={char.value || ''}
+                onBlur={(value) =>
                   setCharacteristicValue(index, 'value', value)
                 }
                 placeholder={t('petsNewScreen.valuePlaceholder')}

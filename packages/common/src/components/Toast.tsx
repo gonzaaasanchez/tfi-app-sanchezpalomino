@@ -12,6 +12,7 @@ type CustomToastProps = {
   subtitle: string
   config: GenericToastType
   duration?: number /// milliseconds
+  subtitleStyle?: any // Allow style override for subtitle
 }
 
 const CustomToast: React.FC<CustomToastProps> = ({
@@ -20,6 +21,7 @@ const CustomToast: React.FC<CustomToastProps> = ({
   subtitle,
   config,
   duration,
+  subtitleStyle,
 }) => {
   const toastConfig = {
     success: {
@@ -78,10 +80,13 @@ const CustomToast: React.FC<CustomToastProps> = ({
               {title}
             </Text>
             <Text
-              style={LabelStyle.title2({
-                fontWeight: 400,
-                color: Color.black[600],
-              })}
+              style={[
+                LabelStyle.title2({
+                  fontWeight: 400,
+                  color: Color.black[600],
+                }),
+                subtitleStyle,
+              ]}
             >
               {subtitle}
             </Text>
@@ -139,6 +144,7 @@ const GenericToast: React.FC<{ overrideOffset?: number }> = ({
             subtitle={text2}
             config={props.config}
             duration={props.duration}
+            subtitleStyle={props.subtitleStyle}
             uniqueKey={new Date().getTime().toString()}
           />
         ),
@@ -148,14 +154,14 @@ const GenericToast: React.FC<{ overrideOffset?: number }> = ({
   )
 }
 
-const ShowToast = ({ config, title, subtitle, duration }: CustomToastProps) => {
+const ShowToast = ({ config, title, subtitle, duration, subtitleStyle }: CustomToastProps) => {
   const visibilityDuration = duration ?? 4000
   Toast.show({
     type: 'pawPalsToast',
     text1: title,
     text2: subtitle,
     visibilityTime: visibilityDuration,
-    props: { config: config, duration: visibilityDuration },
+    props: { config: config, duration: visibilityDuration, subtitleStyle },
   })
 }
 

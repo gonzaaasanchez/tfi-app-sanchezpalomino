@@ -5,6 +5,8 @@ import {
   PetModel,
   useI18n,
   ShowToast,
+  Color,
+  LabelStyle,
 } from '@packages/common'
 import { useState } from 'react'
 
@@ -150,6 +152,12 @@ const usePetsNewViewModel = (): PetsNewViewModel => {
         title: t('general.ups'),
         subtitle: errorMessage,
         duration: 5000,
+        subtitleStyle: {
+          ...LabelStyle.body({
+            fontWeight: 400,
+            color: Color.black[600],
+          }),
+        },
       })
     }
   }

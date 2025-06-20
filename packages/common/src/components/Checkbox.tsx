@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Color } from '../style/Color'
+import { PPMaterialIcon } from './PPMaterialIcon'
 
 interface CheckboxProps {
   checked: boolean
@@ -18,8 +19,7 @@ export const Checkbox: FC<CheckboxProps> = ({
   return (
     <TouchableOpacity
       style={[
-        styles.checkbox,
-        { width: size, height: size },
+        styles.touchableArea,
         disabled && styles.disabled,
       ]}
       onPress={!disabled ? onPress : undefined}
@@ -27,28 +27,34 @@ export const Checkbox: FC<CheckboxProps> = ({
     >
       <View
         style={[
-          styles.checkboxInner,
-          { width: size * 0.6, height: size * 0.6 },
-          checked && styles.checkboxSelected,
+          styles.checkbox,
+          { width: size, height: size },
         ]}
-      />
+      >
+        {checked && (
+          <PPMaterialIcon
+            icon="paw"
+            size={size * 0.8}
+            color={Color.brand1[500]}
+          />
+        )}
+      </View>
     </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
+  touchableArea: {
+    padding: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   checkbox: {
     borderRadius: 4,
     borderWidth: 1,
     borderColor: Color.brand1[500],
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  checkboxInner: {
-    borderRadius: 2,
-  },
-  checkboxSelected: {
-    backgroundColor: Color.brand1[500],
   },
   disabled: {
     opacity: 0.5,

@@ -12,6 +12,7 @@ interface FormFieldProps {
   error?: string
   placeholder?: string
   secureTextEntry?: boolean
+  disabled?: boolean
 }
 
 export const FormField: React.FC<FormFieldProps> = ({
@@ -23,6 +24,7 @@ export const FormField: React.FC<FormFieldProps> = ({
   error,
   placeholder,
   secureTextEntry,
+  disabled = false,
 }) => {
   return (
     <View style={styles.container}>
@@ -36,14 +38,19 @@ export const FormField: React.FC<FormFieldProps> = ({
         </Text>
       )}
       <TextInput
-        style={[styles.input, error && styles.inputError]}
+        style={[
+          styles.input, 
+          error && styles.inputError,
+          disabled && styles.inputDisabled
+        ]}
         value={value}
         defaultValue={defaultValue}
         onChangeText={onChangeText}
         onBlur={(e) => onBlur?.(e.nativeEvent.text)}
         placeholder={placeholder}
         secureTextEntry={secureTextEntry}
-        placeholderTextColor={Color.black[400]}
+        placeholderTextColor={disabled ? Color.black[300] : Color.black[400]}
+        editable={!disabled}
       />
       {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
@@ -68,6 +75,11 @@ const styles = StyleSheet.create({
   },
   inputError: {
     borderColor: StateColor.error.default,
+  },
+  inputDisabled: {
+    backgroundColor: Color.black[50],
+    borderColor: Color.black[200],
+    color: Color.black[400],
   },
   errorText: {
     ...LabelStyle.body2({ color: StateColor.error.default }),

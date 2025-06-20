@@ -48,6 +48,7 @@ import {
 } from './src/components/PPMaterialIcon'
 import Dropdown from './src/components/Dropdown'
 import { FormField } from './src/components/FormField'
+import { Checkbox } from './src/components/Checkbox'
 import { createUserSchema, UserFormData } from './src/data/schemas/userSchema'
 import { PetDetail } from './src/components/PetDetail'
 import { DetailItem } from './src/components/DetailItem'
@@ -96,6 +97,7 @@ export {
   PPMaterialIcon,
   Dropdown,
   FormField,
+  Checkbox,
   createUserSchema,
   UserFormData,
   PetDetail,

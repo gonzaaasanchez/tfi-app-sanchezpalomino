@@ -1,0 +1,178 @@
+import {
+  UIState,
+  useI18n,
+  ShowToast,
+  Color,
+  LabelStyle,
+} from '@packages/common'
+import { useState } from 'react'
+
+type CarerPreferencesState = {
+  homeCareEnabled: boolean
+  homeCareDailyPrice: string
+  petHomeCareEnabled: boolean
+  petHomeCareVisitPrice: string
+  preferencesSaved: boolean
+} & UIState
+
+type CarerPreferencesViewModel = {
+  state: CarerPreferencesState
+  setHomeCareEnabled: () => void
+  setHomeCareDailyPrice: (price: string) => void
+  setPetHomeCareEnabled: () => void
+  setPetHomeCareVisitPrice: (price: string) => void
+  validateForm: (onValidated: () => void) => void
+  savePreferences: () => void
+}
+
+const initialState: CarerPreferencesState = {
+  homeCareEnabled: false,
+  homeCareDailyPrice: '',
+  petHomeCareEnabled: false,
+  petHomeCareVisitPrice: '',
+  loading: false,
+  error: null,
+  preferencesSaved: false,
+}
+
+const useCarerPreferencesViewModel = (): CarerPreferencesViewModel => {
+  const [state, setState] = useState<CarerPreferencesState>(initialState)
+  const { t } = useI18n()
+
+  const setHomeCareEnabled = (): void => {
+    setState((previous) => ({
+      ...previous,
+      homeCareEnabled: !previous.homeCareEnabled,
+      // Clear price when disabled
+      homeCareDailyPrice: !previous.homeCareEnabled
+        ? previous.homeCareDailyPrice
+        : '',
+    }))
+  }
+
+  const setHomeCareDailyPrice = (price: string): void => {
+    setState((previous) => ({
+      ...previous,
+      homeCareDailyPrice: price,
+    }))
+  }
+
+  const setPetHomeCareEnabled = (): void => {
+    setState((previous) => ({
+      ...previous,
+      petHomeCareEnabled: !previous.petHomeCareEnabled,
+      // Clear price when disabled
+      petHomeCareVisitPrice: !previous.petHomeCareEnabled
+        ? previous.petHomeCareVisitPrice
+        : '',
+    }))
+  }
+
+  const setPetHomeCareVisitPrice = (price: string): void => {
+    setState((previous) => ({
+      ...previous,
+      petHomeCareVisitPrice: price,
+    }))
+  }
+
+  const validateForm = (onValidated: () => void): void => {
+    const errors = getValidationErrors()
+
+    if (errors.length === 0) {
+      onValidated()
+    } else {
+      const errorMessage = errors.map((error) => `• ${error}`).join('\n')
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: errorMessage,
+        duration: 5000,
+        subtitleStyle: {
+          ...LabelStyle.body({
+            fontWeight: 400,
+            color: Color.black[600],
+          }),
+        },
+      })
+    }
+  }
+
+  const getValidationErrors = (): string[] => {
+    const errors: string[] = []
+    const {
+      homeCareEnabled,
+      homeCareDailyPrice,
+      petHomeCareEnabled,
+      petHomeCareVisitPrice,
+    } = state
+
+    // Validate home care if enabled
+    if (homeCareEnabled) {
+      if (!homeCareDailyPrice.trim()) {
+        errors.push(
+          t('carerPreferencesScreen.validation.homeCarePriceRequired')
+        )
+      } else {
+        const price = parseFloat(homeCareDailyPrice)
+        if (isNaN(price) || price <= 0) {
+          errors.push(
+            t('carerPreferencesScreen.validation.homeCarePriceInvalid')
+          )
+        }
+      }
+    }
+
+    // Validate pet home care if enabled
+    if (petHomeCareEnabled) {
+      if (!petHomeCareVisitPrice.trim()) {
+        errors.push(
+          t('carerPreferencesScreen.validation.petHomeCarePriceRequired')
+        )
+      } else {
+        const price = parseFloat(petHomeCareVisitPrice)
+        if (isNaN(price) || price <= 0) {
+          errors.push(
+            t('carerPreferencesScreen.validation.petHomeCarePriceInvalid')
+          )
+        }
+      }
+    }
+
+    return errors
+  }
+
+  const savePreferences = (): void => {
+    setState((previous) => ({
+      ...previous,
+      loading: true,
+    }))
+
+    // Simulate API call
+    setTimeout(() => {
+      setState((previous) => ({
+        ...previous,
+        loading: false,
+        preferencesSaved: true,
+      }))
+
+      ShowToast({
+        config: 'success',
+        title: t('carerPreferencesScreen.success.title'),
+        subtitle: t('carerPreferencesScreen.success.message'),
+        duration: 3000,
+      })
+    }, 1000)
+  }
+
+  return {
+    state,
+    setHomeCareEnabled,
+    setHomeCareDailyPrice,
+    setPetHomeCareEnabled,
+    setPetHomeCareVisitPrice,
+    validateForm,
+    savePreferences,
+  }
+}
+
+export { useCarerPreferencesViewModel }

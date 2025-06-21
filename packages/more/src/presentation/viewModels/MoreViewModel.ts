@@ -1,7 +1,7 @@
 import { UIState } from '@app/common'
 import { useDispatch } from 'react-redux'
 import { useState } from 'react'
-import { setAuthToken } from '@app/common'
+import { setAuthToken, setUser } from '@app/common'
 
 type MoreViewModel = {
   state: MoreState
@@ -20,6 +20,7 @@ const useMoreViewModel = (): MoreViewModel => {
 
   const logout: () => void = async () => {
     dispatch(setAuthToken({ token: null }))
+    dispatch(setUser({ user: null }))
   }
 
   return { state: { ...state }, logout }

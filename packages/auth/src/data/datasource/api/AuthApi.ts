@@ -1,8 +1,12 @@
-import { HttpClient, UserModel } from '@app/common'
+import { HttpClient, SessionModel } from '@app/common'
 
 interface AuthApi {
-  login(email: string, password: string): Promise<UserModel>
-  createUser(email: string, password: string, name: string): Promise<UserModel>
+  login(email: string, password: string): Promise<SessionModel>
+  createUser(
+    email: string,
+    password: string,
+    name: string
+  ): Promise<SessionModel>
   forgotPassword(email: string): Promise<void>
 }
 
@@ -17,12 +21,12 @@ class AuthApiImpl implements AuthApi {
     return new Promise((resolve) => setTimeout(resolve, ms))
   }
 
-  async login(email: string, password: string): Promise<UserModel> {
-    const response = await this.httpClient.post<UserModel>('/login', {
+  async login(email: string, password: string): Promise<SessionModel> {
+    const response = await this.httpClient.post<SessionModel>('/auth/login', {
       email,
       password,
     })
-    return response
+    return response.data
   }
 
   async createUser(
@@ -30,17 +34,17 @@ class AuthApiImpl implements AuthApi {
     password: string,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     name: string
-  ): Promise<UserModel> {
-    const response = await this.httpClient.post<UserModel>('/register', {
+  ): Promise<SessionModel> {
+    const response = await this.httpClient.post<SessionModel>('/register', {
       email,
       password,
     })
-    return response
+    return response.data
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async forgotPassword(email: string): Promise<void> {
-    await this.delay(2000);
+    await this.delay(2000)
     return Promise.resolve()
   }
 }

@@ -1,4 +1,4 @@
-import { setAuthToken, UIState, useInjection } from '@app/common'
+import { setAuthToken, setUser, UIState, useInjection } from '@app/common'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { $ } from '../../domain/di/Types'
@@ -35,13 +35,14 @@ const useLoginViewModel = (): LoginViewModel => {
       error: null,
     }))
     try {
-      const user = await useCase.execute(state.email, state.password)
+      const session = await useCase.execute(state.email, state.password)
       setState((previous) => ({
         ...previous,
         loading: false,
         error: null,
       }))
-      dispatch(setAuthToken({ token: user.token }))
+      dispatch(setAuthToken({ token: session.token }))
+      dispatch(setUser({ user: session.user }))
     } catch (error) {
       setState((previous) => ({
         ...previous,

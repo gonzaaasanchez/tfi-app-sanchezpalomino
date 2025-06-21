@@ -1,5 +1,7 @@
 import axios, { AxiosInstance } from 'axios'
 import { HttpClient } from '../../domain/interfaces/HttpClient'
+import { BaseResponse } from './BaseResponse'
+import { AxiosInterceptor } from './AxiosInterceptor'
 
 class AxiosHttpClient implements HttpClient {
   private axiosInstance: AxiosInstance
@@ -9,26 +11,32 @@ class AxiosHttpClient implements HttpClient {
       headers: {
         'Content-Type': 'application/json',
       },
+      timeout: 30000,
     })
+    AxiosInterceptor.setup(this.axiosInstance)
   }
 
-  async get<T>(url: string, params?: unknown): Promise<T> {
-    const response = await this.axiosInstance.get<T>(url, { params })
+  async get<T>(url: string, params?: unknown): Promise<BaseResponse<T>> {
+    const response = await this.axiosInstance.get<BaseResponse<T>>(url, {
+      params,
+    })
     return response.data
   }
 
-  async post<T>(url: string, data: unknown): Promise<T> {
-    const response = await this.axiosInstance.post<T>(url, data)
+  async post<T>(url: string, data: unknown): Promise<BaseResponse<T>> {
+    const response = await this.axiosInstance.post<BaseResponse<T>>(url, data)
     return response.data
   }
 
-  async put<T>(url: string, data: unknown): Promise<T> {
-    const response = await this.axiosInstance.put<T>(url, data)
+  async put<T>(url: string, data: unknown): Promise<BaseResponse<T>> {
+    const response = await this.axiosInstance.put<BaseResponse<T>>(url, data)
     return response.data
   }
 
-  async delete<T>(url: string, params?: unknown): Promise<T> {
-    const response = await this.axiosInstance.delete<T>(url, { params })
+  async delete<T>(url: string, params?: unknown): Promise<BaseResponse<T>> {
+    const response = await this.axiosInstance.delete<BaseResponse<T>>(url, {
+      params,
+    })
     return response.data
   }
 }

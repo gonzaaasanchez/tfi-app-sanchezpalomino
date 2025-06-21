@@ -1,6 +1,6 @@
 import AuthRepository from '../../domain/repository/AuthRepository'
 import { AuthApi } from '../datasource/api/AuthApi'
-import { UserModel } from '@app/common'
+import { SessionModel } from '@app/common'
 
 class AuthRepositoryImpl implements AuthRepository {
   private readonly api: AuthApi
@@ -9,7 +9,7 @@ class AuthRepositoryImpl implements AuthRepository {
     this.api = api
   }
 
-  async login(email: string, password: string): Promise<UserModel> {
+  async login(email: string, password: string): Promise<SessionModel> {
     return this.api.login(email, password)
   }
 
@@ -17,7 +17,7 @@ class AuthRepositoryImpl implements AuthRepository {
     email: string,
     password: string,
     name: string
-  ): Promise<UserModel> {
+  ): Promise<SessionModel> {
     return this.api.createUser(email, password, name)
   }
 

@@ -1,4 +1,4 @@
-import { StringValidator, UserModel } from '@app/common'
+import { SessionModel, StringValidator } from '@app/common'
 import AuthRepository from '../repository/AuthRepository'
 
 class LoginUseCase {
@@ -7,7 +7,7 @@ class LoginUseCase {
   constructor(authRepository: AuthRepository) {
     this.authRepository = authRepository
   }
-  async execute(email: string, password: string): Promise<UserModel> {
+  async execute(email: string, password: string): Promise<SessionModel> {
     if (!email || !password) {
       throw new Error('login-missing-fields')
     }

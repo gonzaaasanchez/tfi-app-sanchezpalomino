@@ -20,7 +20,8 @@ const StringValidator = {
   },
 
   hasValidLength: (password: string) => {
-    return password.length >= 8 && password.length <= 24
+    // return password.length >= 8 && password.length <= 24
+    return password.length >= 6 && password.length <= 24
   },
 
   paasswordMatch: (password: string, repeatPassword: string) => {
@@ -34,8 +35,8 @@ const StringValidator = {
   isValidPassword: (password: string) => {
     return (
       password != '' &&
-      StringValidator.hasLowerCase(password) &&
-      StringValidator.hasUpperCase(password) &&
+      // StringValidator.hasLowerCase(password) &&
+      // StringValidator.hasUpperCase(password) &&
       StringValidator.hasValidLength(password)
     )
   },

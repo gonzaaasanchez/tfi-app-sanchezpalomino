@@ -4,14 +4,18 @@ import { HttpClient } from './src/domain/interfaces/HttpClient'
 import { useInjection } from './src/domain/hooks/Resolver'
 import { useI18n } from './src/domain/hooks/i18n'
 import { ResolverProvider } from './src/domain/hooks/Resolver'
+import { useAppInitialization } from './src/domain/hooks/useAppInitialization'
 import { UIState } from './src/presentation/UIState'
 import {
   appReducer,
   getAuthToken,
   setAuthToken,
+  getUser,
+  setUser,
   AppState,
 } from './src/domain/store/AppSlice'
 import { UserModel } from './src/data/models/UserModel'
+import { SessionModel } from './src/data/models/SessionModel'
 import { PetModel, PetType, PetCharacteristic } from './src/data/models/PetModel'
 import { LocationModel } from './src/data/models/LocationModel'
 import { FeedModel } from './src/data/models/FeedModel'
@@ -61,14 +65,18 @@ export {
   useInjection,
   useI18n,
   ResolverProvider,
+  useAppInitialization,
   UIState,
   appReducer,
   appMiddleware,
   getAuthToken,
   setAuthToken,
+  getUser,
+  setUser,
   AppState,
   HttpClient,
   UserModel,
+  SessionModel,
   PetModel,
   PetType,
   PetCharacteristic,

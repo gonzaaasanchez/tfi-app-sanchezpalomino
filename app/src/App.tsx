@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { StyleSheet, View } from 'react-native'
-import { GenericToast, ResolverProvider } from '@app/common'
+import { GenericToast, ResolverProvider, useAppInitialization } from '@app/common'
 import { Router } from './presentation/screens/Router'
 import { store } from './domain/store/Store'
 import { Provider } from 'react-redux'
@@ -21,6 +21,9 @@ const AppContent = (): JSX.Element => {
     'SourGummy-SemiBold': require('app/assets/fonts/SourGummy-SemiBold.ttf'),
     'SourGummy-Thin': require('app/assets/fonts/SourGummy-Thin.ttf'),
   })
+
+  // Initialize app authentication data
+  useAppInitialization()
 
   const hideSplashScreen = useCallback(async () => {
     if (loaded && !error) {

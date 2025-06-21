@@ -1,46 +1,27 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { UserModel } from '../../data/models/UserModel'
 
 const TOKEN_KEY = 'userAuthToken'
+const USER_KEY = 'userData'
 
-/**
- * Represents the shape of the state managed by this slice.
- *
- * @property {string|null|Promise<string|null>} token - The authentication token.
- * @notExported
- */
 type SliceState = {
-  token: string | null | Promise<string | null>
+  token: string | null
+  user: UserModel | null
 }
 
 const initialState: SliceState = {
-  token: AsyncStorage.getItem(TOKEN_KEY),
+  token: null,
+  user: null,
 }
 
-/**
- * The app slice object.
- *
- * @notExported
- */
 const appSlice = createSlice({
   name: 'AppSlice',
   initialState,
   reducers: {
-    /**
-     * Returns the current state of the slice.
-     *
-     * @returns {SliceState} The current state of the slice.
-     */
     getAuthToken: (state) => {
       return state
     },
-    /**
-     * Updates the `token` property of the state with a new value.
-     *
-     * @param {SliceState} state - The current state of the slice.
-     * @param {PayloadAction<string|null|Promise<string|null>>} action - The action object.
-     * @returns {SliceState} The updated state of the slice.
-     */
     setAuthToken: (
       state,
       action: PayloadAction<{
@@ -49,26 +30,28 @@ const appSlice = createSlice({
     ) => {
       state.token = action.payload.token
     },
+    getUser: (state) => {
+      return state
+    },
+    setUser: (
+      state,
+      action: PayloadAction<{
+        user: UserModel | null
+      }>
+    ) => {
+      state.user = action.payload.user
+    },
   },
 })
 
-/**
- * The app reducer object.
- */
 const appReducer = {
   app: appSlice.reducer,
 }
 
-/**
- * Type definition for the application state.
- *
- * @typedef {Object} AppState
- * @property {ReturnType<typeof appSlice.reducer>} app - The state of the application slice.
- */
 type AppState = {
   app: ReturnType<typeof appSlice.reducer>
 }
 
-const { getAuthToken, setAuthToken } = appSlice.actions
+const { getAuthToken, setAuthToken, getUser, setUser } = appSlice.actions
 
-export { appReducer, getAuthToken, setAuthToken, AppState }
+export { appReducer, getAuthToken, setAuthToken, getUser, setUser, AppState }

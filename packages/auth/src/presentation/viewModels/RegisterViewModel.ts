@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux'
 import { UIState, useInjection } from '@app/common'
-import { setAuthToken } from '@app/common'
+import { setAuthToken, setUser } from '@app/common'
 import { useState } from 'react'
 import { $ } from '../../domain/di/Types'
 import { RegisterUseCase } from '../../domain/usecases/RegisterUseCase'
@@ -38,14 +38,15 @@ const useRegisterViewModel = (): RegisterViewModel => {
   const createUser: () => Promise<boolean> = async () => {
     setState((previous) => ({ ...previous, loading: true, error: null }))
     try {
-      const user = await useCase.execute(
+      const session = await useCase.execute(
         state.email,
         state.name,
         state.password,
         state.confirmPassword
       )
       setState((previous) => ({ ...previous, loading: false, error: null }))
-      dispatch(setAuthToken({ token: user.token }))
+      dispatch(setAuthToken({ token: session.token }))
+      dispatch(setUser({ user: session.user }))
       return true
     } catch (error) {
       setState((previous) => ({

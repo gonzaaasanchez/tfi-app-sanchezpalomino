@@ -1,4 +1,4 @@
-import { StringValidator, UserModel } from '@app/common'
+import { StringValidator, SessionModel } from '@app/common'
 import AuthRepository from '../repository/AuthRepository'
 
 class RegisterUseCase {
@@ -13,7 +13,7 @@ class RegisterUseCase {
     name: string,
     password: string,
     confirmPassword: string
-  ): Promise<UserModel> {
+  ): Promise<SessionModel> {
     if (!name || !email || !password || !confirmPassword) {
       throw new Error('register-missing-fields')
     }

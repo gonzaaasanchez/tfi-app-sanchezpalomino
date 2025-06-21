@@ -1,8 +1,8 @@
-import { UserModel } from '@app/common'
+import { SessionModel } from '@app/common'
 
 interface AuthRepository {
-  login(email: string, password: string): Promise<UserModel>
-  createUser(email: string, password: string, name: string): Promise<UserModel>
+  login(email: string, password: string): Promise<SessionModel>
+  createUser(email: string, password: string, name: string): Promise<SessionModel>
   forgotPassword(email: string): Promise<void>
 }
 

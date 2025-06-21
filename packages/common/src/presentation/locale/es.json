@@ -183,6 +183,10 @@
       "phone": "Teléfono",
       "phonePlaceholder": "Ingresá tu teléfono",
       "saveChanges": "Guardar mis datos",
+      "success": {
+        "title": "¡Felicidades!",
+        "subtitle": "Tus datos se actualizaron correctamente"
+      },
       "errors": {
         "firstNameRequired": "El nombre es requerido",
         "lastNameRequired": "El apellido es requerido",

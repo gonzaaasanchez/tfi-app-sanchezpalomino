@@ -1,16 +1,9 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { setAuthToken, setUser } from '../store/AppSlice'
+import { setAuthToken, setUser, StorageKeys } from '../store/AppSlice'
 import { UserModel } from '../../data/models/UserModel'
 
-const TOKEN_KEY = 'userAuthToken'
-const USER_KEY = 'userData'
-
-/**
- * Hook to initialize app authentication data from AsyncStorage
- * This should be called once when the app starts
- */
 export const useAppInitialization = () => {
   const dispatch = useDispatch()
 
@@ -19,8 +12,8 @@ export const useAppInitialization = () => {
       try {
         // Load token and user data in parallel
         const [token, userData] = await Promise.all([
-          AsyncStorage.getItem(TOKEN_KEY),
-          AsyncStorage.getItem(USER_KEY)
+          AsyncStorage.getItem(StorageKeys.TOKEN_KEY),
+          AsyncStorage.getItem(StorageKeys.USER_KEY),
         ])
 
         // Set token if exists
@@ -40,4 +33,4 @@ export const useAppInitialization = () => {
 
     loadInitialData()
   }, [dispatch])
-} 
+}

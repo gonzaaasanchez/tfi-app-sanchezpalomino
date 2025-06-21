@@ -1,8 +1,5 @@
-import { Resolver } from '../../domain/interfaces/Resolver'
-import { $ } from '../../domain/di/Types'
-
 class UserModel {
-  id?: string
+  _id?: string
   firstName?: string
   lastName?: string
   phoneNumber?: string
@@ -10,12 +7,12 @@ class UserModel {
   avatar?: string
 
   constructor(data: Partial<UserModel>) {
-    this.id = data.id
-    this.firstName = data.firstName
-    this.lastName = data.lastName
-    this.phoneNumber = data.phoneNumber
-    this.email = data.email
-    this.avatar = data.avatar
+    this._id = data._id || null
+    this.firstName = data.firstName || null
+    this.lastName = data.lastName || null
+    this.phoneNumber = data.phoneNumber || null
+    this.email = data.email || null
+    this.avatar = data.avatar || null
   }
 
   get fullName(): string {
@@ -35,6 +32,10 @@ class UserModel {
     }
 
     return `${baseUrl}${this.avatar.startsWith('/') ? '' : '/'}${this.avatar}`
+  }
+
+  toPlainObject() {
+    return Object.assign({}, this)
   }
 }
 

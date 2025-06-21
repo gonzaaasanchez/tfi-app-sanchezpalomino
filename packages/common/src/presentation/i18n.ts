@@ -1,15 +1,15 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
-import en from './locale/es.json'
+import es from './locale/es.json'
 
 const resources = {
-  en: en,
+  es: es,
 }
 
 i18n.use(initReactI18next).init({
   compatibilityJSON: 'v3',
   resources,
-  lng: 'en',
+  lng: 'es',
 })
 
 export default i18n

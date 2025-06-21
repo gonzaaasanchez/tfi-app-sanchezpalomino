@@ -2,6 +2,8 @@ import axios, { AxiosInstance } from 'axios'
 import { HttpClient } from '../../domain/interfaces/HttpClient'
 import { BaseResponse } from './BaseResponse'
 import { AxiosInterceptor } from './AxiosInterceptor'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { StorageKeys } from '../../domain/store/AppSlice'
 
 class AxiosHttpClient implements HttpClient {
   private axiosInstance: AxiosInstance
@@ -16,26 +18,46 @@ class AxiosHttpClient implements HttpClient {
     AxiosInterceptor.setup(this.axiosInstance)
   }
 
+  private async getHeaders(): Promise<Record<string, string>> {
+    const token = await AsyncStorage.getItem(StorageKeys.TOKEN_KEY)
+    const headers: Record<string, string> = {}
+    if (token) {
+      headers.Authorization = `Bearer ${token}`
+    }
+    console.log('headers', headers)
+    return headers
+  }
+
   async get<T>(url: string, params?: unknown): Promise<BaseResponse<T>> {
+    const headers = await this.getHeaders()
     const response = await this.axiosInstance.get<BaseResponse<T>>(url, {
       params,
+      headers,
     })
     return response.data
   }
 
   async post<T>(url: string, data: unknown): Promise<BaseResponse<T>> {
-    const response = await this.axiosInstance.post<BaseResponse<T>>(url, data)
+    const headers = await this.getHeaders()
+    const response = await this.axiosInstance.post<BaseResponse<T>>(url, data, {
+      headers,
+    })
     return response.data
   }
 
   async put<T>(url: string, data: unknown): Promise<BaseResponse<T>> {
-    const response = await this.axiosInstance.put<BaseResponse<T>>(url, data)
+    const headers = await this.getHeaders()
+    const response = await this.axiosInstance.put<BaseResponse<T>>(url, data, {
+      headers,
+    })
     return response.data
   }
 
   async delete<T>(url: string, params?: unknown): Promise<BaseResponse<T>> {
+    const headers = await this.getHeaders()
     const response = await this.axiosInstance.delete<BaseResponse<T>>(url, {
       params,
+      headers,
     })
     return response.data
   }

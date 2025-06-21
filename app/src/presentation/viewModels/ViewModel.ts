@@ -39,27 +39,12 @@ const useRouterViewModel = (): RouterViewModel => {
   const userAuthToken = useSelector((state: AppState) => state.app.token)
 
   useEffect(() => {
-    /**
-     * Initialize the authentication state.
-     *
-     * If the userAuthToken is a promise, wait for it to resolve, otherwise use its value.
-     * Set the loading state to true, then set the isLoggedIn state to true if the token is truthy,
-     * and set the loading state to false.
-     *
-     * @returns {Promise<void>} A promise that resolves when the authentication state is initialized.
-     */
     const initializeAuth = async (): Promise<void> => {
       setState((previous) => ({ ...previous, loading: true }))
-      let token: string | null
-      if (userAuthToken instanceof Promise) {
-        token = await userAuthToken
-      } else {
-        token = userAuthToken
-      }
       setState((previous) => ({
         ...previous,
         loading: false,
-        isLoggedIn: token !== null,
+        isLoggedIn: userAuthToken !== null,
       }))
     }
     initializeAuth()

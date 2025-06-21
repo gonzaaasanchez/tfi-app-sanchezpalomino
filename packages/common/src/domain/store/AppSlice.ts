@@ -1,9 +1,10 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { UserModel } from '../../data/models/UserModel'
 
-const TOKEN_KEY = 'userAuthToken'
-const USER_KEY = 'userData'
+export const StorageKeys = {
+  TOKEN_KEY: 'userAuthToken',
+  USER_KEY: 'userData',
+}
 
 type SliceState = {
   token: string | null

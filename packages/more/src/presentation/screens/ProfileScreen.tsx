@@ -12,7 +12,6 @@ import {
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useSelector } from 'react-redux'
 
 import {
   createUserSchema,
@@ -22,25 +21,15 @@ import {
   Color,
   LabelStyle,
   useI18n,
-  AppState,
   PPMaterialIcon,
-  useInjection,
-  Types,
-  UserModel,
+  Loader,
+  GenericToast,
 } from '@packages/common'
+import { useProfileViewModel } from '../viewModels/ProfileViewModel'
 
 const ProfileScreen: FC = (): JSX.Element => {
   const { t } = useI18n()
-  const userData = useSelector((state: AppState) => state.app.user)
-  const baseUrl = useInjection(Types.BaseURL) as string
-  
-  // Crear instancia de UserModel para tener acceso a getAvatarUrl
-  const user = userData ? new UserModel(userData) : null
-
-  useEffect(() => {
-    console.log('User:', user)
-    console.log('Avatar URL:', user?.getAvatarUrl(baseUrl))
-  }, [user])
+  const { user, baseUrl, state, updateProfile } = useProfileViewModel()
 
   const {
     control,
@@ -56,11 +45,6 @@ const ProfileScreen: FC = (): JSX.Element => {
       avatar: user?.avatar || '',
     },
   })
-
-  const onSubmit = (data: UserFormData) => {
-    console.log(data)
-    // Handle form submission
-  }
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
@@ -105,7 +89,13 @@ const ProfileScreen: FC = (): JSX.Element => {
             </TouchableOpacity>
           </View>
 
-          <View style={{paddingBottom: 50}}>
+          {state.error && (
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>{state.error}</Text>
+            </View>
+          )}
+
+          <View style={{ paddingBottom: 50 }}>
             <Controller
               control={control}
               name="firstName"
@@ -165,10 +155,13 @@ const ProfileScreen: FC = (): JSX.Element => {
 
           <Button.Primary
             title={t('profileScreen.saveChanges')}
-            onPress={handleSubmit(onSubmit)}
+            onPress={handleSubmit(updateProfile)}
+            loading={state.loading}
           />
         </ScrollView>
       </KeyboardAvoidingView>
+      {state.loading && <Loader loading={state.loading} />}
+      <GenericToast overrideOffset={10} />
     </SafeAreaView>
   )
 }
@@ -200,6 +193,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: Color.brand2[50],
     borderRadius: 20,
+  },
+  errorContainer: {
+    backgroundColor: Color.brand2[100],
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 16,
+  },
+  errorText: {
+    color: Color.brand1[700],
+    fontSize: 14,
   },
   keyboardAvoidingView: {
     flex: 1,

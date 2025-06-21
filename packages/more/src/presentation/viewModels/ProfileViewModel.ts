@@ -19,8 +19,7 @@ type ProfileViewModel = {
   baseUrl: string
   state: ProfileState
   updateProfile: (userData: Partial<UserModel>) => Promise<void>
-  selectImageFromCamera: () => Promise<void>
-  selectImageFromGallery: () => Promise<void>
+  selectImageFrom: (source: 'camera' | 'gallery') => Promise<void>
 }
 
 type ProfileState = {
@@ -50,28 +49,11 @@ const useProfileViewModel = (): ProfileViewModel => {
   // Crear instancia de UserModel para tener acceso a getAvatarUrl
   const user = userData ? new UserModel(userData) : null
 
-  const selectImageFromGallery = async (): Promise<void> => {
-    const { uri, error } = await pickFromGallery()
-
-    if (error) {
-      ShowToast({
-        config: 'error',
-        title: t('general.ups'),
-        subtitle: error,
-      })
-      return
-    }
-
-    if (uri) {
-      setState((prev) => ({
-        ...prev,
-        newAvatarFile: uri,
-      }))
-    }
-  }
-
-  const selectImageFromCamera = async (): Promise<void> => {
-    const { uri, error } = await pickFromCamera()
+  const selectImageFrom = async (
+    source: 'camera' | 'gallery'
+  ): Promise<void> => {
+    const { uri, error } =
+      source === 'camera' ? await pickFromCamera() : await pickFromGallery()
 
     if (error) {
       ShowToast({
@@ -108,6 +90,11 @@ const useProfileViewModel = (): ProfileViewModel => {
         error: null,
         newAvatarFile: null,
       }))
+      ShowToast({
+        config: 'success',
+        title: t('profileScreen.success.title'),
+        subtitle: t('profileScreen.success.subtitle'),
+      })
     } catch (error) {
       ShowToast({
         config: 'error',
@@ -122,8 +109,7 @@ const useProfileViewModel = (): ProfileViewModel => {
     baseUrl,
     state,
     updateProfile,
-    selectImageFromCamera,
-    selectImageFromGallery,
+    selectImageFrom,
   }
 }
 

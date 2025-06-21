@@ -33,14 +33,8 @@ import { useProfileViewModel } from '../viewModels/ProfileViewModel'
 
 const ProfileScreen: FC = (): JSX.Element => {
   const { t } = useI18n()
-  const {
-    user,
-    baseUrl,
-    state,
-    updateProfile,
-    selectImageFromCamera,
-    selectImageFromGallery,
-  } = useProfileViewModel()
+  const { user, baseUrl, state, updateProfile, selectImageFrom } =
+    useProfileViewModel()
   const imagePickerModalRef = useBottomSheetModalRef()
 
   const {
@@ -60,11 +54,7 @@ const ProfileScreen: FC = (): JSX.Element => {
 
   const handleImageSelection = (source: 'camera' | 'gallery') => {
     imagePickerModalRef.current?.dismiss()
-    if (source === 'camera') {
-      selectImageFromCamera()
-    } else {
-      selectImageFromGallery()
-    }
+    selectImageFrom(source)
   }
 
   const getAvatarUrl = (): string | null => {

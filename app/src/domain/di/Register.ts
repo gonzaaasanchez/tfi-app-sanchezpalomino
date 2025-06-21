@@ -24,7 +24,7 @@ const registerDependencies = (): void => {
 }
 
 const AppRegister = (resolver: Resolver): void => {
-  resolver.registerSingleton(Types.BaseURL, 'https://tfi-backend-sanchezpalomino.onrender.com/api')
+  resolver.registerSingleton(Types.BaseURL, 'https://tfi-backend-sanchezpalomino.onrender.com')
 }
 
 export { resolver, registerDependencies }

@@ -24,12 +24,24 @@ import {
   useI18n,
   AppState,
   PPMaterialIcon,
+  useInjection,
+  Types,
+  UserModel,
 } from '@packages/common'
 
 const ProfileScreen: FC = (): JSX.Element => {
   const { t } = useI18n()
-  const user = useSelector((state: AppState) => state.app.user)
+  const userData = useSelector((state: AppState) => state.app.user)
+  const baseUrl = useInjection(Types.BaseURL) as string
   
+  // Crear instancia de UserModel para tener acceso a getAvatarUrl
+  const user = userData ? new UserModel(userData) : null
+
+  useEffect(() => {
+    console.log('User:', user)
+    console.log('Avatar URL:', user?.getAvatarUrl(baseUrl))
+  }, [user])
+
   const {
     control,
     handleSubmit,
@@ -64,7 +76,7 @@ const ProfileScreen: FC = (): JSX.Element => {
           <View style={styles.avatarContainer}>
             {user?.avatar && (
               <Image
-                source={{ uri: user?.avatar }}
+                source={{ uri: user.getAvatarUrl(baseUrl) }}
                 resizeMode="cover"
                 style={styles.avatar}
               />

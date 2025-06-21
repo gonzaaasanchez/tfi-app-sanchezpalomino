@@ -15,7 +15,7 @@ import { $ } from './Types'
 const CommonRegister = (resolver: Resolver): void => {
   resolver.registerSingleton<HttpClient>(
     $.HttpClient,
-    new AxiosHttpClient(resolver.resolve($.BaseURL))
+    new AxiosHttpClient(resolver.resolve($.BaseURL) + '/api')
   )
 }
 

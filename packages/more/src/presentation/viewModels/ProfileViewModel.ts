@@ -96,6 +96,7 @@ const useProfileViewModel = (): ProfileViewModel => {
         subtitle: t('profileScreen.success.subtitle'),
       })
     } catch (error) {
+      setState((prev) => ({ ...prev, loading: false }))
       ShowToast({
         config: 'error',
         title: t('general.ups'),

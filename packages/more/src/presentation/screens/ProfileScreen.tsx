@@ -61,7 +61,10 @@ const ProfileScreen: FC = (): JSX.Element => {
     if (state.newAvatarFile) {
       return state.newAvatarFile
     }
-    return user?.getAvatarUrl(baseUrl)
+    const avatarUrl = user?.getAvatarUrl(baseUrl)
+    if (!avatarUrl) return null
+    // Agregar timestamp para evitar cache
+    return `${avatarUrl}?_t=${Date.now()}`
   }
 
   const PawIcon = () => {

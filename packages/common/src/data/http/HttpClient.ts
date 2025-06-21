@@ -10,9 +10,6 @@ class AxiosHttpClient implements HttpClient {
   constructor(baseURL: string) {
     this.axiosInstance = axios.create({
       baseURL: baseURL,
-      headers: {
-        'Content-Type': 'application/json',
-      },
       timeout: 30000,
     })
     AxiosInterceptor.setup(this.axiosInstance)
@@ -24,7 +21,6 @@ class AxiosHttpClient implements HttpClient {
     if (token) {
       headers.Authorization = `Bearer ${token}`
     }
-    console.log('headers', headers)
     return headers
   }
 
@@ -39,6 +35,13 @@ class AxiosHttpClient implements HttpClient {
 
   async post<T>(url: string, data: unknown): Promise<BaseResponse<T>> {
     const headers = await this.getHeaders()
+   
+    if (data instanceof FormData) {
+      delete headers['Content-Type']
+    } else {
+      headers['Content-Type'] = 'application/json'
+    }
+
     const response = await this.axiosInstance.post<BaseResponse<T>>(url, data, {
       headers,
     })
@@ -47,6 +50,13 @@ class AxiosHttpClient implements HttpClient {
 
   async put<T>(url: string, data: unknown): Promise<BaseResponse<T>> {
     const headers = await this.getHeaders()
+
+    if (data instanceof FormData) {
+      delete headers['Content-Type']
+    } else {
+      headers['Content-Type'] = 'application/json'
+    }
+
     const response = await this.axiosInstance.put<BaseResponse<T>>(url, data, {
       headers,
     })

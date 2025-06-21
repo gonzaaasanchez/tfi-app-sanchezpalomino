@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC } from 'react'
 import {
   StyleSheet,
   View,
@@ -24,12 +24,24 @@ import {
   PPMaterialIcon,
   Loader,
   GenericToast,
+  PPBottomSheetContainer,
+  PPBottomSheet,
+  useBottomSheetModalRef,
+  ImagePickerOptions,
 } from '@packages/common'
 import { useProfileViewModel } from '../viewModels/ProfileViewModel'
 
 const ProfileScreen: FC = (): JSX.Element => {
   const { t } = useI18n()
-  const { user, baseUrl, state, updateProfile } = useProfileViewModel()
+  const {
+    user,
+    baseUrl,
+    state,
+    updateProfile,
+    selectImageFromCamera,
+    selectImageFromGallery,
+  } = useProfileViewModel()
+  const imagePickerModalRef = useBottomSheetModalRef()
 
   const {
     control,
@@ -46,123 +58,150 @@ const ProfileScreen: FC = (): JSX.Element => {
     },
   })
 
+  const handleImageSelection = (source: 'camera' | 'gallery') => {
+    imagePickerModalRef.current?.dismiss()
+    if (source === 'camera') {
+      selectImageFromCamera()
+    } else {
+      selectImageFromGallery()
+    }
+  }
+
+  const getAvatarUrl = (): string | null => {
+    if (state.newAvatarFile) {
+      return state.newAvatarFile
+    }
+    return user?.getAvatarUrl(baseUrl)
+  }
+
+  const PawIcon = () => {
+    return <PPMaterialIcon icon="pets" size={40} color={Color.brand1[700]} />
+  }
+
   return (
-    <SafeAreaView style={styles.container} edges={['bottom']}>
-      <KeyboardAvoidingView
-        style={styles.keyboardAvoidingView}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
+    <PPBottomSheetContainer>
+      <SafeAreaView style={styles.container} edges={['bottom']}>
+        <KeyboardAvoidingView
+          style={styles.keyboardAvoidingView}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
-          <View style={styles.avatarContainer}>
-            {user?.avatar && (
-              <Image
-                source={{ uri: user.getAvatarUrl(baseUrl) }}
-                resizeMode="cover"
-                style={styles.avatar}
-              />
-            )}
-            {!user?.avatar && (
-              <View style={styles.avatar}>
-                <PPMaterialIcon
-                  icon="pets"
-                  size={40}
-                  color={Color.brand1[700]}
-                />
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={styles.avatarContainer}>
+              {getAvatarUrl() && (
+                <View style={styles.avatar}>
+                  <Image
+                    source={{ uri: getAvatarUrl() }}
+                    resizeMode="cover"
+                    style={styles.avatarImage}
+                  />
+                </View>
+              )}
+              {!getAvatarUrl() && (
+                <View style={styles.avatar}>
+                  <PawIcon />
+                </View>
+              )}
+              <TouchableOpacity
+                style={styles.editAvatarButton}
+                activeOpacity={0.85}
+                onPress={() => imagePickerModalRef.current?.present()}
+              >
+                <Text
+                  style={LabelStyle.body2({
+                    fontWeight: 600,
+                    color: Color.black[600],
+                  })}
+                >
+                  {t('profileScreen.editPhoto')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {state.error && (
+              <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>{state.error}</Text>
               </View>
             )}
-            <TouchableOpacity
-              style={styles.editAvatarButton}
-              activeOpacity={0.85}
-            >
-              <Text
-                style={LabelStyle.body2({
-                  fontWeight: 600,
-                  color: Color.black[600],
-                })}
-              >
-                {t('profileScreen.editPhoto')}
-              </Text>
-            </TouchableOpacity>
-          </View>
 
-          {state.error && (
-            <View style={styles.errorContainer}>
-              <Text style={styles.errorText}>{state.error}</Text>
+            <View style={{ paddingBottom: 50 }}>
+              <Controller
+                control={control}
+                name="firstName"
+                render={({ field: { onChange, value } }) => (
+                  <FormField
+                    label={t('profileScreen.firstName')}
+                    value={value || ''}
+                    onChangeText={onChange}
+                    error={errors.firstName?.message}
+                    placeholder={t('profileScreen.firstNamePlaceholder')}
+                  />
+                )}
+              />
+
+              <Controller
+                control={control}
+                name="lastName"
+                render={({ field: { onChange, value } }) => (
+                  <FormField
+                    label={t('profileScreen.lastName')}
+                    value={value || ''}
+                    onChangeText={onChange}
+                    error={errors.lastName?.message}
+                    placeholder={t('profileScreen.lastNamePlaceholder')}
+                  />
+                )}
+              />
+
+              <Controller
+                control={control}
+                name="email"
+                render={({ field: { onChange, value } }) => (
+                  <FormField
+                    label={t('profileScreen.email')}
+                    value={value || ''}
+                    onChangeText={onChange}
+                    error={errors.email?.message}
+                    placeholder={t('profileScreen.emailPlaceholder')}
+                  />
+                )}
+              />
+
+              <Controller
+                control={control}
+                name="phoneNumber"
+                render={({ field: { onChange, value } }) => (
+                  <FormField
+                    label={t('profileScreen.phone')}
+                    value={value || ''}
+                    onChangeText={onChange}
+                    error={errors.phoneNumber?.message}
+                    placeholder={t('profileScreen.phonePlaceholder')}
+                  />
+                )}
+              />
             </View>
-          )}
 
-          <View style={{ paddingBottom: 50 }}>
-            <Controller
-              control={control}
-              name="firstName"
-              render={({ field: { onChange, value } }) => (
-                <FormField
-                  label={t('profileScreen.firstName')}
-                  value={value || ''}
-                  onChangeText={onChange}
-                  error={errors.firstName?.message}
-                  placeholder={t('profileScreen.firstNamePlaceholder')}
-                />
-              )}
+            <Button.Primary
+              title={t('profileScreen.saveChanges')}
+              onPress={handleSubmit(updateProfile)}
+              loading={state.loading}
             />
-
-            <Controller
-              control={control}
-              name="lastName"
-              render={({ field: { onChange, value } }) => (
-                <FormField
-                  label={t('profileScreen.lastName')}
-                  value={value || ''}
-                  onChangeText={onChange}
-                  error={errors.lastName?.message}
-                  placeholder={t('profileScreen.lastNamePlaceholder')}
-                />
-              )}
-            />
-
-            <Controller
-              control={control}
-              name="email"
-              render={({ field: { onChange, value } }) => (
-                <FormField
-                  label={t('profileScreen.email')}
-                  value={value || ''}
-                  onChangeText={onChange}
-                  error={errors.email?.message}
-                  placeholder={t('profileScreen.emailPlaceholder')}
-                />
-              )}
-            />
-
-            <Controller
-              control={control}
-              name="phoneNumber"
-              render={({ field: { onChange, value } }) => (
-                <FormField
-                  label={t('profileScreen.phone')}
-                  value={value || ''}
-                  onChangeText={onChange}
-                  error={errors.phoneNumber?.message}
-                  placeholder={t('profileScreen.phonePlaceholder')}
-                />
-              )}
-            />
-          </View>
-
-          <Button.Primary
-            title={t('profileScreen.saveChanges')}
-            onPress={handleSubmit(updateProfile)}
-            loading={state.loading}
+          </ScrollView>
+        </KeyboardAvoidingView>
+        {state.loading && <Loader loading={state.loading} />}
+        <GenericToast overrideOffset={10} />
+        <PPBottomSheet.Empty ref={imagePickerModalRef} dismisseable={true}>
+          <ImagePickerOptions
+            handleImageSelection={handleImageSelection}
+            onDismiss={() => imagePickerModalRef.current?.dismiss()}
           />
-        </ScrollView>
-      </KeyboardAvoidingView>
-      {state.loading && <Loader loading={state.loading} />}
-      <GenericToast overrideOffset={10} />
-    </SafeAreaView>
+        </PPBottomSheet.Empty>
+      </SafeAreaView>
+    </PPBottomSheetContainer>
   )
 }
 
@@ -186,6 +225,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: Color.brand1[300],
+  },
+  avatarImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 70,
   },
   editAvatarButton: {
     marginVertical: 12,

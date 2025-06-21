@@ -5,6 +5,7 @@ import { useInjection } from './src/domain/hooks/Resolver'
 import { useI18n } from './src/domain/hooks/i18n'
 import { ResolverProvider } from './src/domain/hooks/Resolver'
 import { useAppInitialization } from './src/domain/hooks/useAppInitialization'
+import { useImagePicker } from './src/domain/hooks/useImagePicker'
 import { UIState } from './src/presentation/UIState'
 import {
   appReducer,
@@ -16,7 +17,11 @@ import {
 } from './src/domain/store/AppSlice'
 import { UserModel } from './src/data/models/UserModel'
 import { SessionModel } from './src/data/models/SessionModel'
-import { PetModel, PetType, PetCharacteristic } from './src/data/models/PetModel'
+import {
+  PetModel,
+  PetType,
+  PetCharacteristic,
+} from './src/data/models/PetModel'
 import { LocationModel } from './src/data/models/LocationModel'
 import { FeedModel } from './src/data/models/FeedModel'
 import { appMiddleware } from './src/domain/store/AppMiddleware'
@@ -33,6 +38,12 @@ import {
 import { Button, ButtonState } from './src/components/Button'
 import { StringValidator } from './src/utils/StringUtils'
 import { DateUtils } from './src/utils/DateUtils'
+import {
+  getMimeType,
+  getFileName,
+  createFileInfo,
+  isValidImageUri,
+} from './src/utils/FileUtils'
 import { Loader } from './src/components/Loader'
 import { AnimatedView } from './src/components/AnimatedView'
 import { PPBottomSheetContainer } from './src/components/bottom-sheet/PPBottomSheetContainer'
@@ -56,6 +67,7 @@ import { Checkbox } from './src/components/Checkbox'
 import { createUserSchema, UserFormData } from './src/data/schemas/userSchema'
 import { PetDetail } from './src/components/PetDetail'
 import { DetailItem } from './src/components/DetailItem'
+import { ImagePickerOptions } from './src/components/ImagePickerOptions'
 
 export {
   Resolver,
@@ -66,6 +78,7 @@ export {
   useI18n,
   ResolverProvider,
   useAppInitialization,
+  useImagePicker,
   UIState,
   appReducer,
   appMiddleware,
@@ -92,6 +105,10 @@ export {
   ButtonState,
   StringValidator,
   DateUtils,
+  getMimeType,
+  getFileName,
+  createFileInfo,
+  isValidImageUri,
   Loader,
   AnimatedView,
   PPBottomSheetContainer,
@@ -111,4 +128,5 @@ export {
   PetDetail,
   DetailItem,
   HomeTabsHeight,
+  ImagePickerOptions,
 }

@@ -183,6 +183,16 @@
       "phone": "Teléfono",
       "phonePlaceholder": "Ingresá tu teléfono",
       "saveChanges": "Guardar mis datos",
+      "selectImage": {
+        "title": "Seleccionar imagen",
+        "camera": "Tomar foto",
+        "gallery": "Elegir de galería"
+      },
+      "permissions": {
+        "title": "Permisos requeridos",
+        "camera": "Necesitamos acceso a la cámara para tomar una foto",
+        "gallery": "Necesitamos acceso a la galería para seleccionar una imagen"
+      },
       "success": {
         "title": "¡Felicidades!",
         "subtitle": "Tus datos se actualizaron correctamente"

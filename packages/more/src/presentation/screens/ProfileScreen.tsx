@@ -29,11 +29,7 @@ import {
 const ProfileScreen: FC = (): JSX.Element => {
   const { t } = useI18n()
   const user = useSelector((state: AppState) => state.app.user)
-
-  useEffect(() => {
-    console.log(user)
-  }, [user])
-
+  
   const {
     control,
     handleSubmit,

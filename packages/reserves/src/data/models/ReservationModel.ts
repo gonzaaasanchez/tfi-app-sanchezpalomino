@@ -58,12 +58,12 @@ class ReservationModel {
   */
 
   get createdByUser(): boolean {
-    const createdByUser = this.userOwner?.id === 'u100'
+    const createdByUser = this.userOwner?._id === 'u100'
     return createdByUser
   }
 
   get createdForUser(): boolean {
-    const createdForUser = this.userCarer?.id === 'u100'
+    const createdForUser = this.userCarer?._id === 'u100'
     return createdForUser
   }
 

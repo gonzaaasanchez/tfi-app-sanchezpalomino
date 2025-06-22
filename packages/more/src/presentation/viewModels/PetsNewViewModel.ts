@@ -170,7 +170,7 @@ const usePetsNewViewModel = (): PetsNewViewModel => {
       errors.push(t('petsNewScreen.validation.nameRequired'))
     }
 
-    if (!pet.type?.id) {
+    if (!pet.petType?.id) {
       errors.push(t('petsNewScreen.validation.typeRequired'))
     }
 

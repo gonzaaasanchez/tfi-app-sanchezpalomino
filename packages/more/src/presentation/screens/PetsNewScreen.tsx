@@ -92,10 +92,10 @@ const PetsNewScreen: FC = (): JSX.Element => {
             placeholder={t('petsNewScreen.typePlaceholder')}
             onFinishSelection={setType}
             initialValue={
-              state.pet.type
+              state.pet.petType
                 ? {
-                    value: state.pet.type.id || '',
-                    label: state.pet.type.name || '',
+                    value: state.pet.petType.id || '',
+                    label: state.pet.petType.name || '',
                   }
                 : undefined
             }

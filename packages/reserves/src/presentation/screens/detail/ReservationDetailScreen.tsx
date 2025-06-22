@@ -9,7 +9,8 @@ import {
   useBottomSheetModalRef,
   GeneralStyle,
   PetDetail,
-  DetailItem
+  DetailItem,
+  ImageWithPlaceholder,
 } from '@packages/common'
 import { FC, useEffect, useState } from 'react'
 import { View, Text, Image, StyleSheet } from 'react-native'
@@ -73,9 +74,9 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
       <View style={styles.container}>
         <View style={styles.card}>
           <View style={styles.userContainer}>
-            <Image
-              source={{ uri: state.currentReserve?.placeDetailAvatar }}
-              style={styles.avatar}
+            <ImageWithPlaceholder
+              source={state.currentReserve?.placeDetailAvatar}
+              dimension={70}
             />
             <View>
               <Text style={LabelStyle.title2()}>
@@ -95,7 +96,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
               <View key={pet.id}>
                 <DetailItem
                   icon="pets"
-                  value={`${pet.name} (${pet.type.name})`}
+                  value={`${pet.name} (${pet.petType?.name})`}
                   onPress={() => setPetDetail(pet)}
                 />
               </View>
@@ -119,7 +120,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
                 title={t('reserveDetailScreen.location')}
                 value={t('reserveDetailScreen.distanceFormat', {
                   location: state.currentReserve?.location,
-                  distance: state.currentReserve?.distance.toString()
+                  distance: state.currentReserve?.distance.toString(),
                 })}
               />
             )}
@@ -185,12 +186,7 @@ const styles = StyleSheet.create({
   userContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  avatar: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    marginRight: 10,
+    gap: 10,
   },
 })
 

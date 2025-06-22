@@ -2,7 +2,6 @@ import React, { FC } from 'react'
 import {
   StyleSheet,
   View,
-  Image,
   ScrollView,
   TouchableOpacity,
   Text,
@@ -12,7 +11,6 @@ import {
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { SafeAreaView } from 'react-native-safe-area-context'
-
 import {
   createUserSchema,
   UserFormData,
@@ -21,13 +19,13 @@ import {
   Color,
   LabelStyle,
   useI18n,
-  PPMaterialIcon,
   Loader,
   GenericToast,
   PPBottomSheetContainer,
   PPBottomSheet,
   useBottomSheetModalRef,
   ImagePickerOptions,
+  ImageWithPlaceholder,
 } from '@packages/common'
 import { useProfileViewModel } from '../viewModels/ProfileViewModel'
 
@@ -67,10 +65,6 @@ const ProfileScreen: FC = (): JSX.Element => {
     return `${avatarUrl}?_t=${Date.now()}`
   }
 
-  const PawIcon = () => {
-    return <PPMaterialIcon icon="pets" size={40} color={Color.brand1[700]} />
-  }
-
   return (
     <PPBottomSheetContainer>
       <SafeAreaView style={styles.container} edges={['bottom']}>
@@ -84,20 +78,7 @@ const ProfileScreen: FC = (): JSX.Element => {
             keyboardShouldPersistTaps="handled"
           >
             <View style={styles.avatarContainer}>
-              {getAvatarUrl() && (
-                <View style={styles.avatar}>
-                  <Image
-                    source={{ uri: getAvatarUrl() }}
-                    resizeMode="cover"
-                    style={styles.avatarImage}
-                  />
-                </View>
-              )}
-              {!getAvatarUrl() && (
-                <View style={styles.avatar}>
-                  <PawIcon />
-                </View>
-              )}
+              <ImageWithPlaceholder source={getAvatarUrl()} dimension={140} />
               <TouchableOpacity
                 style={styles.editAvatarButton}
                 activeOpacity={0.85}
@@ -208,21 +189,6 @@ const styles = StyleSheet.create({
   avatarContainer: {
     alignItems: 'center',
     paddingTop: 24,
-  },
-  avatar: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    backgroundColor: Color.brand1[100],
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: Color.brand1[300],
-  },
-  avatarImage: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 70,
   },
   editAvatarButton: {
     marginVertical: 12,

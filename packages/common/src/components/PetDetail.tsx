@@ -1,10 +1,11 @@
-import { View, Image, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import { FC } from 'react'
 import { useI18n } from '../domain/hooks/i18n'
 import { PetModel } from '../data/models/PetModel'
 import { DetailItem } from './DetailItem'
 import { LabelStyle } from '../style/Styles'
 import { Color } from '../style/Color'
+import ImageWithPlaceholder from './ImageWithPlaceholder'
 
 type PetDetailSheetProps = {
   pet: PetModel
@@ -15,7 +16,9 @@ const PetDetail: FC<PetDetailSheetProps> = ({ pet }) => {
 
   return (
     <View style={{ paddingBottom: 20 }}>
-      <Image style={styles.petImage} source={{ uri: pet?.photoUrl }} />
+      <View style={{ alignItems: 'center', paddingBottom: 10}}>
+        <ImageWithPlaceholder source={pet.photoUrl} dimension={120} />
+      </View>
       <Text style={styles.petName}>{pet?.name}</Text>
       <Text style={styles.petType}>{`(${pet?.petType?.name})`}</Text>
       <Text style={styles.petComment}>{pet?.comment}</Text>
@@ -37,12 +40,6 @@ const PetDetail: FC<PetDetailSheetProps> = ({ pet }) => {
   )
 }
 const styles = StyleSheet.create({
-  petImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    alignSelf: 'center',
-  },
   petName: {
     ...LabelStyle.title1(),
     textAlign: 'center',

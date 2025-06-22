@@ -22,6 +22,7 @@ import {
   EmptyView,
   Loader,
   useI18n,
+  ImageWithPlaceholder,
 } from '@packages/common'
 import { useNavigation, StackActions } from '@react-navigation/native'
 import { usePetsViewModel } from '../viewModels/PetsViewModel'
@@ -34,11 +35,7 @@ const PetCard: FC<{ pet: PetModel; onPress: () => void }> = ({
     <TouchableOpacity activeOpacity={0.85} onPress={onPress}>
       <View style={styles.cardContainer}>
         <View style={styles.leftContainer}>
-          <Image
-            source={{ uri: pet.photoUrl }}
-            style={styles.profileImage}
-            resizeMode="cover"
-          />
+          <ImageWithPlaceholder source={pet.photoUrl} dimension={60} />
         </View>
         <View style={styles.rightContainer}>
           <Text style={styles.petName}>{pet.name}</Text>
@@ -131,14 +128,6 @@ const styles = StyleSheet.create({
   },
   leftContainer: {
     marginRight: 12,
-  },
-  profileImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: Color.brand1[100],
-    borderWidth: 1,
-    borderColor: Color.brand1[300],
   },
   rightContainer: {
     flex: 1,

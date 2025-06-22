@@ -7,21 +7,21 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'c1',
       userCarer: new UserModel({
-        id: 'u100',
-        firstname: 'Gonzalo',
-        lastname: 'Sanchez',
+        _id: 'u100',
+        firstName: 'Gonzalo',
+        lastName: 'Sanchez',
         phoneNumber: '+54 341 5891365',
         avatar: 'https://picsum.photos/200?random=1',
       }),
       userOwner: new UserModel({
-        id: 'u1',
-        firstname: 'Juan',
-        lastname: 'Pérez',
+        _id: 'u1',
+        firstName: 'Juan',
+        lastName: 'Pérez',
         phoneNumber: '+54 341 5678907',
         avatar:
           'https://hospitalveterinariodonostia.com/wp-content/uploads/2022/02/Personalidad-gatos.png',
       }),
-      placeType: 'Home',
+      placeType: PlaceType.OwnerHome,
       visitsPerDay: 2,
       pets: [
         {
@@ -64,13 +64,13 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'c2',
       userOwner: new UserModel({
-        id: 'u2',
-        firstname: 'María',
-        lastname: 'Gómez',
+        _id: 'u2',
+        firstName: 'María',
+        lastName: 'Gómez',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=2',
       }),
-      placeType: 'Visit',
+      placeType: PlaceType.CarerHome,
       visitsPerDay: 3,
       pets: [
         {
@@ -97,13 +97,13 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'c3',
       userOwner: new UserModel({
-        id: 'u3',
-        firstname: 'Lucía',
-        lastname: 'Ramírez',
+        _id: 'u3',
+        firstName: 'Lucía',
+        lastName: 'Ramírez',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=3',
       }),
-      placeType: 'Home',
+      placeType: PlaceType.OwnerHome,
       visitsPerDay: 1,
       pets: [
         {
@@ -134,13 +134,13 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'c4',
       userOwner: new UserModel({
-        id: 'u4',
-        firstname: 'Carlos',
-        lastname: 'Fernández',
+        _id: 'u4',
+        firstName: 'Carlos',
+        lastName: 'Fernández',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=4',
       }),
-      placeType: 'Visit',
+      placeType: PlaceType.CarerHome,
       visitsPerDay: 2,
       pets: [
         {
@@ -168,13 +168,13 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'c5',
       userOwner: new UserModel({
-        id: 'u5',
-        firstname: 'Ana',
-        lastname: 'Martínez',
+        _id: 'u5',
+        firstName: 'Ana',
+        lastName: 'Martínez',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=5',
       }),
-      placeType: 'Home',
+      placeType: PlaceType.OwnerHome,
       visitsPerDay: 3,
       pets: [
         {
@@ -216,13 +216,13 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'c6',
       userOwner: new UserModel({
-        id: 'u6',
-        firstname: 'Laura',
-        lastname: 'Sánchez',
+        _id: 'u6',
+        firstName: 'Laura',
+        lastName: 'Sánchez',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=6',
       }),
-      placeType: 'Home',
+      placeType: PlaceType.OwnerHome,
       visitsPerDay: 1,
       pets: [
         {
@@ -249,13 +249,13 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'c7',
       userOwner: new UserModel({
-        id: 'u7',
-        firstname: 'Pablo',
-        lastname: 'López',
+        _id: 'u7',
+        firstName: 'Pablo',
+        lastName: 'López',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=7',
       }),
-      placeType: 'Visit',
+      placeType: PlaceType.CarerHome,
       visitsPerDay: 2,
       pets: [
         {
@@ -282,13 +282,13 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'c8',
       userOwner: new UserModel({
-        id: 'u8',
-        firstname: 'Sofía',
-        lastname: 'Ortiz',
+        _id: 'u8',
+        firstName: 'Sofía',
+        lastName: 'Ortiz',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=8',
       }),
-      placeType: 'Visit',
+      placeType: PlaceType.CarerHome,
       visitsPerDay: 3,
       pets: [
         {
@@ -315,13 +315,13 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'c9',
       userOwner: new UserModel({
-        id: 'u9',
-        firstname: 'Miguel',
-        lastname: 'Hernández',
+        _id: 'u9',
+        firstName: 'Miguel',
+        lastName: 'Hernández',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=9',
       }),
-      placeType: 'Home',
+      placeType: PlaceType.OwnerHome,
       visitsPerDay: 1,
       pets: [
         {
@@ -348,13 +348,13 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'c10',
       userOwner: new UserModel({
-        id: 'u10',
-        firstname: 'Julián',
-        lastname: 'Alvarez',
+        _id: 'u10',
+        firstName: 'Julián',
+        lastName: 'Alvarez',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=10',
       }),
-      placeType: 'Visit',
+      placeType: PlaceType.CarerHome,
       visitsPerDay: 3,
       pets: [
         {
@@ -384,16 +384,16 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'p1',
       userCarer: new UserModel({
-        id: 'u100',
-        firstname: 'Gonzalo',
-        lastname: 'Sanchez',
+        _id: 'u100',
+        firstName: 'Gonzalo',
+        lastName: 'Sanchez',
         phoneNumber: '+54 341 5891365',
         avatar: 'https://picsum.photos/200?random=11',
       }),
       userOwner: new UserModel({
-        id: 'u11',
-        firstname: 'Federico',
-        lastname: 'López',
+        _id: 'u11',
+        firstName: 'Federico',
+        lastName: 'López',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=12',
       }),
@@ -409,16 +409,16 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'p2',
       userCarer: new UserModel({
-        id: 'u100',
-        firstname: 'Gonzalo',
-        lastname: 'Sanchez',
+        _id: 'u100',
+        firstName: 'Gonzalo',
+        lastName: 'Sanchez',
         phoneNumber: '+54 341 5891365',
         avatar: 'https://picsum.photos/200?random=13',
       }),
       userOwner: new UserModel({
-        id: 'u12',
-        firstname: 'Jorge',
-        lastname: 'Vega',
+        _id: 'u12',
+        firstName: 'Jorge',
+        lastName: 'Vega',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=14',
       }),
@@ -434,16 +434,16 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'p3',
       userCarer: new UserModel({
-        id: 'u100',
-        firstname: 'Gonzalo',
-        lastname: 'Sanchez',
+        _id: 'u100',
+        firstName: 'Gonzalo',
+        lastName: 'Sanchez',
         phoneNumber: '+54 341 5891365',
         avatar: 'https://picsum.photos/200?random=15',
       }),
       userOwner: new UserModel({
-        id: 'u13',
-        firstname: 'Paola',
-        lastname: 'González',
+        _id: 'u13',
+        firstName: 'Paola',
+        lastName: 'González',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=16',
       }),
@@ -459,16 +459,16 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'p4',
       userCarer: new UserModel({
-        id: 'u100',
-        firstname: 'Gonzalo',
-        lastname: 'Sanchez',
+        _id: 'u100',
+        firstName: 'Gonzalo',
+        lastName: 'Sanchez',
         phoneNumber: '+54 341 5891365',
         avatar: 'https://picsum.photos/200?random=17',
       }),
       userOwner: new UserModel({
-        id: 'u14',
-        firstname: 'Ricardo',
-        lastname: 'Martínez',
+        _id: 'u14',
+        firstName: 'Ricardo',
+        lastName: 'Martínez',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=18',
       }),
@@ -484,16 +484,16 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'p5',
       userCarer: new UserModel({
-        id: 'u100',
-        firstname: 'Gonzalo',
-        lastname: 'Sanchez',
+        _id: 'u100',
+        firstName: 'Gonzalo',
+        lastName: 'Sanchez',
         phoneNumber: '+54 341 5891365',
         avatar: 'https://picsum.photos/200?random=19',
       }),
       userOwner: new UserModel({
-        id: 'u15',
-        firstname: 'Marta',
-        lastname: 'Soto',
+        _id: 'u15',
+        firstName: 'Marta',
+        lastName: 'Soto',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=20',
       }),
@@ -509,16 +509,16 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'p6',
       userCarer: new UserModel({
-        id: 'u100',
-        firstname: 'Gonzalo',
-        lastname: 'Sanchez',
+        _id: 'u100',
+        firstName: 'Gonzalo',
+        lastName: 'Sanchez',
         phoneNumber: '+54 341 5891365',
         avatar: 'https://picsum.photos/200?random=21',
       }),
       userOwner: new UserModel({
-        id: 'u16',
-        firstname: 'Rosa',
-        lastname: 'Torres',
+        _id: 'u16',
+        firstName: 'Rosa',
+        lastName: 'Torres',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=22',
       }),
@@ -534,16 +534,16 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'p7',
       userCarer: new UserModel({
-        id: 'u100',
-        firstname: 'Gonzalo',
-        lastname: 'Sanchez',
+        _id: 'u100',
+        firstName: 'Gonzalo',
+        lastName: 'Sanchez',
         phoneNumber: '+54 341 5891365',
         avatar: 'https://picsum.photos/200?random=23',
       }),
       userOwner: new UserModel({
-        id: 'u17',
-        firstname: 'Carlos',
-        lastname: 'Rivas',
+        _id: 'u17',
+        firstName: 'Carlos',
+        lastName: 'Rivas',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=24',
       }),
@@ -562,16 +562,16 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'ca1',
       userCarer: new UserModel({
-        id: 'u100',
-        firstname: 'Gonzalo',
-        lastname: 'Sanchez',
+        _id: 'u100',
+        firstName: 'Gonzalo',
+        lastName: 'Sanchez',
         phoneNumber: '+54 341 5891365',
         avatar: 'https://picsum.photos/200?random=25',
       }),
       userOwner: new UserModel({
-        id: 'u18',
-        firstname: 'Susana',
-        lastname: 'Méndez',
+        _id: 'u18',
+        firstName: 'Susana',
+        lastName: 'Méndez',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=26',
       }),
@@ -587,16 +587,16 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'ca2',
       userCarer: new UserModel({
-        id: 'u100',
-        firstname: 'Gonzalo',
-        lastname: 'Sanchez',
+        _id: 'u100',
+        firstName: 'Gonzalo',
+        lastName: 'Sanchez',
         phoneNumber: '+54 341 5891365',
         avatar: 'https://picsum.photos/200?random=27',
       }),
       userOwner: new UserModel({
-        id: 'u19',
-        firstname: 'Gabriela',
-        lastname: 'Martínez',
+        _id: 'u19',
+        firstName: 'Gabriela',
+        lastName: 'Martínez',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=28',
       }),
@@ -612,16 +612,16 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'ca3',
       userCarer: new UserModel({
-        id: 'u100',
-        firstname: 'Gonzalo',
-        lastname: 'Sanchez',
+        _id: 'u100',
+        firstName: 'Gonzalo',
+        lastName: 'Sanchez',
         phoneNumber: '+54 341 5891365',
         avatar: 'https://picsum.photos/200?random=29',
       }),
       userOwner: new UserModel({
-        id: 'u20',
-        firstname: 'Elena',
-        lastname: 'Bravo',
+        _id: 'u20',
+        firstName: 'Elena',
+        lastName: 'Bravo',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=30',
       }),
@@ -637,16 +637,16 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'ca4',
       userCarer: new UserModel({
-        id: 'u100',
-        firstname: 'Gonzalo',
-        lastname: 'Sanchez',
+        _id: 'u100',
+        firstName: 'Gonzalo',
+        lastName: 'Sanchez',
         phoneNumber: '+54 341 5891365',
         avatar: 'https://picsum.photos/200?random=31',
       }),
       userOwner: new UserModel({
-        id: 'u21',
-        firstname: 'Alberto',
-        lastname: 'Hernández',
+        _id: 'u21',
+        firstName: 'Alberto',
+        lastName: 'Hernández',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=32',
       }),
@@ -662,16 +662,16 @@ export const GetReceivedReservatiosMockedResponse = {
     {
       id: 'ca5',
       userCarer: new UserModel({
-        id: 'u100',
-        firstname: 'Gonzalo',
-        lastname: 'Sanchez',
+        _id: 'u100',
+        firstName: 'Gonzalo',
+        lastName: 'Sanchez',
         phoneNumber: '+54 341 5891365',
         avatar: 'https://picsum.photos/200?random=33',
       }),
       userOwner: new UserModel({
-        id: 'u22',
-        firstname: 'Valeria',
-        lastname: 'Sánchez',
+        _id: 'u22',
+        firstName: 'Valeria',
+        lastName: 'Sánchez',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=34',
       }),
@@ -692,20 +692,20 @@ export const GetSentReservatiosMockedResponse = {
     {
       id: 'c1',
       userOwner: new UserModel({
-        id: 'u100',
-        firstname: 'Gonzalo',
-        lastname: 'Sanchez',
+        _id: 'u100',
+        firstName: 'Gonzalo',
+        lastName: 'Sanchez',
         phoneNumber: '+54 341 5891365',
         avatar: 'https://picsum.photos/200?random=4',
       }),
       userCarer: new UserModel({
-        id: 'u1',
-        firstname: 'Juan',
-        lastname: 'Pérez',
+        _id: 'u1',
+        firstName: 'Juan',
+        lastName: 'Pérez',
         phoneNumber: '+54 341 5678907',
         avatar: 'https://picsum.photos/200?random=5',
       }),
-      placeType: 'Home',
+      placeType: PlaceType.OwnerHome,
       visitsPerDay: 2,
       pets: [
         {

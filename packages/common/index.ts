@@ -24,7 +24,10 @@ import {
 } from './src/data/models/PetModel'
 import { LocationModel } from './src/data/models/LocationModel'
 import { FeedModel } from './src/data/models/FeedModel'
-import { PaginationModel, PaginatedResponse } from './src/data/models/PaginationModel'
+import {
+  PaginationModel,
+  PaginatedResponse,
+} from './src/data/models/PaginationModel'
 import { appMiddleware } from './src/domain/store/AppMiddleware'
 import { $ as Types } from './src/domain/di/Types'
 import { createResolver } from './src/data/di/Resolver'
@@ -69,6 +72,7 @@ import { createUserSchema, UserFormData } from './src/data/schemas/userSchema'
 import { PetDetail } from './src/components/PetDetail'
 import { DetailItem } from './src/components/DetailItem'
 import { ImagePickerOptions } from './src/components/ImagePickerOptions'
+import ImageWithPlaceholder from './src/components/ImageWithPlaceholder'
 
 export {
   Resolver,
@@ -132,4 +136,5 @@ export {
   DetailItem,
   HomeTabsHeight,
   ImagePickerOptions,
+  ImageWithPlaceholder,
 }

@@ -1,6 +1,7 @@
 import {
   Color,
   GeneralStyle,
+  ImageWithPlaceholder,
   LabelStyle,
   PPMaterialIcon,
   PPMaterialIconsName,
@@ -8,7 +9,7 @@ import {
 } from '@packages/common'
 import React from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
-import { PlaceType, ReservationModel } from '../../data/models/ReservationModel'
+import { ReservationModel } from '../../data/models/ReservationModel'
 
 type ReservationCardProps = {
   reservation: ReservationModel
@@ -41,9 +42,9 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
     <TouchableOpacity activeOpacity={0.85} onPress={onReservationSelected}>
       <View style={styles.cardContainer}>
         <View style={styles.leftContainer}>
-          <Image
-            source={{ uri: reservation.placeDetailAvatar }}
-            style={styles.profileImage}
+          <ImageWithPlaceholder
+            source={reservation.placeDetailAvatar}
+            dimension={60}
           />
         </View>
         <View style={styles.rightContainer}>
@@ -73,11 +74,6 @@ const styles = StyleSheet.create({
   },
   leftContainer: {
     marginRight: 12,
-  },
-  profileImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
   },
   rightContainer: {
     flex: 1,

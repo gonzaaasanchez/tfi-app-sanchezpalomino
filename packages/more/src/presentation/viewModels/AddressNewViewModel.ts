@@ -26,6 +26,7 @@ type AddressNewState = {
   address: Address | null
   floor: string
   apartment: string
+  addressSaved: boolean
 } & UIState
 
 const initialState: AddressNewState = {
@@ -35,6 +36,7 @@ const initialState: AddressNewState = {
   address: null,
   floor: '',
   apartment: '',
+  addressSaved: false,
 }
 
 const useAddressNewViewModel = (): AddressNewViewModel => {
@@ -126,13 +128,9 @@ const useAddressNewViewModel = (): AddressNewViewModel => {
       setState((previous) => ({
         ...previous,
         loading: false,
+        addressSaved: true,
       }))
-      ShowToast({
-        config: 'success',
-        title: t('addressNewScreen.success.title'),
-        subtitle: t('addressNewScreen.success.message'),
-      })
-      
+
     } catch (error) {
       setState((previous) => ({
         ...previous,

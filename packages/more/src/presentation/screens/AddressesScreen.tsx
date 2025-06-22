@@ -1,10 +1,11 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import {
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
   FlatList,
+  RefreshControl,
 } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
@@ -24,7 +25,17 @@ const AddressesScreen: FC = (): JSX.Element => {
   const { t } = useI18n()
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
-  const { state } = useAddressesViewModel()
+  const { state, loadAddresses } = useAddressesViewModel()
+  const [refreshing, setRefreshing] = useState(false)
+
+  const onRefresh = async () => {
+    setRefreshing(true)
+    try {
+      await loadAddresses()
+    } finally {
+      setRefreshing(false)
+    }
+  }
 
   const AddressCard: FC<{ address: Address; onPress: () => void }> = ({
     address,
@@ -57,6 +68,13 @@ const AddressesScreen: FC = (): JSX.Element => {
             )}
             keyExtractor={(item, index) => item.name + index}
             contentContainerStyle={styles.addressList}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                tintColor={Color.brand1[100]}
+              />
+            }
           />
         ) : (
           <EmptyView

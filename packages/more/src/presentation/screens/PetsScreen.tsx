@@ -125,7 +125,7 @@ const PetsScreen: FC = (): JSX.Element => {
         dismisseable={true}
         onDismiss={() => setPetDetail(null)}
       >
-        <PetDetail pet={petDetail} />
+        <PetDetail pet={petDetail} baseUrl={baseUrl} />
       </PPBottomSheet.Empty>
       <TouchableOpacity
         style={{

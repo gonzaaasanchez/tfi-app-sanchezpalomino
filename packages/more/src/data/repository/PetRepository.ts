@@ -33,4 +33,9 @@ export class PetRepositoryImpl implements PetRepository {
     const response = await this.api.getPetCharacteristics(page, limit)
     return response
   }
+
+  async savePet(pet: PetModel, avatarFile?: string | null): Promise<PetModel> {
+    const response = await this.api.savePet(pet, avatarFile)
+    return response
+  }
 }

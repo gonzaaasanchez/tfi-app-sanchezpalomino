@@ -23,6 +23,8 @@ import {
   useBottomSheetModalRef,
   GenericToast,
   Loader,
+  ImageWithPlaceholder,
+  ImagePickerOptions,
 } from '@packages/common'
 import { usePetsNewViewModel } from '../viewModels/PetsNewViewModel'
 import catSuccess from '@app/assets/lottie-json/success-cat.json'
@@ -41,10 +43,12 @@ const PetsNewScreen: FC = (): JSX.Element => {
     setCharacteristicType,
     validateForm,
     savePet,
+    selectImageFrom,
   } = usePetsNewViewModel()
 
   const confirmationModalRef = useBottomSheetModalRef()
   const successModalRef = useBottomSheetModalRef()
+  const imagePickerModalRef = useBottomSheetModalRef()
 
   useEffect(() => {
     if (state.petSaved) {
@@ -52,13 +56,20 @@ const PetsNewScreen: FC = (): JSX.Element => {
     }
   }, [state.petSaved])
 
+  const handleImageSelection = (source: 'camera' | 'gallery') => {
+    imagePickerModalRef.current?.dismiss()
+    selectImageFrom(source)
+  }
+
   const Avatar = () => {
     return (
       <View style={styles.avatarContainer}>
-        <View style={styles.avatar}>
-          <PPMaterialIcon icon="pets" size={40} color={Color.brand1[700]} />
-        </View>
-        <TouchableOpacity style={styles.uploadButton}>
+        <ImageWithPlaceholder source={state.newAvatarFile} dimension={120} />
+        <TouchableOpacity
+          style={styles.uploadButton}
+          activeOpacity={0.85}
+          onPress={() => imagePickerModalRef.current?.present()}
+        >
           <Text style={styles.uploadText}>{t('profileScreen.editPhoto')}</Text>
         </TouchableOpacity>
       </View>
@@ -228,6 +239,12 @@ const PetsNewScreen: FC = (): JSX.Element => {
       />
       {state.loading && <Loader loading={state.loading} />}
       <GenericToast overrideOffset={10} />
+      <PPBottomSheet.Empty ref={imagePickerModalRef} dismisseable={true}>
+        <ImagePickerOptions
+          handleImageSelection={handleImageSelection}
+          onDismiss={() => imagePickerModalRef.current?.dismiss()}
+        />
+      </PPBottomSheet.Empty>
     </PPBottomSheetContainer>
   )
 }

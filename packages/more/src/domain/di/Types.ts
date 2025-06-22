@@ -7,6 +7,7 @@ const $ = {
   GetMyPetsUseCase: Symbol.for('GetMyPetsUseCase'),
   GetPetTypesUseCase: Symbol.for('GetPetTypesUseCase'),
   GetPetCharacteristicsUseCase: Symbol.for('GetPetCharacteristicsUseCase'),
+  SavePetUseCase: Symbol.for('SavePetUseCase'),
 }
 
 export { $ }

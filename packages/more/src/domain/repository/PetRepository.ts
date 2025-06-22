@@ -15,4 +15,5 @@ export interface PetRepository {
     page?: number,
     limit?: number
   ): Promise<PaginatedResponse<PetCharacteristic>>
+  savePet(pet: PetModel, avatarFile?: string | null): Promise<PetModel>
 }

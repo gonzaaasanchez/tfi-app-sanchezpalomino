@@ -17,6 +17,7 @@ export interface PetApi {
     page?: number,
     limit?: number
   ): Promise<PaginatedResponse<PetCharacteristic>>
+  savePet(pet: PetModel, avatarFile?: string | null): Promise<PetModel>
 }
 
 export class PetApiImpl implements PetApi {
@@ -48,5 +49,9 @@ export class PetApiImpl implements PetApi {
     const response =
       await this.httpClient.get<PaginatedResponse<PetCharacteristic>>(url)
     return response.data
+  }
+
+  async savePet(pet: PetModel, avatarFile?: string | null): Promise<PetModel> {
+    return Promise.resolve({} as PetModel)
   }
 }

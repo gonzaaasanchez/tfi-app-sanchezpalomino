@@ -9,6 +9,7 @@ import { PetRepository } from '../../domain/repository/PetRepository'
 import { GetMyPetsUseCase } from '../usecases/GetMyPetsUseCase'
 import { GetPetTypesUseCase } from '../usecases/GetPetTypesUseCase'
 import { GetPetCharacteristicsUseCase } from '../usecases/GetPetCharacteristicsUseCase'
+import { SavePetUseCase } from '../usecases/SavePetUseCase'
 import { $ } from './Types'
 
 const MoreRegister = (resolver: Resolver): void => {
@@ -53,6 +54,11 @@ const MoreRegister = (resolver: Resolver): void => {
   resolver.registerSingleton<GetPetCharacteristicsUseCase>(
     $.GetPetCharacteristicsUseCase,
     new GetPetCharacteristicsUseCase(resolver.resolve($.PetRepository))
+  )
+
+  resolver.registerSingleton<SavePetUseCase>(
+    $.SavePetUseCase,
+    new SavePetUseCase(resolver.resolve($.PetRepository))
   )
 }
 

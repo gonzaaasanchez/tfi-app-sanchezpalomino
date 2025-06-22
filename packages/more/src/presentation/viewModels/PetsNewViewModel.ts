@@ -8,6 +8,7 @@ import {
   Color,
   LabelStyle,
   useInjection,
+  useImagePicker,
 } from '@packages/common'
 import { useState, useEffect } from 'react'
 import { GetPetTypesUseCase } from '../../domain/usecases/GetPetTypesUseCase'
@@ -19,6 +20,7 @@ type PetsNewState = {
   petTypesDatasource: PetType[]
   characteristicsDatasource: PetCharacteristic[]
   petSaved: boolean
+  newAvatarFile: string | null
 } & UIState
 
 type PetsNewViewModel = {
@@ -36,6 +38,7 @@ type PetsNewViewModel = {
   ) => void
   validateForm: (onValidated: () => void) => void
   savePet: () => void
+  selectImageFrom: (source: 'camera' | 'gallery') => Promise<void>
 }
 
 const initialState: PetsNewState = {
@@ -45,6 +48,7 @@ const initialState: PetsNewState = {
   loading: false,
   error: null,
   petSaved: false,
+  newAvatarFile: null,
 }
 
 const usePetsNewViewModel = (): PetsNewViewModel => {
@@ -56,6 +60,11 @@ const usePetsNewViewModel = (): PetsNewViewModel => {
   )
   const getPetCharacteristicsUseCase =
     useInjection<GetPetCharacteristicsUseCase>($.GetPetCharacteristicsUseCase)
+
+  const {
+    selectImageFromGallery: pickFromGallery,
+    selectImageFromCamera: pickFromCamera,
+  } = useImagePicker()
 
   useEffect(() => {
     loadInitialData()
@@ -87,6 +96,29 @@ const usePetsNewViewModel = (): PetsNewViewModel => {
         title: t('general.ups'),
         subtitle: error instanceof Error ? error.message : 'Error loading data',
       })
+    }
+  }
+
+  const selectImageFrom = async (
+    source: 'camera' | 'gallery'
+  ): Promise<void> => {
+    const { uri, error } =
+      source === 'camera' ? await pickFromCamera() : await pickFromGallery()
+
+    if (error) {
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: error,
+      })
+      return
+    }
+
+    if (uri) {
+      setState((prev) => ({
+        ...prev,
+        newAvatarFile: uri,
+      }))
     }
   }
 
@@ -253,6 +285,7 @@ const usePetsNewViewModel = (): PetsNewViewModel => {
     setCharacteristicType,
     validateForm,
     savePet,
+    selectImageFrom,
   }
 }
 

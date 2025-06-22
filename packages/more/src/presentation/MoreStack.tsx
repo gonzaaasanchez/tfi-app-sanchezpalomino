@@ -11,6 +11,7 @@ import { TouchableOpacity } from 'react-native'
 import { PetsNewScreen } from './screens/PetsNewScreen'
 import { CarerPreferencesScreen } from './screens/CarerPreferencesScreen'
 import { AddressesScreen } from './screens/AddressesScreen'
+import { AddressNewScreen } from './screens/AddressNewScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -85,6 +86,18 @@ const MoreStack: FC = (): JSX.Element => {
         component={AddressesScreen}
         options={({ navigation }) => ({
           headerTitle: t('addressesScreen.title'),
+          headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <MaterialIcons name="close" size={24} color="white" />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="addressNew"
+        component={AddressNewScreen}
+        options={({ navigation }) => ({
+          headerTitle: t('addressNewScreen.title'),
           headerRight: () => (
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <MaterialIcons name="close" size={24} color="white" />

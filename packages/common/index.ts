@@ -79,7 +79,8 @@ import { PetDetail } from './src/components/PetDetail'
 import { DetailItem } from './src/components/DetailItem'
 import { ImagePickerOptions } from './src/components/ImagePickerOptions'
 import ImageWithPlaceholder from './src/components/ImageWithPlaceholder'
-
+import { Address } from './src/data/models/Address'
+import { GooglePlacesInput } from './src/components/GooglePlaceInput'
 export {
   Resolver,
   Token,
@@ -148,4 +149,6 @@ export {
   HomeTabsHeight,
   ImagePickerOptions,
   ImageWithPlaceholder,
+  Address,
+  GooglePlacesInput,
 }

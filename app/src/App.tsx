@@ -8,6 +8,7 @@ import { Provider } from 'react-redux'
 import { resolver } from './domain/di/Register'
 import { useFonts } from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
+import 'react-native-get-random-values'; /* Necessary in order to install 'react-native-google-places-autocomplete;' ISSUE https://stackoverflow.com/questions/79144560/react-native-google-places-autocomplete-not-working-for-expo */
 
 const AppContent = (): JSX.Element => {
   const [loaded, error] = useFonts({

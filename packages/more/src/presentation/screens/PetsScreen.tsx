@@ -25,6 +25,7 @@ import {
   useInjection,
   getImageFullUrl,
   Types,
+  GenericToast,
 } from '@packages/common'
 import { useNavigation, StackActions } from '@react-navigation/native'
 import { usePetsViewModel } from '../viewModels/PetsViewModel'
@@ -201,6 +202,7 @@ const PetsScreen: FC = (): JSX.Element => {
         <PPMaterialIcon icon="add" size={30} color={'white'} />
       </TouchableOpacity>
       {state.loading && <Loader loading={state.loading} />}
+      <GenericToast overrideOffset={10} />
     </PPBottomSheetContainer>
   )
 }

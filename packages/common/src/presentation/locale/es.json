@@ -8,7 +8,10 @@
       "cancel": "Cancelar",
       "ups": "¡Ups!",
       "emptyList": "No hay información para mostrar",
-      "serviceError": "Ha ocurrido un error. Por favor, ¡intentalo nuevamente!"
+      "serviceError": "Ha ocurrido un error. Por favor, ¡intentalo nuevamente!",
+      "delete": "Eliminar",
+      "addressPlaceholder": "Ingresá tu dirección",
+      "googlePlacesApiKeyMissing": "Clave de API de Google Places no configurada"
     },
     "loginScreen": {
       "email": "Email",
@@ -212,7 +215,28 @@
       }
     },
     "addressesScreen": {
-      "title": "Mis Domicilios"
+      "title": "Mis Domicilios",
+      "emptyState": {
+        "title": "No tenés domicilios registrados",
+        "subtitle": "Agregá tu primera dirección para comenzar"
+      }
+    },
+    "addressNewScreen": {
+      "title": "Nuevo domicilio",
+      "address": "Dirección",
+      "addressPlaceholder": "Ingresá tu dirección",
+      "floor": "Piso (opcional)",
+      "floorPlaceholder": "Ej: 2",
+      "apartment": "Departamento (opcional)",
+      "apartmentPlaceholder": "Ej: A",
+      "saveAddress": "Guardar dirección",
+      "success": {
+        "title": "¡Perfecto!",
+        "message": "La dirección se guardó correctamente"
+      },
+      "validation": {
+        "addressRequired": "La dirección es requerida"
+      }
     },
     "carerPreferencesScreen": {
       "title": "Mis preferencias como cuidador",

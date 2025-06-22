@@ -205,7 +205,11 @@
       }
     },
     "petsScreen": {
-      "title": "Mis Mascotas"
+      "title": "Mis Mascotas",
+      "emptyState": {
+        "title": "No tenés mascotas registradas",
+        "subtitle": "Agregá tu primera mascota para comenzar"
+      }
     },
     "addressesScreen": {
       "title": "Mis Domicilios"

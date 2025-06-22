@@ -17,7 +17,7 @@ const PetDetail: FC<PetDetailSheetProps> = ({ pet }) => {
     <View style={{ paddingBottom: 20 }}>
       <Image style={styles.petImage} source={{ uri: pet?.photoUrl }} />
       <Text style={styles.petName}>{pet?.name}</Text>
-      <Text style={styles.petType}>{`(${pet?.type.name})`}</Text>
+      <Text style={styles.petType}>{`(${pet?.petType?.name})`}</Text>
       <Text style={styles.petComment}>{pet?.comment}</Text>
       <Text style={styles.petCharacteristicsTitle}>
         {t('reserveDetailScreen.petDetails')}

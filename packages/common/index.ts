@@ -24,6 +24,7 @@ import {
 } from './src/data/models/PetModel'
 import { LocationModel } from './src/data/models/LocationModel'
 import { FeedModel } from './src/data/models/FeedModel'
+import { PaginationModel, PaginatedResponse } from './src/data/models/PaginationModel'
 import { appMiddleware } from './src/domain/store/AppMiddleware'
 import { $ as Types } from './src/domain/di/Types'
 import { createResolver } from './src/data/di/Resolver'
@@ -95,6 +96,8 @@ export {
   PetCharacteristic,
   LocationModel,
   FeedModel,
+  PaginationModel,
+  PaginatedResponse,
   Types,
   LabelStyle,
   LightTheme,

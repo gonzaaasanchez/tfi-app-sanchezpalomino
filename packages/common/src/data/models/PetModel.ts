@@ -14,7 +14,7 @@ type PetModel = {
   name?: string
   comment?: string
   photoUrl?: string
-  type?: PetType
+  petType?: PetType
   characteristics?: PetCharacteristic[]
 }
 

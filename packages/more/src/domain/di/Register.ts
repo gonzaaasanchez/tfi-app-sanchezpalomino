@@ -3,6 +3,10 @@ import { UserApi, UserApiImpl } from '../../data/datasource/api/UserApi'
 import { UserRepositoryImpl } from '../../data/repository/UserRepository'
 import { UserRepository } from '../../domain/repository/UserRepository'
 import { UpdateProfileUseCase } from '../usecases/UpdateProfileUseCase'
+import { PetApi, PetApiImpl } from '../../data/datasource/api/PetApi'
+import { PetRepositoryImpl } from '../../data/repository/PetRepository'
+import { PetRepository } from '../../domain/repository/PetRepository'
+import { GetMyPetsUseCase } from '../usecases/GetMyPetsUseCase'
 import { $ } from './Types'
 
 const MoreRegister = (resolver: Resolver): void => {
@@ -12,16 +16,31 @@ const MoreRegister = (resolver: Resolver): void => {
     new UserApiImpl(resolver.resolve(Types.HttpClient))
   )
 
+  resolver.registerSingleton<PetApi>(
+    $.PetApi,
+    new PetApiImpl(resolver.resolve(Types.HttpClient))
+  )
+
   // Repository
   resolver.registerSingleton<UserRepository>(
     $.UserRepository,
     new UserRepositoryImpl(resolver.resolve($.UserApi))
   )
 
+  resolver.registerSingleton<PetRepository>(
+    $.PetRepository,
+    new PetRepositoryImpl(resolver.resolve($.PetApi))
+  )
+
   // Use Cases
   resolver.registerSingleton<UpdateProfileUseCase>(
     $.UpdateProfileUseCase,
     new UpdateProfileUseCase(resolver.resolve($.UserRepository))
+  )
+
+  resolver.registerSingleton<GetMyPetsUseCase>(
+    $.GetMyPetsUseCase,
+    new GetMyPetsUseCase(resolver.resolve($.PetRepository))
   )
 }
 

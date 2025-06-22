@@ -59,6 +59,7 @@ const GooglePlacesInput: FC<GooglePlacesInputProps> = ({
           const location = details?.geometry?.location
           if (location && onSelection) {
             onSelection({
+              name: '',
               fullAddress: details?.formatted_address || '',
               coords: { lat: location.lat, lon: location.lng },
             })

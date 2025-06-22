@@ -223,6 +223,8 @@
     },
     "addressNewScreen": {
       "title": "Nuevo domicilio",
+      "name": "Nombre",
+      "namePlaceholder": "Ingresá el nombre de tu domicilio",
       "address": "Dirección",
       "addressPlaceholder": "Ingresá tu dirección",
       "floor": "Piso (opcional)",
@@ -235,7 +237,8 @@
         "message": "La dirección se guardó correctamente"
       },
       "validation": {
-        "addressRequired": "La dirección es requerida"
+        "addressRequired": "La dirección es requerida",
+        "nameRequired": "El nombre es requerido"
       }
     },
     "carerPreferencesScreen": {

@@ -1,4 +1,4 @@
-import { CarerConfig, UserModel } from '@app/common'
+import { CarerConfig, UserModel, Address } from '@app/common'
 
 export interface UserRepository {
   updateProfile(
@@ -6,4 +6,5 @@ export interface UserRepository {
     avatarFile?: string
   ): Promise<UserModel>
   updateCarerConfig(carerConfig: CarerConfig): Promise<UserModel>
+  addAddress(address: Address): Promise<Address>
 }

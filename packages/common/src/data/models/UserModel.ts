@@ -1,3 +1,5 @@
+import { Address } from './Address'
+
 export interface CarerConfig {
   homeCare: {
     enabled: boolean
@@ -17,6 +19,7 @@ class UserModel {
   email?: string
   avatar?: string
   carerConfig?: CarerConfig
+  addresses?: Address[]
 
   constructor(data: Partial<UserModel>) {
     this._id = data._id || null
@@ -26,6 +29,7 @@ class UserModel {
     this.email = data.email || null
     this.avatar = data.avatar || null
     this.carerConfig = data.carerConfig || null
+    this.addresses = data.addresses || []
   }
 
   get fullName(): string {

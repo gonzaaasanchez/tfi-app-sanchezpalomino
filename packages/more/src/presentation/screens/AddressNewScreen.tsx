@@ -17,23 +17,20 @@ import { useAddressNewViewModel } from '../viewModels/AddressNewViewModel'
 
 const AddressNewScreen: FC = (): JSX.Element => {
   const { t } = useI18n()
-  const { state, setAddress, setFloor, setApartment, saveAddress } =
+  const { state, setAddress, setFloor, setApartment, saveAddress, setName } =
     useAddressNewViewModel()
-
-  useEffect(() => {
-    if (state.error) {
-      ShowToast({
-        config: 'error',
-        title: t('general.ups'),
-        subtitle: state.error,
-      })
-    }
-  }, [state.error])
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <View style={styles.formContainer}>
         <View>
+          <FormField
+            label={t('addressNewScreen.name')}
+            placeholder={t('addressNewScreen.namePlaceholder')}
+            value={state.name}
+            onChangeText={setName}
+          />
+
           <View style={styles.addressSection}>
             <Text style={styles.sectionLabel}>
               {t('addressNewScreen.address')}

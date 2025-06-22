@@ -1,16 +1,28 @@
-import { UIState, Address, useI18n, ShowToast } from '@packages/common'
+import {
+  UIState,
+  Address,
+  useI18n,
+  useInjection,
+  Color,
+  ShowToast,
+  LabelStyle,
+} from '@packages/common'
 import { useState } from 'react'
+import { AddAddressUseCase } from '../../domain/usecases/AddAddressUseCase'
+import { $ } from '../../domain/di/Types'
 
 type AddressNewViewModel = {
   state: AddressNewState
+  setName: (name: string) => void
   setAddress: (address: Address) => void
   setFloor: (floor: string) => void
   setApartment: (apartment: string) => void
   saveAddress: () => Promise<void>
-  validateForm: () => [boolean, string?]
+  validateForm: () => string[]
 }
 
 type AddressNewState = {
+  name: string | null
   address: Address | null
   floor: string
   apartment: string
@@ -19,6 +31,7 @@ type AddressNewState = {
 const initialState: AddressNewState = {
   loading: false,
   error: null,
+  name: null,
   address: null,
   floor: '',
   apartment: '',
@@ -26,12 +39,20 @@ const initialState: AddressNewState = {
 
 const useAddressNewViewModel = (): AddressNewViewModel => {
   const { t } = useI18n()
+  const addAddressUseCase = useInjection<AddAddressUseCase>($.AddAddressUseCase)
   const [state, setState] = useState<AddressNewState>(initialState)
 
   const setAddress = (address: Address): void => {
     setState((previous) => ({
       ...previous,
       address,
+    }))
+  }
+
+  const setName = (name: string): void => {
+    setState((previous) => ({
+      ...previous,
+      name,
     }))
   }
 
@@ -49,24 +70,38 @@ const useAddressNewViewModel = (): AddressNewViewModel => {
     }))
   }
 
-  const validateForm = (): [boolean, string?] => {
-    if (!state.address?.fullAddress) {
-      return [false, t('addressNewScreen.validation.addressRequired')]
+  const validateForm = (): string[] => {
+    const errors: string[] = []
+    const { name, address } = state
+
+    if (!name) {
+      errors.push(t('addressNewScreen.validation.nameRequired'))
     }
-    return [true]
+    if (!address?.fullAddress) {
+      errors.push(t('addressNewScreen.validation.addressRequired'))
+    }
+    return errors
   }
 
   const saveAddress = async (): Promise<void> => {
-    const [isValid, error] = validateForm()
-    if (!isValid) {
+    const errors = validateForm()
+    const errorMessage = errors.map((error) => `• ${error}`).join('\n')
+    if (errors.length > 0) {
       setState((previous) => ({
         ...previous,
-        error,
+        error: errorMessage,
       }))
       ShowToast({
         config: 'error',
         title: t('general.ups'),
-        subtitle: error,
+        subtitle: errorMessage,
+        duration: 5000,
+        subtitleStyle: {
+          ...LabelStyle.body({
+            fontWeight: 400,
+            color: Color.black[600],
+          }),
+        },
       })
       return
     }
@@ -78,14 +113,26 @@ const useAddressNewViewModel = (): AddressNewViewModel => {
     }))
 
     try {
-      // Aquí se implementaría la lógica para guardar la dirección
-      // Por ahora solo simulamos el guardado
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const addressToSave: Address = {
+        name: state.name || '',
+        fullAddress: state.address?.fullAddress || '',
+        coords: state.address?.coords || { lat: 0, lon: 0 },
+        floor: state.floor || undefined,
+        apartment: state.apartment || undefined,
+      }
+
+      const createdAddress = await addAddressUseCase.execute(addressToSave)
 
       setState((previous) => ({
         ...previous,
         loading: false,
       }))
+      ShowToast({
+        config: 'success',
+        title: t('addressNewScreen.success.title'),
+        subtitle: t('addressNewScreen.success.message'),
+      })
+      
     } catch (error) {
       setState((previous) => ({
         ...previous,
@@ -97,6 +144,7 @@ const useAddressNewViewModel = (): AddressNewViewModel => {
 
   return {
     state,
+    setName,
     setAddress,
     setFloor,
     setApartment,
@@ -105,4 +153,4 @@ const useAddressNewViewModel = (): AddressNewViewModel => {
   }
 }
 
-export { useAddressNewViewModel } 
+export { useAddressNewViewModel }

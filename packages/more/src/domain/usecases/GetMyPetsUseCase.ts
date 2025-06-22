@@ -4,7 +4,10 @@ import { PetRepository } from '../repository/PetRepository'
 export class GetMyPetsUseCase {
   constructor(private repository: PetRepository) {}
 
-  async execute(): Promise<PaginatedResponse<PetModel>> {
-    return await this.repository.getMyPets()
+  async execute(
+    page?: number,
+    limit?: number
+  ): Promise<PaginatedResponse<PetModel>> {
+    return await this.repository.getMyPets(page, limit)
   }
-} 
+}

@@ -54,7 +54,7 @@ const PetsScreen: FC = (): JSX.Element => {
   const petDetailModalRef = useBottomSheetModalRef()
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
-  const { state, refreshPets } = usePetsViewModel()
+  const { state, refreshPets, onReachedBottom } = usePetsViewModel()
   const { t } = useI18n()
 
   useEffect(() => {
@@ -62,6 +62,17 @@ const PetsScreen: FC = (): JSX.Element => {
       petDetailModalRef.current?.present()
     }
   }, [petDetail])
+
+  const handleScroll = (event: any) => {
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent
+    const paddingToBottom = 20
+    const isCloseToBottom = layoutMeasurement.height + contentOffset.y >= 
+      contentSize.height - paddingToBottom
+
+    if (isCloseToBottom) {
+      onReachedBottom()
+    }
+  }
 
   return (
     <PPBottomSheetContainer>
@@ -75,6 +86,8 @@ const PetsScreen: FC = (): JSX.Element => {
               tintColor={Color.brand1[100]}
             />
           }
+          onScroll={handleScroll}
+          scrollEventThrottle={400}
         >
           {!state.loading && state.pets.length === 0 && (
             <EmptyView
@@ -86,6 +99,11 @@ const PetsScreen: FC = (): JSX.Element => {
           {state.pets.map((pet) => (
             <PetCard key={pet.id} pet={pet} onPress={() => setPetDetail(pet)} />
           ))}
+          {/* {state.loadingMore && (
+            <View style={styles.loadingMoreContainer}>
+              <Loader loading={true} />
+            </View>
+          )} */}
         </ScrollView>
       </SafeAreaView>
       <PPBottomSheet.Empty
@@ -145,6 +163,10 @@ const styles = StyleSheet.create({
     ...LabelStyle.callout2({ color: Color.black[500] }),
     marginLeft: 6,
     flexShrink: 1,
+  },
+  loadingMoreContainer: {
+    paddingVertical: 20,
+    alignItems: 'center',
   },
 })
 

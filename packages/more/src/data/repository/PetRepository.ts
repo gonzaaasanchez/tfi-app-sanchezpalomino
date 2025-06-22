@@ -5,8 +5,11 @@ import { PetApi } from '../datasource/api/PetApi'
 export class PetRepositoryImpl implements PetRepository {
   constructor(private api: PetApi) {}
 
-  async getMyPets(): Promise<PaginatedResponse<PetModel>> {
-    const response = await this.api.getMyPets()
+  async getMyPets(
+    page?: number,
+    limit?: number
+  ): Promise<PaginatedResponse<PetModel>> {
+    const response = await this.api.getMyPets(page, limit)
     return response
   }
 }

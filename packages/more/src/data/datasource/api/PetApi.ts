@@ -54,16 +54,19 @@ export class PetApiImpl implements PetApi {
   }
 
   async savePet(pet: PetModel, avatarFile?: string | null): Promise<PetModel> {
+    const isUpdate = !!pet.id
+
     if (avatarFile) {
-      return this.savePetWithAvatar(pet, avatarFile)
+      return this.savePetWithAvatar(pet, avatarFile, isUpdate)
     } else {
-      return this.savePetWithoutAvatar(pet)
+      return this.savePetWithoutAvatar(pet, isUpdate)
     }
   }
 
   private async savePetWithAvatar(
     pet: PetModel,
-    avatarFile: string
+    avatarFile: string,
+    isUpdate: boolean
   ): Promise<PetModel> {
     if (!isValidImageUri(avatarFile)) {
       throw new Error(
@@ -101,11 +104,17 @@ export class PetApiImpl implements PetApi {
     const fileInfo = createFileInfo(avatarFile, 'avatar')
     formData.append('avatarFile', fileInfo as any)
 
-    const response = await this.httpClient.post<PetModel>('/pets', formData)
+    const url = isUpdate ? `/pets/${pet.id}` : '/pets'
+    const method = isUpdate ? 'put' : 'post'
+
+    const response = await this.httpClient[method]<PetModel>(url, formData)
     return response.data
   }
 
-  private async savePetWithoutAvatar(pet: PetModel): Promise<PetModel> {
+  private async savePetWithoutAvatar(
+    pet: PetModel,
+    isUpdate: boolean
+  ): Promise<PetModel> {
     // Construir el body según la estructura especificada
     const petBody = {
       name: pet.name,
@@ -118,7 +127,10 @@ export class PetApiImpl implements PetApi {
         })) || [],
     }
 
-    const response = await this.httpClient.post<PetModel>('/pets', petBody)
+    const url = isUpdate ? `/pets/${pet.id}` : '/pets'
+    const method = isUpdate ? 'put' : 'post'
+
+    const response = await this.httpClient[method]<PetModel>(url, petBody)
     return response.data
   }
 }

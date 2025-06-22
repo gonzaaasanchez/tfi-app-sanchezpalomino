@@ -22,6 +22,7 @@ type PetsNewState = {
   characteristicsDatasource: PetCharacteristic[]
   petSaved: boolean
   avatarFile: string | null
+  isEditMode: boolean
 } & UIState
 
 type PetsNewViewModel = {
@@ -50,10 +51,15 @@ const initialState: PetsNewState = {
   error: null,
   petSaved: false,
   avatarFile: null,
+  isEditMode: false,
 }
 
-const usePetsNewViewModel = (): PetsNewViewModel => {
-  const [state, setState] = useState<PetsNewState>(initialState)
+const usePetsNewViewModel = (initialPet?: PetModel): PetsNewViewModel => {
+  const [state, setState] = useState<PetsNewState>({
+    ...initialState,
+    pet: initialPet || {},
+    isEditMode: !!initialPet?.id,
+  })
   const { t } = useI18n()
 
   const getPetTypesUseCase = useInjection<GetPetTypesUseCase>(
@@ -71,6 +77,20 @@ const usePetsNewViewModel = (): PetsNewViewModel => {
   useEffect(() => {
     loadInitialData()
   }, [])
+
+  // setup dropdowns for edit mode
+  useEffect(() => {
+    if (
+      initialPet?.id &&
+      state.petTypesDatasource.length > 0 &&
+      state.characteristicsDatasource.length > 0
+    ) {
+      configureDropdownsForEditMode(
+        state.petTypesDatasource,
+        state.characteristicsDatasource
+      )
+    }
+  }, [initialPet, state.petTypesDatasource, state.characteristicsDatasource])
 
   const loadInitialData = async (): Promise<void> => {
     setState((previous) => ({ ...previous, loading: true }))
@@ -98,6 +118,47 @@ const usePetsNewViewModel = (): PetsNewViewModel => {
         title: t('general.ups'),
         subtitle: error instanceof Error ? error.message : 'Error loading data',
       })
+    }
+  }
+
+  const configureDropdownsForEditMode = (
+    petTypes: PetType[],
+    characteristics: PetCharacteristic[]
+  ): void => {
+    if (!initialPet) return
+
+    // Configurar el tipo de mascota
+    const petTypeId = initialPet.petType?._id || (initialPet.petType as any)?.id
+    if (petTypeId) {
+      const selectedType = petTypes.find((type) => type._id === petTypeId)
+      if (selectedType) {
+        setState((previous) => ({
+          ...previous,
+          pet: { ...previous.pet, petType: selectedType },
+        }))
+      }
+    }
+
+    // Configurar las características
+    if (initialPet.characteristics && initialPet.characteristics.length > 0) {
+      const configuredCharacteristics = initialPet.characteristics.map(
+        (char) => {
+          const characteristicId = char._id || (char as any).id
+          const characteristic = characteristics.find(
+            (c) => c._id === characteristicId
+          )
+          return {
+            _id: characteristicId || '',
+            name: characteristic?.name || char.name || '',
+            value: char.value || '',
+          }
+        }
+      )
+
+      setState((previous) => ({
+        ...previous,
+        pet: { ...previous.pet, characteristics: configuredCharacteristics },
+      }))
     }
   }
 

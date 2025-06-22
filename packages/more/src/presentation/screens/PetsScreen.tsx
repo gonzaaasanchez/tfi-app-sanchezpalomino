@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   ScrollView,
-  Image,
   Text,
   TouchableOpacity,
   RefreshControl,
@@ -131,7 +130,9 @@ const PetsScreen: FC = (): JSX.Element => {
           handlers={{
             onEdit: () => {
               petDetailModalRef.current?.dismiss()
-              navigation.dispatch(StackActions.push('petsNew'))
+              navigation.dispatch(
+                StackActions.push('petsNew', { pet: petDetail })
+              )
             },
             onDelete: () => {
               petDetailModalRef.current?.dismiss()

@@ -13,6 +13,8 @@ interface FormFieldProps {
   placeholder?: string
   secureTextEntry?: boolean
   disabled?: boolean
+  multiline?: boolean
+  numberOfLines?: number
 }
 
 export const FormField: React.FC<FormFieldProps> = ({
@@ -25,6 +27,8 @@ export const FormField: React.FC<FormFieldProps> = ({
   placeholder,
   secureTextEntry,
   disabled = false,
+  multiline = false,
+  numberOfLines = 1,
 }) => {
   return (
     <View style={styles.container}>
@@ -39,9 +43,10 @@ export const FormField: React.FC<FormFieldProps> = ({
       )}
       <TextInput
         style={[
-          styles.input, 
+          styles.input,
           error && styles.inputError,
-          disabled && styles.inputDisabled
+          disabled && styles.inputDisabled,
+          multiline && styles.inputMultiline,
         ]}
         value={value}
         defaultValue={defaultValue}
@@ -51,6 +56,9 @@ export const FormField: React.FC<FormFieldProps> = ({
         secureTextEntry={secureTextEntry}
         placeholderTextColor={disabled ? Color.black[300] : Color.black[400]}
         editable={!disabled}
+        multiline={multiline}
+        numberOfLines={numberOfLines}
+        textAlignVertical={multiline ? 'top' : 'center'}
       />
       {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
@@ -84,5 +92,11 @@ const styles = StyleSheet.create({
   errorText: {
     ...LabelStyle.body2({ color: StateColor.error.default }),
     marginTop: 4,
+  },
+  inputMultiline: {
+    height: 'auto',
+    minHeight: 80,
+    paddingTop: 12,
+    paddingBottom: 12,
   },
 })

@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useLayoutEffect } from 'react'
 import {
   View,
   StyleSheet,
@@ -9,7 +9,7 @@ import {
   Platform,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native'
 import {
   Color,
   LabelStyle,
@@ -25,13 +25,25 @@ import {
   Loader,
   ImageWithPlaceholder,
   ImagePickerOptions,
+  PetModel,
+  getImageFullUrl,
+  useInjection,
+  Types,
 } from '@packages/common'
 import { usePetsNewViewModel } from '../viewModels/PetsNewViewModel'
 import catSuccess from '@app/assets/lottie-json/success-cat.json'
 
+type PetsNewRouteParams = {
+  pet?: PetModel
+}
+
 const PetsNewScreen: FC = (): JSX.Element => {
   const { t } = useI18n()
   const navigation = useNavigation()
+  const route = useRoute<RouteProp<{ params: PetsNewRouteParams }, 'params'>>()
+  const initialPet = route.params?.pet
+  const baseUrl = useInjection(Types.BaseURL) as string
+
   const {
     state,
     setName,
@@ -44,7 +56,7 @@ const PetsNewScreen: FC = (): JSX.Element => {
     validateForm,
     savePet,
     selectImageFrom,
-  } = usePetsNewViewModel()
+  } = usePetsNewViewModel(initialPet)
 
   const confirmationModalRef = useBottomSheetModalRef()
   const successModalRef = useBottomSheetModalRef()
@@ -56,15 +68,29 @@ const PetsNewScreen: FC = (): JSX.Element => {
     }
   }, [state.petSaved])
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: state.isEditMode
+        ? t('petsNewScreen.editTitle')
+        : t('petsNewScreen.title'),
+    })
+  }, [state.isEditMode, navigation, t])
+
   const handleImageSelection = (source: 'camera' | 'gallery') => {
     imagePickerModalRef.current?.dismiss()
     selectImageFrom(source)
   }
 
   const Avatar = () => {
+    let avatarSource = state.avatarFile
+    
+    if (!avatarSource && state.isEditMode && state.pet.avatar) {
+      avatarSource = getImageFullUrl(state.pet.avatar, baseUrl)
+    }
+    
     return (
       <View style={styles.avatarContainer}>
-        <ImageWithPlaceholder source={state.avatarFile} dimension={120} />
+        <ImageWithPlaceholder source={avatarSource} dimension={120} />
         <TouchableOpacity
           style={styles.uploadButton}
           activeOpacity={0.85}
@@ -118,6 +144,8 @@ const PetsNewScreen: FC = (): JSX.Element => {
           defaultValue={state.pet.comment || ''}
           onBlur={setComment}
           placeholder={t('petsNewScreen.commentPlaceholder')}
+          multiline={true}
+          numberOfLines={5}
         />
       </View>
     )
@@ -185,7 +213,11 @@ const PetsNewScreen: FC = (): JSX.Element => {
     return (
       <View style={{ paddingHorizontal: 20 }}>
         <Button.Primary
-          title={t('petsNewScreen.save')}
+          title={
+            state.isEditMode
+              ? t('petsNewScreen.update')
+              : t('petsNewScreen.save')
+          }
           onPress={() =>
             validateForm(() => confirmationModalRef.current?.present())
           }
@@ -220,9 +252,21 @@ const PetsNewScreen: FC = (): JSX.Element => {
       </SafeAreaView>
       <PPBottomSheet.Dialog
         ref={confirmationModalRef}
-        title={t('petsNewScreen.confirmation.title')}
-        subtitle={t('petsNewScreen.confirmation.subtitle')}
-        primaryActionTitle={t('petsNewScreen.confirmation.confirm')}
+        title={
+          state.isEditMode
+            ? t('petsNewScreen.confirmation.updateTitle')
+            : t('petsNewScreen.confirmation.title')
+        }
+        subtitle={
+          state.isEditMode
+            ? t('petsNewScreen.confirmation.updateSubtitle')
+            : t('petsNewScreen.confirmation.subtitle')
+        }
+        primaryActionTitle={
+          state.isEditMode
+            ? t('petsNewScreen.confirmation.update')
+            : t('petsNewScreen.confirmation.confirm')
+        }
         secondaryActionTitle={t('petsNewScreen.confirmation.cancel')}
         onPrimaryAction={() => {
           confirmationModalRef.current?.dismiss()
@@ -232,8 +276,16 @@ const PetsNewScreen: FC = (): JSX.Element => {
       />
       <PPBottomSheet.Dialog
         ref={successModalRef}
-        title={t('petsNewScreen.success.title')}
-        subtitle={t('petsNewScreen.success.subtitle')}
+        title={
+          state.isEditMode
+            ? t('petsNewScreen.success.updateTitle')
+            : t('petsNewScreen.success.title')
+        }
+        subtitle={
+          state.isEditMode
+            ? t('petsNewScreen.success.updateSubtitle')
+            : t('petsNewScreen.success.subtitle')
+        }
         lottieFile={catSuccess}
         onPrimaryAction={() => navigation.goBack()}
       />

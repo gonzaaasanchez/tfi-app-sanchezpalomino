@@ -239,6 +239,7 @@
     },
     "petsNewScreen": {
       "title": "Nueva Mascota",
+      "editTitle": "Editar Mascota",
       "name": "Nombre",
       "namePlaceholder": "Ingresá el nombre de tu mascota",
       "type": "Tipo de mascota",
@@ -250,17 +251,23 @@
       "valuePlaceholder": "Valor",
       "addCharacteristic": "Agregar característica",
       "save": "Guardar",
+      "update": "Actualizar",
       "edit": "Editar",
       "delete": "Eliminar",
       "confirmation": {
         "title": "Agregar mascota",
+        "updateTitle": "Actualizar mascota",
         "subtitle": "¿Confirmás los datos de la mascota?",
+        "updateSubtitle": "¿Confirmás los cambios en la mascota?",
         "confirm": "Confirmar",
+        "update": "Actualizar",
         "cancel": "Cancelar"
       },
       "success": {
         "title": "¡Mascota agregada!",
-        "subtitle": "Ahora podés empezar a buscar cuidadores"
+        "updateTitle": "¡Mascota actualizada!",
+        "subtitle": "Ahora podés empezar a buscar cuidadores",
+        "updateSubtitle": "Los cambios se guardaron correctamente"
       },
       "validation": {
         "nameRequired": "Agregá el nombre de tu mascota",

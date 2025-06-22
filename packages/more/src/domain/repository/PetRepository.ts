@@ -16,4 +16,5 @@ export interface PetRepository {
     limit?: number
   ): Promise<PaginatedResponse<PetCharacteristic>>
   savePet(pet: PetModel, avatarFile?: string | null): Promise<PetModel>
+  deletePet(petId: string): Promise<void>
 }

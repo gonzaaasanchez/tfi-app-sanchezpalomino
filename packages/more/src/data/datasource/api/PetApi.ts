@@ -20,6 +20,7 @@ export interface PetApi {
     limit?: number
   ): Promise<PaginatedResponse<PetCharacteristic>>
   savePet(pet: PetModel, avatarFile?: string | null): Promise<PetModel>
+  deletePet(petId: string): Promise<void>
 }
 
 export class PetApiImpl implements PetApi {
@@ -132,5 +133,10 @@ export class PetApiImpl implements PetApi {
 
     const response = await this.httpClient[method]<PetModel>(url, petBody)
     return response.data
+  }
+
+  async deletePet(petId: string): Promise<void> {
+    const url = `/pets/${petId}`
+    await this.httpClient.delete(url)
   }
 }

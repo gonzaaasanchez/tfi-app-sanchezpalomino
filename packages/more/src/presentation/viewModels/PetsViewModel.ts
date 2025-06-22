@@ -4,15 +4,18 @@ import {
   useI18n,
   useInjection,
   PaginationModel,
+  ShowToast,
 } from '@packages/common'
 import { useState, useEffect } from 'react'
 import { GetMyPetsUseCase } from '../../domain/usecases/GetMyPetsUseCase'
+import { DeletePetUseCase } from '../../domain/usecases/DeletePetUseCase'
 import { $ } from '../../domain/di/Types'
 
 type PetsState = {
   pets: PetModel[]
   pagination: PaginationModel
   loadingMore: boolean
+  petDeleted: boolean
 } & UIState
 
 type PetsViewModel = {
@@ -20,6 +23,7 @@ type PetsViewModel = {
   loadPets: ({ reset }: { reset: boolean }) => Promise<void>
   refreshPets: () => Promise<void>
   onReachedBottom: () => void
+  deletePet: (petId: string) => Promise<void>
 }
 
 const initialState: PetsState = {
@@ -33,12 +37,14 @@ const initialState: PetsState = {
   loading: false,
   loadingMore: false,
   error: null,
+  petDeleted: false,
 }
 
 const usePetsViewModel = (): PetsViewModel => {
   const [state, setState] = useState<PetsState>(initialState)
   const { t } = useI18n()
   const getMyPetsUseCase = useInjection<GetMyPetsUseCase>($.GetMyPetsUseCase)
+  const deletePetUseCase = useInjection<DeletePetUseCase>($.DeletePetUseCase)
 
   useEffect(() => {
     loadPets({ reset: true })
@@ -101,11 +107,32 @@ const usePetsViewModel = (): PetsViewModel => {
     loadPets({ reset: false })
   }
 
+  const deletePet = async (petId: string): Promise<void> => {
+    try {
+      setState((previous) => ({ ...previous, loading: true, error: null }))
+      await deletePetUseCase.execute(petId)
+      setState((previous) => ({ ...previous, loading: false, petDeleted: true }))
+    } catch (error) {
+      setState((previous) => ({
+        ...previous,
+        loading: false,
+        error:
+          error instanceof Error ? error.message : 'Error al eliminar mascota',
+      }))
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: error instanceof Error ? error.message : 'Error al eliminar mascota',
+      })
+    }
+  }
+
   return {
     state,
     loadPets,
     refreshPets,
     onReachedBottom,
+    deletePet,
   }
 }
 

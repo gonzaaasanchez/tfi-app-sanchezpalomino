@@ -28,6 +28,7 @@ import {
 } from '@packages/common'
 import { useNavigation, StackActions } from '@react-navigation/native'
 import { usePetsViewModel } from '../viewModels/PetsViewModel'
+import catSuccess from '@app/assets/lottie-json/success-cat.json'
 
 const PetCard: FC<{ pet: PetModel; onPress: () => void; baseUrl: string }> = ({
   pet,
@@ -57,10 +58,13 @@ const PetCard: FC<{ pet: PetModel; onPress: () => void; baseUrl: string }> = ({
 
 const PetsScreen: FC = (): JSX.Element => {
   const [petDetail, setPetDetail] = useState<PetModel | null>(null)
+  const [petToDelete, setPetToDelete] = useState<PetModel | null>(null)
   const petDetailModalRef = useBottomSheetModalRef()
+  const deleteConfirmationModalRef = useBottomSheetModalRef()
+  const successModalRef = useBottomSheetModalRef()
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
-  const { state, refreshPets, onReachedBottom } = usePetsViewModel()
+  const { state, refreshPets, onReachedBottom, deletePet } = usePetsViewModel()
   const { t } = useI18n()
   const baseUrl = useInjection(Types.BaseURL) as string
 
@@ -69,6 +73,20 @@ const PetsScreen: FC = (): JSX.Element => {
       petDetailModalRef.current?.present()
     }
   }, [petDetail])
+
+  useEffect(() => {
+    if (petToDelete) {
+      deleteConfirmationModalRef.current?.present()
+    }
+  }, [petToDelete])
+
+  useEffect(() => {
+    if (state.petDeleted) {
+      petDetailModalRef.current?.dismiss()
+      successModalRef.current?.present()
+      refreshPets()
+    }
+  }, [state.petDeleted])
 
   const handleScroll = (event: any) => {
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent
@@ -80,6 +98,19 @@ const PetsScreen: FC = (): JSX.Element => {
     if (isCloseToBottom) {
       onReachedBottom()
     }
+  }
+
+  const handleDeletePet = () => {
+    deleteConfirmationModalRef.current?.dismiss()
+    if (petToDelete?.id) {
+      deletePet(petToDelete.id)
+    }
+    setPetToDelete(null)
+  }
+
+  const handleCancelDelete = () => {
+    deleteConfirmationModalRef.current?.dismiss()
+    setPetToDelete(null)
   }
 
   return (
@@ -135,11 +166,29 @@ const PetsScreen: FC = (): JSX.Element => {
               )
             },
             onDelete: () => {
-              petDetailModalRef.current?.dismiss()
+              setPetToDelete(petDetail)
             },
           }}
         />
       </PPBottomSheet.Empty>
+      <PPBottomSheet.Dialog
+        ref={deleteConfirmationModalRef}
+        title={t('petsNewScreen.confirmation.deleteTitle')}
+        subtitle={t('petsNewScreen.confirmation.deleteSubtitle')}
+        primaryActionTitle={t('petsNewScreen.confirmation.delete')}
+        secondaryActionTitle={t('petsNewScreen.confirmation.cancel')}
+        onPrimaryAction={handleDeletePet}
+        onSecondaryAction={handleCancelDelete}
+      />
+      <PPBottomSheet.Dialog
+        ref={successModalRef}
+        title={t('petsNewScreen.success.deleteTitle')}
+        subtitle={t('petsNewScreen.success.deleteSubtitle')}
+        lottieFile={catSuccess}
+        onPrimaryAction={() => {
+          successModalRef.current?.dismiss()
+        }}
+      />
       <TouchableOpacity
         style={{
           ...GeneralStyle.addFloatingButton,

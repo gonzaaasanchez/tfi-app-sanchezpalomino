@@ -38,4 +38,8 @@ export class PetRepositoryImpl implements PetRepository {
     const response = await this.api.savePet(pet, avatarFile)
     return response
   }
+
+  async deletePet(petId: string): Promise<void> {
+    await this.api.deletePet(petId)
+  }
 }

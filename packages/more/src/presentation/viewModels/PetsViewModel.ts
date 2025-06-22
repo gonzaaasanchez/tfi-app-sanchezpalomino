@@ -96,6 +96,12 @@ const usePetsViewModel = (): PetsViewModel => {
         error:
           error instanceof Error ? error.message : 'Error al cargar mascotas',
       }))
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle:
+          error instanceof Error ? error.message : 'Error al eliminar mascota',
+      })
     }
   }
 
@@ -111,7 +117,11 @@ const usePetsViewModel = (): PetsViewModel => {
     try {
       setState((previous) => ({ ...previous, loading: true, error: null }))
       await deletePetUseCase.execute(petId)
-      setState((previous) => ({ ...previous, loading: false, petDeleted: true }))
+      setState((previous) => ({
+        ...previous,
+        loading: false,
+        petDeleted: true,
+      }))
     } catch (error) {
       setState((previous) => ({
         ...previous,
@@ -122,7 +132,8 @@ const usePetsViewModel = (): PetsViewModel => {
       ShowToast({
         config: 'error',
         title: t('general.ups'),
-        subtitle: error instanceof Error ? error.message : 'Error al eliminar mascota',
+        subtitle:
+          error instanceof Error ? error.message : 'Error al eliminar mascota',
       })
     }
   }

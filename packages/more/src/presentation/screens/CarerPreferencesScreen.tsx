@@ -27,8 +27,8 @@ const CarerPreferencesScreen: FC = (): JSX.Element => {
     savePreferences,
   } = useCarerPreferencesViewModel()
 
-  const handleSave = (): void => {
-    validateForm(() => {
+  const handleSave = async (): Promise<void> => {
+    validateForm(async () => {
       savePreferences()
     })
   }

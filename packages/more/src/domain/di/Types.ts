@@ -4,6 +4,7 @@ const $ = {
   UserRepository: Symbol.for('UserRepository'),
   PetRepository: Symbol.for('PetRepository'),
   UpdateProfileUseCase: Symbol.for('UpdateProfileUseCase'),
+  UpdateCarerConfigUseCase: Symbol.for('UpdateCarerConfigUseCase'),
   GetMyPetsUseCase: Symbol.for('GetMyPetsUseCase'),
   GetPetTypesUseCase: Symbol.for('GetPetTypesUseCase'),
   GetPetCharacteristicsUseCase: Symbol.for('GetPetCharacteristicsUseCase'),

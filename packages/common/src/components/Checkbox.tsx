@@ -35,7 +35,7 @@ export const Checkbox: FC<CheckboxProps> = ({
           <PPMaterialIcon
             icon="paw"
             size={size * 0.8}
-            color={Color.brand1[500]}
+            color={Color.brand1[600]}
           />
         )}
       </View>
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   checkbox: {
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: Color.brand1[500],
+    borderColor: Color.brand1[600],
     justifyContent: 'center',
     alignItems: 'center',
   },

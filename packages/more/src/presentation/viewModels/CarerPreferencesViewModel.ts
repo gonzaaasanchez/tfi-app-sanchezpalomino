@@ -4,8 +4,16 @@ import {
   ShowToast,
   Color,
   LabelStyle,
+  useInjection,
+  setUser,
+  CarerConfig,
+  AppState,
 } from '@packages/common'
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { $ } from '../../domain/di/Types'
+import { UpdateCarerConfigUseCase } from '../../domain/usecases/UpdateCarerConfigUseCase'
+import React from 'react'
 
 type CarerPreferencesState = {
   homeCareEnabled: boolean
@@ -38,6 +46,26 @@ const initialState: CarerPreferencesState = {
 const useCarerPreferencesViewModel = (): CarerPreferencesViewModel => {
   const [state, setState] = useState<CarerPreferencesState>(initialState)
   const { t } = useI18n()
+  const dispatch = useDispatch()
+  const currentUser = useSelector((state: AppState) => state.app.user)
+  const updateCarerConfigUseCase: UpdateCarerConfigUseCase = useInjection(
+    $.UpdateCarerConfigUseCase
+  )
+
+  // Initialize state with user's current preferences
+  React.useEffect(() => {
+    if (currentUser?.carerConfig) {
+      setState((previous) => ({
+        ...previous,
+        homeCareEnabled: currentUser.carerConfig.homeCare.enabled,
+        homeCareDailyPrice:
+          currentUser.carerConfig.homeCare.dayPrice?.toString() || '',
+        petHomeCareEnabled: currentUser.carerConfig.petHomeCare.enabled,
+        petHomeCareVisitPrice:
+          currentUser.carerConfig.petHomeCare.visitPrice?.toString() || '',
+      }))
+    }
+  }, [currentUser])
 
   const setHomeCareEnabled = (): void => {
     setState((previous) => ({
@@ -141,14 +169,32 @@ const useCarerPreferencesViewModel = (): CarerPreferencesViewModel => {
     return errors
   }
 
-  const savePreferences = (): void => {
+  const savePreferences = async (): Promise<void> => {
     setState((previous) => ({
       ...previous,
       loading: true,
     }))
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const carerConfig: CarerConfig = {
+        homeCare: {
+          enabled: state.homeCareEnabled,
+          dayPrice: state.homeCareEnabled
+            ? parseFloat(state.homeCareDailyPrice)
+            : null,
+        },
+        petHomeCare: {
+          enabled: state.petHomeCareEnabled,
+          visitPrice: state.petHomeCareEnabled
+            ? parseFloat(state.petHomeCareVisitPrice)
+            : null,
+        },
+      }
+
+      const updatedUser = await updateCarerConfigUseCase.execute(carerConfig)
+
+      dispatch(setUser({ user: updatedUser.toPlainObject() }))
+
       setState((previous) => ({
         ...previous,
         loading: false,
@@ -161,7 +207,20 @@ const useCarerPreferencesViewModel = (): CarerPreferencesViewModel => {
         subtitle: t('carerPreferencesScreen.success.message'),
         duration: 3000,
       })
-    }, 1000)
+    } catch (error) {
+      setState((previous) => ({
+        ...previous,
+        loading: false,
+        error: error.message,
+      }))
+
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: error.message,
+        duration: 3000,
+      })
+    }
   }
 
   return {

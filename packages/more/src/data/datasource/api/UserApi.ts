@@ -1,6 +1,7 @@
 import {
   HttpClient,
   UserModel,
+  CarerConfig,
   createFileInfo,
   isValidImageUri,
 } from '@app/common'
@@ -10,6 +11,7 @@ export interface UserApi {
     userData: Partial<UserModel>,
     avatarFile?: string
   ): Promise<UserModel>
+  updateCarerConfig(carerConfig: CarerConfig): Promise<UserModel>
 }
 
 export class UserApiImpl implements UserApi {
@@ -24,6 +26,16 @@ export class UserApiImpl implements UserApi {
     } else {
       return this.updateProfileWithoutAvatar(userData)
     }
+  }
+
+  async updateCarerConfig(carerConfig: CarerConfig): Promise<UserModel> {
+    const response = await this.httpClient.put<UserModel>(
+      '/users/me/carer-config',
+      {
+        carerConfig,
+      }
+    )
+    return response.data
   }
 
   private async updateProfileWithAvatar(

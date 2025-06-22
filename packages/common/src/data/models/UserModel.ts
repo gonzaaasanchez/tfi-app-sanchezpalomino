@@ -1,4 +1,13 @@
-import { getImageFullUrl } from '../../utils/ImageUtils'
+export interface CarerConfig {
+  homeCare: {
+    enabled: boolean
+    dayPrice: number | null
+  }
+  petHomeCare: {
+    enabled: boolean
+    visitPrice: number | null
+  }
+}
 
 class UserModel {
   _id?: string
@@ -7,6 +16,7 @@ class UserModel {
   phoneNumber?: string
   email?: string
   avatar?: string
+  carerConfig?: CarerConfig
 
   constructor(data: Partial<UserModel>) {
     this._id = data._id || null
@@ -15,6 +25,7 @@ class UserModel {
     this.phoneNumber = data.phoneNumber || null
     this.email = data.email || null
     this.avatar = data.avatar || null
+    this.carerConfig = data.carerConfig || null
   }
 
   get fullName(): string {

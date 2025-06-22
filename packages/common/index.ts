@@ -15,7 +15,7 @@ import {
   setUser,
   AppState,
 } from './src/domain/store/AppSlice'
-import { UserModel } from './src/data/models/UserModel'
+import { UserModel, CarerConfig } from './src/data/models/UserModel'
 import { SessionModel } from './src/data/models/SessionModel'
 import {
   PetModel,
@@ -100,6 +100,7 @@ export {
   AppState,
   HttpClient,
   UserModel,
+  CarerConfig,
   SessionModel,
   PetModel,
   PetType,

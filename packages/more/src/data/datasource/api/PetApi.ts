@@ -4,6 +4,7 @@ import {
   PaginatedResponse,
   PetType,
   PetCharacteristic,
+  buildPaginatedUrl,
 } from '@app/common'
 
 export interface PetApi {
@@ -25,13 +26,7 @@ export class PetApiImpl implements PetApi {
     page?: number,
     limit?: number
   ): Promise<PaginatedResponse<PetModel>> {
-    const params = new URLSearchParams()
-    if (page !== undefined) params.append('page', page.toString())
-    if (limit !== undefined) params.append('limit', limit.toString())
-
-    const queryString = params.toString()
-    const url = `/pets/my${queryString ? `?${queryString}` : ''}`
-
+    const url = buildPaginatedUrl('/pets/my', { page, limit })
     const response = await this.httpClient.get<PaginatedResponse<PetModel>>(url)
     return response.data
   }
@@ -40,13 +35,7 @@ export class PetApiImpl implements PetApi {
     page?: number,
     limit?: number
   ): Promise<PaginatedResponse<PetType>> {
-    const params = new URLSearchParams()
-    if (page !== undefined) params.append('page', page.toString())
-    if (limit !== undefined) params.append('limit', limit.toString())
-
-    const queryString = params.toString()
-    const url = `/pet-types${queryString ? `?${queryString}` : ''}`
-
+    const url = buildPaginatedUrl('/pet-types', { page, limit })
     const response = await this.httpClient.get<PaginatedResponse<PetType>>(url)
     return response.data
   }
@@ -55,13 +44,7 @@ export class PetApiImpl implements PetApi {
     page?: number,
     limit?: number
   ): Promise<PaginatedResponse<PetCharacteristic>> {
-    const params = new URLSearchParams()
-    if (page !== undefined) params.append('page', page.toString())
-    if (limit !== undefined) params.append('limit', limit.toString())
-
-    const queryString = params.toString()
-    const url = `/pet-characteristics${queryString ? `?${queryString}` : ''}`
-
+    const url = buildPaginatedUrl('/pet-characteristics', { page, limit })
     const response =
       await this.httpClient.get<PaginatedResponse<PetCharacteristic>>(url)
     return response.data

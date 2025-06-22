@@ -200,7 +200,9 @@ const PetsNewScreen: FC = (): JSX.Element => {
           >
             <Avatar />
             <MainForm />
-            <CharacteristicsForm />
+            {state.characteristicsDatasource?.length > 0 && (
+              <CharacteristicsForm />
+            )}
           </ScrollView>
           <SaveButton />
         </KeyboardAvoidingView>

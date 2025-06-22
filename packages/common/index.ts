@@ -48,6 +48,11 @@ import {
   createFileInfo,
   isValidImageUri,
 } from './src/utils/FileUtils'
+import {
+  buildPaginationQueryString,
+  buildPaginatedUrl,
+  PaginationParams,
+} from './src/utils/QueryUtils'
 import { Loader } from './src/components/Loader'
 import { AnimatedView } from './src/components/AnimatedView'
 import { PPBottomSheetContainer } from './src/components/bottom-sheet/PPBottomSheetContainer'
@@ -116,6 +121,9 @@ export {
   getFileName,
   createFileInfo,
   isValidImageUri,
+  buildPaginationQueryString,
+  buildPaginatedUrl,
+  PaginationParams,
   Loader,
   AnimatedView,
   PPBottomSheetContainer,

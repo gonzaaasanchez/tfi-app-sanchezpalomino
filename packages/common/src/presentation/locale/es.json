@@ -250,6 +250,8 @@
       "valuePlaceholder": "Valor",
       "addCharacteristic": "Agregar característica",
       "save": "Guardar",
+      "edit": "Editar",
+      "delete": "Eliminar",
       "confirmation": {
         "title": "Agregar mascota",
         "subtitle": "¿Confirmás los datos de la mascota?",

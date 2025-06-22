@@ -125,7 +125,19 @@ const PetsScreen: FC = (): JSX.Element => {
         dismisseable={true}
         onDismiss={() => setPetDetail(null)}
       >
-        <PetDetail pet={petDetail} baseUrl={baseUrl} />
+        <PetDetail
+          pet={petDetail}
+          baseUrl={baseUrl}
+          handlers={{
+            onEdit: () => {
+              petDetailModalRef.current?.dismiss()
+              navigation.dispatch(StackActions.push('petsNew'))
+            },
+            onDelete: () => {
+              petDetailModalRef.current?.dismiss()
+            },
+          }}
+        />
       </PPBottomSheet.Empty>
       <TouchableOpacity
         style={{

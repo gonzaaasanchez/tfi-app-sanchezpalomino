@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { FC } from 'react'
 import { useI18n } from '../domain/hooks/i18n'
 import { PetModel } from '../data/models/PetModel'
@@ -10,10 +10,14 @@ import { getImageFullUrl } from '../utils/ImageUtils'
 
 type PetDetailSheetProps = {
   pet: PetModel
-  baseUrl?: string
+  baseUrl: string
+  handlers?: {
+    onEdit: () => void
+    onDelete: () => void
+  }
 }
 
-const PetDetail: FC<PetDetailSheetProps> = ({ pet, baseUrl = '' }) => {
+const PetDetail: FC<PetDetailSheetProps> = ({ pet, baseUrl, handlers }) => {
   const { t } = useI18n()
 
   return (
@@ -41,6 +45,18 @@ const PetDetail: FC<PetDetailSheetProps> = ({ pet, baseUrl = '' }) => {
           />
         </View>
       ))}
+      {handlers && (
+        <View style={styles.actionsContainer}>
+          <TouchableOpacity onPress={handlers.onEdit}>
+            <Text style={styles.editButton}>{t('petsNewScreen.edit')}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handlers.onDelete}>
+            <Text style={styles.deleteButton}>
+              {t('petsNewScreen.delete')}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   )
 }
@@ -63,6 +79,22 @@ const styles = StyleSheet.create({
     ...LabelStyle.body({ textAlign: 'center' }),
     paddingBottom: 10,
     color: Color.black[800],
+  },
+  actionsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 30,
+    paddingTop: 40,
+  },
+  editButton: {
+    ...LabelStyle.body({ color: Color.black[500] }),
+    borderBottomWidth: 1,
+    borderBottomColor: Color.black[500],
+  },
+  deleteButton: {
+    ...LabelStyle.body({ color: Color.red[700]}),
+    borderBottomWidth: 1,
+    borderBottomColor: Color.red[700],
   },
 })
 

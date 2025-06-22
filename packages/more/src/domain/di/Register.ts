@@ -7,6 +7,8 @@ import { PetApi, PetApiImpl } from '../../data/datasource/api/PetApi'
 import { PetRepositoryImpl } from '../../data/repository/PetRepository'
 import { PetRepository } from '../../domain/repository/PetRepository'
 import { GetMyPetsUseCase } from '../usecases/GetMyPetsUseCase'
+import { GetPetTypesUseCase } from '../usecases/GetPetTypesUseCase'
+import { GetPetCharacteristicsUseCase } from '../usecases/GetPetCharacteristicsUseCase'
 import { $ } from './Types'
 
 const MoreRegister = (resolver: Resolver): void => {
@@ -41,6 +43,16 @@ const MoreRegister = (resolver: Resolver): void => {
   resolver.registerSingleton<GetMyPetsUseCase>(
     $.GetMyPetsUseCase,
     new GetMyPetsUseCase(resolver.resolve($.PetRepository))
+  )
+
+  resolver.registerSingleton<GetPetTypesUseCase>(
+    $.GetPetTypesUseCase,
+    new GetPetTypesUseCase(resolver.resolve($.PetRepository))
+  )
+
+  resolver.registerSingleton<GetPetCharacteristicsUseCase>(
+    $.GetPetCharacteristicsUseCase,
+    new GetPetCharacteristicsUseCase(resolver.resolve($.PetRepository))
   )
 }
 

@@ -7,8 +7,12 @@ import {
   ShowToast,
   Color,
   LabelStyle,
+  useInjection,
 } from '@packages/common'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { GetPetTypesUseCase } from '../../domain/usecases/GetPetTypesUseCase'
+import { GetPetCharacteristicsUseCase } from '../../domain/usecases/GetPetCharacteristicsUseCase'
+import { $ } from '../../domain/di/Types'
 
 type PetsNewState = {
   pet: PetModel
@@ -27,31 +31,17 @@ type PetsNewViewModel = {
   setCharacteristicType: (index: number, value: any) => void
   setCharacteristicValue: (
     index: number,
-    field: 'id' | 'name' | 'value',
+    field: '_id' | 'name' | 'value',
     value: string
   ) => void
   validateForm: (onValidated: () => void) => void
   savePet: () => void
 }
 
-const mockPetTypes: PetType[] = [
-  { id: '1', name: 'Perro' },
-  { id: '2', name: 'Gato' },
-  { id: '3', name: 'Ave' },
-  { id: '4', name: 'Otro' },
-]
-
-const mockCharacteristics: PetCharacteristic[] = [
-  { id: '1', name: 'Tamaño' },
-  { id: '2', name: 'Edad' },
-  { id: '3', name: 'Personalidad' },
-  { id: '4', name: 'Necesita medicación' },
-]
-
 const initialState: PetsNewState = {
   pet: {},
-  petTypesDatasource: mockPetTypes,
-  characteristicsDatasource: mockCharacteristics,
+  petTypesDatasource: [],
+  characteristicsDatasource: [],
   loading: false,
   error: null,
   petSaved: false,
@@ -60,6 +50,45 @@ const initialState: PetsNewState = {
 const usePetsNewViewModel = (): PetsNewViewModel => {
   const [state, setState] = useState<PetsNewState>(initialState)
   const { t } = useI18n()
+
+  const getPetTypesUseCase = useInjection<GetPetTypesUseCase>(
+    $.GetPetTypesUseCase
+  )
+  const getPetCharacteristicsUseCase =
+    useInjection<GetPetCharacteristicsUseCase>($.GetPetCharacteristicsUseCase)
+
+  useEffect(() => {
+    loadInitialData()
+  }, [])
+
+  const loadInitialData = async (): Promise<void> => {
+    setState((previous) => ({ ...previous, loading: true }))
+
+    try {
+      const [petTypesResponse, characteristicsResponse] = await Promise.all([
+        getPetTypesUseCase.execute(1, 100),
+        getPetCharacteristicsUseCase.execute(1, 100),
+      ])
+
+      setState((previous) => ({
+        ...previous,
+        petTypesDatasource: petTypesResponse.items || [],
+        characteristicsDatasource: characteristicsResponse.items || [],
+        loading: false,
+      }))
+    } catch (error) {
+      setState((previous) => ({
+        ...previous,
+        error: error instanceof Error ? error.message : 'Error loading data',
+        loading: false,
+      }))
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: error instanceof Error ? error.message : 'Error loading data',
+      })
+    }
+  }
 
   const setName = (name: string): void => {
     setState((previous) => ({
@@ -70,10 +99,12 @@ const usePetsNewViewModel = (): PetsNewViewModel => {
 
   const setType = (value: any): void => {
     if (!Array.isArray(value)) {
-      const selectedType = mockPetTypes.find((p) => p.id === value.value)
+      const selectedType = state.petTypesDatasource.find(
+        (p) => p._id === value.value
+      )
       setState((previous) => ({
         ...previous,
-        pet: { ...previous.pet, type: selectedType },
+        pet: { ...previous.pet, petType: selectedType },
       }))
     }
   }
@@ -92,7 +123,7 @@ const usePetsNewViewModel = (): PetsNewViewModel => {
         ...previous.pet,
         characteristics: [
           ...(previous.pet.characteristics || []),
-          { id: '', name: '', value: '' },
+          { _id: '', name: '', value: '' },
         ],
       },
     }))
@@ -111,8 +142,10 @@ const usePetsNewViewModel = (): PetsNewViewModel => {
 
   const setCharacteristicType = (index: number, value: any): void => {
     if (!Array.isArray(value)) {
-      const selectedChar = mockCharacteristics.find((c) => c.id === value.value)
-      setCharacteristicValue(index, 'id', value.value)
+      const selectedChar = state.characteristicsDatasource.find(
+        (c) => c._id === value.value
+      )
+      setCharacteristicValue(index, '_id', value.value)
       if (selectedChar) {
         setCharacteristicValue(index, 'name', selectedChar.name || '')
       }
@@ -121,7 +154,7 @@ const usePetsNewViewModel = (): PetsNewViewModel => {
 
   const setCharacteristicValue = (
     index: number,
-    field: 'id' | 'name' | 'value',
+    field: '_id' | 'name' | 'value',
     value: string
   ): void => {
     setState((previous) => {
@@ -129,8 +162,10 @@ const usePetsNewViewModel = (): PetsNewViewModel => {
       newCharacteristics[index] = {
         ...newCharacteristics[index],
         [field]: value,
-        ...(field === 'id' && {
-          name: mockCharacteristics.find((c) => c.id === value)?.name || '',
+        ...(field === '_id' && {
+          name:
+            state.characteristicsDatasource.find((c) => c._id === value)
+              ?.name || '',
         }),
       }
       return {
@@ -170,7 +205,7 @@ const usePetsNewViewModel = (): PetsNewViewModel => {
       errors.push(t('petsNewScreen.validation.nameRequired'))
     }
 
-    if (!pet.petType?.id) {
+    if (!pet.petType?._id) {
       errors.push(t('petsNewScreen.validation.typeRequired'))
     }
 
@@ -180,7 +215,7 @@ const usePetsNewViewModel = (): PetsNewViewModel => {
 
     if (pet.characteristics && pet.characteristics.length > 0) {
       pet.characteristics.forEach((char, index) => {
-        if (!char.id || !char.name || !char.value?.trim()) {
+        if (!char._id || !char.name) {
           errors.push(
             t('petsNewScreen.validation.characteristicIncomplete', {
               index: String(index + 1),

@@ -23,7 +23,7 @@ export class AxiosInterceptor {
             method: response.config.method?.toUpperCase(),
             url: response.config.baseURL + response.config.url,
             status: response.status,
-            headers: response.headers,
+            // headers: response.headers,
             data: response.data,
           }
           console.log('✅ Service Response:', JSON.stringify(log, null, 2))
@@ -37,7 +37,7 @@ export class AxiosInterceptor {
               method: error.response.config.method?.toUpperCase(),
               url: error.config.baseURL + error.config.url,
               status: error.response.status,
-              headers: error.response.headers,
+              // headers: error.response.headers,
               data: error.response.data,
             }
             console.log(

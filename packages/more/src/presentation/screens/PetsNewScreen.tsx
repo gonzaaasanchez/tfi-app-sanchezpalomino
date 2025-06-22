@@ -86,7 +86,7 @@ const PetsNewScreen: FC = (): JSX.Element => {
           </Text>
           <Dropdown
             data={state.petTypesDatasource.map((type) => ({
-              value: type.id || '',
+              value: type._id || '',
               label: type.name || '',
             }))}
             placeholder={t('petsNewScreen.typePlaceholder')}
@@ -94,7 +94,7 @@ const PetsNewScreen: FC = (): JSX.Element => {
             initialValue={
               state.pet.petType
                 ? {
-                    value: state.pet.petType.id || '',
+                    value: state.pet.petType._id || '',
                     label: state.pet.petType.name || '',
                   }
                 : undefined
@@ -123,7 +123,7 @@ const PetsNewScreen: FC = (): JSX.Element => {
             <View style={styles.characteristicInputs}>
               <Dropdown
                 data={state.characteristicsDatasource.map((char) => ({
-                  value: char.id || '',
+                  value: char._id || '',
                   label: char.name || '',
                 }))}
                 placeholder={t('petsNewScreen.characteristicPlaceholder')}
@@ -131,16 +131,16 @@ const PetsNewScreen: FC = (): JSX.Element => {
                   setCharacteristicType(index, value)
                 }
                 initialValue={
-                  state.pet.characteristics?.[index]?.id
+                  state.pet.characteristics?.[index]?._id
                     ? {
-                        value: state.pet.characteristics[index].id || '',
+                        value: state.pet.characteristics[index]._id || '',
                         label: state.pet.characteristics[index].name || '',
                       }
                     : undefined
                 }
               />
               <FormField
-                defaultValue={char.value || ''}
+                defaultValue={(char as any).value || ''}
                 onBlur={(value) =>
                   setCharacteristicValue(index, 'value', value)
                 }

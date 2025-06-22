@@ -1,12 +1,11 @@
 type PetType = {
-  id?: string
+  _id?: string
   name?: string
 }
 
 type PetCharacteristic = {
-  id?: string
+  _id?: string
   name?: string
-  value?: string
 }
 
 type PetModel = {

@@ -23,19 +23,26 @@ import {
   Loader,
   useI18n,
   ImageWithPlaceholder,
+  useInjection,
+  getImageFullUrl,
+  Types,
 } from '@packages/common'
 import { useNavigation, StackActions } from '@react-navigation/native'
 import { usePetsViewModel } from '../viewModels/PetsViewModel'
 
-const PetCard: FC<{ pet: PetModel; onPress: () => void }> = ({
+const PetCard: FC<{ pet: PetModel; onPress: () => void; baseUrl: string }> = ({
   pet,
   onPress,
+  baseUrl,
 }) => {
   return (
     <TouchableOpacity activeOpacity={0.85} onPress={onPress}>
       <View style={styles.cardContainer}>
         <View style={styles.leftContainer}>
-          <ImageWithPlaceholder source={pet.photoUrl} dimension={60} />
+          <ImageWithPlaceholder
+            source={getImageFullUrl(pet.avatar, baseUrl)}
+            dimension={60}
+          />
         </View>
         <View style={styles.rightContainer}>
           <Text style={styles.petName}>{pet.name}</Text>
@@ -56,6 +63,7 @@ const PetsScreen: FC = (): JSX.Element => {
   const navigation = useNavigation()
   const { state, refreshPets, onReachedBottom } = usePetsViewModel()
   const { t } = useI18n()
+  const baseUrl = useInjection(Types.BaseURL) as string
 
   useEffect(() => {
     if (petDetail) {
@@ -66,7 +74,8 @@ const PetsScreen: FC = (): JSX.Element => {
   const handleScroll = (event: any) => {
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent
     const paddingToBottom = 20
-    const isCloseToBottom = layoutMeasurement.height + contentOffset.y >= 
+    const isCloseToBottom =
+      layoutMeasurement.height + contentOffset.y >=
       contentSize.height - paddingToBottom
 
     if (isCloseToBottom) {
@@ -97,7 +106,12 @@ const PetsScreen: FC = (): JSX.Element => {
             />
           )}
           {state.pets.map((pet) => (
-            <PetCard key={pet.id} pet={pet} onPress={() => setPetDetail(pet)} />
+            <PetCard
+              key={pet.id}
+              pet={pet}
+              onPress={() => setPetDetail(pet)}
+              baseUrl={baseUrl}
+            />
           ))}
           {/* {state.loadingMore && (
             <View style={styles.loadingMoreContainer}>

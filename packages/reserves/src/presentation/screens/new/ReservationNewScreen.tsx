@@ -122,13 +122,13 @@ const ReservationNewScreen: FC = (): JSX.Element => {
       {
         id: '1',
         name: 'Firulais',
-        photoUrl: 'https://example.com/firulais.jpg',
+        avatar: 'https://example.com/firulais.jpg',
         type: { id: '1', name: 'Perro' },
       },
       {
         id: '2',
         name: 'Mishu',
-        photoUrl: 'https://example.com/mishu.jpg',
+        avatar: 'https://example.com/mishu.jpg',
         type: { id: '2', name: 'Gato' },
       },
     ]

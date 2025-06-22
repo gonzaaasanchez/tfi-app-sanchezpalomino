@@ -48,6 +48,7 @@ import {
   createFileInfo,
   isValidImageUri,
 } from './src/utils/FileUtils'
+import { getImageFullUrl } from './src/utils/ImageUtils'
 import {
   buildPaginationQueryString,
   buildPaginatedUrl,
@@ -121,6 +122,7 @@ export {
   getFileName,
   createFileInfo,
   isValidImageUri,
+  getImageFullUrl,
   buildPaginationQueryString,
   buildPaginatedUrl,
   PaginationParams,

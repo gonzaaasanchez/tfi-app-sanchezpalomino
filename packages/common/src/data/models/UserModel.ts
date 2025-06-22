@@ -1,3 +1,5 @@
+import { getImageFullUrl } from '../../utils/ImageUtils'
+
 class UserModel {
   _id?: string
   firstName?: string
@@ -17,21 +19,6 @@ class UserModel {
 
   get fullName(): string {
     return `${this.firstName || ''} ${this.lastName || ''}`.trim()
-  }
-
-  getAvatarUrl(baseUrl: string): string {
-    if (!this.avatar) {
-      return ''
-    }
-
-    if (
-      this.avatar.startsWith('http://') ||
-      this.avatar.startsWith('https://')
-    ) {
-      return this.avatar
-    }
-
-    return `${baseUrl}${this.avatar.startsWith('/') ? '' : '/'}${this.avatar}`
   }
 
   toPlainObject() {

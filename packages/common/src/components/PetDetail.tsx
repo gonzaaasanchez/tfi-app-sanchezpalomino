@@ -6,18 +6,23 @@ import { DetailItem } from './DetailItem'
 import { LabelStyle } from '../style/Styles'
 import { Color } from '../style/Color'
 import ImageWithPlaceholder from './ImageWithPlaceholder'
+import { getImageFullUrl } from '../utils/ImageUtils'
 
 type PetDetailSheetProps = {
   pet: PetModel
+  baseUrl?: string
 }
 
-const PetDetail: FC<PetDetailSheetProps> = ({ pet }) => {
+const PetDetail: FC<PetDetailSheetProps> = ({ pet, baseUrl = '' }) => {
   const { t } = useI18n()
 
   return (
     <View style={{ paddingBottom: 20 }}>
-      <View style={{ alignItems: 'center', paddingBottom: 10}}>
-        <ImageWithPlaceholder source={pet.photoUrl} dimension={120} />
+      <View style={{ alignItems: 'center', paddingBottom: 10 }}>
+        <ImageWithPlaceholder
+          source={getImageFullUrl(pet.avatar, baseUrl)}
+          dimension={120}
+        />
       </View>
       <Text style={styles.petName}>{pet?.name}</Text>
       <Text style={styles.petType}>{`(${pet?.petType?.name})`}</Text>
@@ -25,8 +30,8 @@ const PetDetail: FC<PetDetailSheetProps> = ({ pet }) => {
       <Text style={styles.petCharacteristicsTitle}>
         {t('reserveDetailScreen.petDetails')}
       </Text>
-      {pet.characteristics?.map((characteristic) => (
-        <View key={characteristic.id}>
+      {pet.characteristics?.map((characteristic, index) => (
+        <View key={characteristic._id || index}>
           <DetailItem
             icon="pets"
             iconSize={14}

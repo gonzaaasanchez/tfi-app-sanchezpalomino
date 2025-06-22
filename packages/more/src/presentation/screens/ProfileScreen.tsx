@@ -26,6 +26,7 @@ import {
   useBottomSheetModalRef,
   ImagePickerOptions,
   ImageWithPlaceholder,
+  getImageFullUrl,
 } from '@packages/common'
 import { useProfileViewModel } from '../viewModels/ProfileViewModel'
 
@@ -59,7 +60,7 @@ const ProfileScreen: FC = (): JSX.Element => {
     if (state.newAvatarFile) {
       return state.newAvatarFile
     }
-    const avatarUrl = user?.getAvatarUrl(baseUrl)
+    const avatarUrl = getImageFullUrl(user?.avatar, baseUrl)
     if (!avatarUrl) return null
     // Agregar timestamp para evitar cache
     return `${avatarUrl}?_t=${Date.now()}`

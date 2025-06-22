@@ -5,6 +5,8 @@ import {
   PetType,
   PetCharacteristic,
   buildPaginatedUrl,
+  createFileInfo,
+  isValidImageUri,
 } from '@app/common'
 
 export interface PetApi {
@@ -52,6 +54,71 @@ export class PetApiImpl implements PetApi {
   }
 
   async savePet(pet: PetModel, avatarFile?: string | null): Promise<PetModel> {
-    return Promise.resolve({} as PetModel)
+    if (avatarFile) {
+      return this.savePetWithAvatar(pet, avatarFile)
+    } else {
+      return this.savePetWithoutAvatar(pet)
+    }
+  }
+
+  private async savePetWithAvatar(
+    pet: PetModel,
+    avatarFile: string
+  ): Promise<PetModel> {
+    if (!isValidImageUri(avatarFile)) {
+      throw new Error(
+        'Formato de archivo de imagen inválido. Por favor selecciona un archivo de imagen válido.'
+      )
+    }
+
+    const formData = new FormData()
+
+    // Construir el body según la estructura especificada
+    const petBody = {
+      name: pet.name,
+      comment: pet.comment,
+      petTypeId: pet.petType?._id,
+      characteristics:
+        pet.characteristics?.map((char) => ({
+          characteristicId: char._id,
+          value: char.value,
+        })) || [],
+    }
+
+    // Agregar los campos del body al FormData
+    Object.keys(petBody).forEach((key) => {
+      const value = petBody[key as keyof typeof petBody]
+      if (value !== undefined && value !== null) {
+        if (key === 'characteristics') {
+          formData.append(key, JSON.stringify(value))
+        } else {
+          formData.append(key, String(value))
+        }
+      }
+    })
+
+    // Agregar el archivo de avatar
+    const fileInfo = createFileInfo(avatarFile, 'avatar')
+    formData.append('avatarFile', fileInfo as any)
+
+    const response = await this.httpClient.post<PetModel>('/pets', formData)
+    return response.data
+  }
+
+  private async savePetWithoutAvatar(pet: PetModel): Promise<PetModel> {
+    // Construir el body según la estructura especificada
+    const petBody = {
+      name: pet.name,
+      comment: pet.comment,
+      petTypeId: pet.petType?._id,
+      characteristics:
+        pet.characteristics?.map((char) => ({
+          characteristicId: char._id,
+          value: char.value,
+        })) || [],
+    }
+
+    const response = await this.httpClient.post<PetModel>('/pets', petBody)
+    return response.data
   }
 }

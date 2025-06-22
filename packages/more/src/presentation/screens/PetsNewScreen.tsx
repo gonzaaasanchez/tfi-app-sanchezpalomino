@@ -64,7 +64,7 @@ const PetsNewScreen: FC = (): JSX.Element => {
   const Avatar = () => {
     return (
       <View style={styles.avatarContainer}>
-        <ImageWithPlaceholder source={state.newAvatarFile} dimension={120} />
+        <ImageWithPlaceholder source={state.avatarFile} dimension={120} />
         <TouchableOpacity
           style={styles.uploadButton}
           activeOpacity={0.85}
@@ -86,7 +86,7 @@ const PetsNewScreen: FC = (): JSX.Element => {
           placeholder={t('petsNewScreen.namePlaceholder')}
         />
 
-        <View style={{ marginBottom: 16 }}>
+        <View style={{ marginBottom: 6 }}>
           <Text
             style={LabelStyle.body2({
               fontWeight: 500,
@@ -151,7 +151,7 @@ const PetsNewScreen: FC = (): JSX.Element => {
                 }
               />
               <FormField
-                defaultValue={(char as any).value || ''}
+                defaultValue={char.value || ''}
                 onBlur={(value) =>
                   setCharacteristicValue(index, 'value', value)
                 }
@@ -256,6 +256,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     padding: 20,
+    paddingBottom: 80,
     flexGrow: 1,
   },
   avatarContainer: {

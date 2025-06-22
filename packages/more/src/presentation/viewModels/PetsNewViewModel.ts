@@ -13,6 +13,7 @@ import {
 import { useState, useEffect } from 'react'
 import { GetPetTypesUseCase } from '../../domain/usecases/GetPetTypesUseCase'
 import { GetPetCharacteristicsUseCase } from '../../domain/usecases/GetPetCharacteristicsUseCase'
+import { SavePetUseCase } from '../../domain/usecases/SavePetUseCase'
 import { $ } from '../../domain/di/Types'
 
 type PetsNewState = {
@@ -20,7 +21,7 @@ type PetsNewState = {
   petTypesDatasource: PetType[]
   characteristicsDatasource: PetCharacteristic[]
   petSaved: boolean
-  newAvatarFile: string | null
+  avatarFile: string | null
 } & UIState
 
 type PetsNewViewModel = {
@@ -37,7 +38,7 @@ type PetsNewViewModel = {
     value: string
   ) => void
   validateForm: (onValidated: () => void) => void
-  savePet: () => void
+  savePet: () => Promise<void>
   selectImageFrom: (source: 'camera' | 'gallery') => Promise<void>
 }
 
@@ -48,7 +49,7 @@ const initialState: PetsNewState = {
   loading: false,
   error: null,
   petSaved: false,
-  newAvatarFile: null,
+  avatarFile: null,
 }
 
 const usePetsNewViewModel = (): PetsNewViewModel => {
@@ -60,6 +61,7 @@ const usePetsNewViewModel = (): PetsNewViewModel => {
   )
   const getPetCharacteristicsUseCase =
     useInjection<GetPetCharacteristicsUseCase>($.GetPetCharacteristicsUseCase)
+  const savePetUseCase = useInjection<SavePetUseCase>($.SavePetUseCase)
 
   const {
     selectImageFromGallery: pickFromGallery,
@@ -117,7 +119,7 @@ const usePetsNewViewModel = (): PetsNewViewModel => {
     if (uri) {
       setState((prev) => ({
         ...prev,
-        newAvatarFile: uri,
+        avatarFile: uri,
       }))
     }
   }
@@ -260,18 +262,34 @@ const usePetsNewViewModel = (): PetsNewViewModel => {
     return errors
   }
 
-  const savePet = (): void => {
+  const savePet = async (): Promise<void> => {
     setState((previous) => ({
       ...previous,
       loading: true,
+      error: null,
     }))
-    setTimeout(() => {
+
+    try {
+      const savedPet = await savePetUseCase.execute(state.pet, state.avatarFile)
+
       setState((previous) => ({
         ...previous,
         loading: false,
         petSaved: true,
       }))
-    }, 1000)
+    } catch (error) {
+      setState((previous) => ({
+        ...previous,
+        loading: false,
+        error: error instanceof Error ? error.message : 'Error saving pet',
+      }))
+
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: error instanceof Error ? error.message : 'Error saving pet',
+      })
+    }
   }
 
   return {

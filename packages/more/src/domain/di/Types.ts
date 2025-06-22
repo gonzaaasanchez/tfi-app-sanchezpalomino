@@ -6,6 +6,7 @@ const $ = {
   UpdateProfileUseCase: Symbol.for('UpdateProfileUseCase'),
   UpdateCarerConfigUseCase: Symbol.for('UpdateCarerConfigUseCase'),
   AddAddressUseCase: Symbol.for('AddAddressUseCase'),
+  GetAddressesUseCase: Symbol.for('GetAddressesUseCase'),
   GetMyPetsUseCase: Symbol.for('GetMyPetsUseCase'),
   GetPetTypesUseCase: Symbol.for('GetPetTypesUseCase'),
   GetPetCharacteristicsUseCase: Symbol.for('GetPetCharacteristicsUseCase'),

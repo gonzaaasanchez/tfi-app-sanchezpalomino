@@ -22,4 +22,9 @@ export class UserRepositoryImpl implements UserRepository {
     const response = await this.api.addAddress(address)
     return response
   }
+
+  async getAddresses(): Promise<Address[]> {
+    const response = await this.api.getAddresses()
+    return response
+  }
 }

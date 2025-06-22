@@ -14,6 +14,7 @@ export interface UserApi {
   ): Promise<UserModel>
   updateCarerConfig(carerConfig: CarerConfig): Promise<UserModel>
   addAddress(address: Address): Promise<Address>
+  getAddresses(): Promise<Address[]>
 }
 
 export class UserApiImpl implements UserApi {
@@ -45,6 +46,11 @@ export class UserApiImpl implements UserApi {
       '/users/me/addresses',
       address
     )
+    return response.data
+  }
+
+  async getAddresses(): Promise<Address[]> {
+    const response = await this.httpClient.get<Address[]>('/users/me/addresses')
     return response.data
   }
 

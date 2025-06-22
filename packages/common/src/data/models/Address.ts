@@ -1,4 +1,5 @@
 type Address = {
+  id: string
   name: string
   fullAddress: string
   floor?: string

@@ -1,5 +1,7 @@
-import { UIState, Address, useI18n } from '@packages/common'
-import { useState } from 'react'
+import { UIState, Address, useI18n, useInjection } from '@packages/common'
+import { useState, useEffect } from 'react'
+import { GetAddressesUseCase } from '../../domain/usecases/GetAddressesUseCase'
+import { $ } from '../../domain/di/Types'
 
 type AddressesViewModel = {
   state: AddressesState
@@ -19,6 +21,7 @@ const initialState: AddressesState = {
 const useAddressesViewModel = (): AddressesViewModel => {
   const { t } = useI18n()
   const [state, setState] = useState<AddressesState>(initialState)
+  const getAddressesUseCase: GetAddressesUseCase = useInjection($.GetAddressesUseCase)
 
   const loadAddresses = async (): Promise<void> => {
     setState((previous) => ({
@@ -28,23 +31,25 @@ const useAddressesViewModel = (): AddressesViewModel => {
     }))
 
     try {
-      // Aquí se implementaría la lógica para cargar las direcciones
-      // Por ahora solo simulamos la carga
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const addresses = await getAddressesUseCase.execute()
 
       setState((previous) => ({
         ...previous,
         loading: false,
-        addresses: [], // Aquí se cargarían las direcciones reales
+        addresses,
       }))
     } catch (error) {
       setState((previous) => ({
         ...previous,
         loading: false,
-        error: 'Error al cargar las direcciones',
+        error: t('addressesScreen.error.loadAddresses'),
       }))
     }
   }
+
+  useEffect(() => {
+    loadAddresses()
+  }, [])
 
   return {
     state,

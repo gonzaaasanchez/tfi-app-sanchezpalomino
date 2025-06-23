@@ -10,7 +10,7 @@ export interface CarerConfig {
     enabled: boolean
     visitPrice: number | null
   }
-  preferredPetTypes?: PetType[]
+  petTypes?: PetType[]
 }
 
 class UserModel {

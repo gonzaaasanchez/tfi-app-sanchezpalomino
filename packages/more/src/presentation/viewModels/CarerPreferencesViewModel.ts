@@ -77,7 +77,7 @@ const useCarerPreferencesViewModel = (): CarerPreferencesViewModel => {
         petHomeCareEnabled: currentUser.carerConfig.petHomeCare.enabled,
         petHomeCareVisitPrice:
           currentUser.carerConfig.petHomeCare.visitPrice?.toString() || '',
-        selectedPetTypes: currentUser.carerConfig.preferredPetTypes || [],
+        selectedPetTypes: currentUser.carerConfig.petTypes || [],
       }))
     }
   }, [currentUser])
@@ -247,7 +247,7 @@ const useCarerPreferencesViewModel = (): CarerPreferencesViewModel => {
             ? parseFloat(state.petHomeCareVisitPrice)
             : null,
         },
-        preferredPetTypes: state.selectedPetTypes,
+        petTypes: state.selectedPetTypes,
       }
 
       const updatedUser = await updateCarerConfigUseCase.execute(carerConfig)

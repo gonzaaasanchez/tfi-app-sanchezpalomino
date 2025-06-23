@@ -33,17 +33,23 @@ export class UserApiImpl implements UserApi {
   }
 
   async updateCarerConfig(carerConfig: CarerConfig): Promise<UserModel> {
+    // Convert PetType objects to IDs for backend
+    const backendCarerConfig = {
+      ...carerConfig,
+      petTypes: carerConfig.petTypes?.map((type) => type._id || '') || [],
+    }
+
     const response = await this.httpClient.put<UserModel>(
       '/users/me/carer-config',
       {
-        carerConfig,
+        carerConfig: backendCarerConfig,
       }
     )
     return response.data
   }
 
   async addAddress(address: AddressModel): Promise<AddressModel> {
-    const isUpdate = !!address._id
+    const isUpdate = !!address._idr
     const url = isUpdate ? `/users/me/addresses/${address._id}` : '/users/me/addresses'
     const method = isUpdate ? 'put' : 'post'
     

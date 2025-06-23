@@ -21,16 +21,16 @@ import {
   PPBottomSheet,
   PPBottomSheetContainer,
   AddressDetail,
+  GenericToast,
 } from '@packages/common'
 import { useAddressesViewModel } from '../viewModels/AddressesViewModel'
 import { StackActions, useNavigation } from '@react-navigation/native'
-import catSuccess from '@app/assets/lottie-json/success-cat.json'
 
 const AddressesScreen: FC = (): JSX.Element => {
   const { t } = useI18n()
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
-  const { state, loadAddresses } = useAddressesViewModel()
+  const { state, loadAddresses, deleteAddress } = useAddressesViewModel()
   const [refreshing, setRefreshing] = useState(false)
   const [addressDetail, setAddressDetail] = useState<AddressModel | null>(null)
   const [addressToDelete, setAddressToDelete] = useState<AddressModel | null>(
@@ -38,7 +38,6 @@ const AddressesScreen: FC = (): JSX.Element => {
   )
   const addressDetailModalRef = useBottomSheetModalRef()
   const deleteConfirmationModalRef = useBottomSheetModalRef()
-  const successModalRef = useBottomSheetModalRef()
 
   const onRefresh = async () => {
     setRefreshing(true)
@@ -64,15 +63,14 @@ const AddressesScreen: FC = (): JSX.Element => {
   useEffect(() => {
     if (state.addressDeleted) {
       addressDetailModalRef.current?.dismiss()
-      successModalRef.current?.present()
       onRefresh()
     }
   }, [state.addressDeleted])
 
   const handleDeleteAddress = () => {
     deleteConfirmationModalRef.current?.dismiss()
-    if (addressToDelete?.id) {
-      // deleteAddress(addressToDelete.id)
+    if (addressToDelete?._id) {
+      deleteAddress(addressToDelete._id)
     }
     setAddressToDelete(null)
   }
@@ -156,21 +154,12 @@ const AddressesScreen: FC = (): JSX.Element => {
         </PPBottomSheet.Empty>
         <PPBottomSheet.Dialog
           ref={deleteConfirmationModalRef}
-          title={t('petsNewScreen.confirmation.deleteTitle')}
-          subtitle={t('petsNewScreen.confirmation.deleteSubtitle')}
-          primaryActionTitle={t('petsNewScreen.confirmation.delete')}
-          secondaryActionTitle={t('petsNewScreen.confirmation.cancel')}
+          title={t('addressesScreen.confirmation.deleteTitle')}
+          subtitle={t('addressesScreen.confirmation.deleteSubtitle')}
+          primaryActionTitle={t('addressesScreen.confirmation.delete')}
+          secondaryActionTitle={t('addressesScreen.confirmation.cancel')}
           onPrimaryAction={handleDeleteAddress}
           onSecondaryAction={handleCancelDeleteAddress}
-        />
-        <PPBottomSheet.Dialog
-          ref={successModalRef}
-          title={t('petsNewScreen.success.deleteTitle')}
-          subtitle={t('petsNewScreen.success.deleteSubtitle')}
-          lottieFile={catSuccess}
-          onPrimaryAction={() => {
-            successModalRef.current?.dismiss()
-          }}
         />
         <TouchableOpacity
           style={{
@@ -184,6 +173,7 @@ const AddressesScreen: FC = (): JSX.Element => {
           <PPMaterialIcon icon="add" size={30} color={'white'} />
         </TouchableOpacity>
         {state.loading && <Loader loading={state.loading} />}
+        <GenericToast overrideOffset={10} />
       </SafeAreaView>
     </PPBottomSheetContainer>
   )

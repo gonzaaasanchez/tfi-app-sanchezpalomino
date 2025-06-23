@@ -29,7 +29,6 @@ import {
 } from '@packages/common'
 import { useNavigation, StackActions } from '@react-navigation/native'
 import { usePetsViewModel } from '../viewModels/PetsViewModel'
-import catSuccess from '@app/assets/lottie-json/success-cat.json'
 
 const PetCard: FC<{ pet: PetModel; onPress: () => void; baseUrl: string }> = ({
   pet,
@@ -62,7 +61,6 @@ const PetsScreen: FC = (): JSX.Element => {
   const [petToDelete, setPetToDelete] = useState<PetModel | null>(null)
   const petDetailModalRef = useBottomSheetModalRef()
   const deleteConfirmationModalRef = useBottomSheetModalRef()
-  const successModalRef = useBottomSheetModalRef()
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
   const { state, refreshPets, onReachedBottom, deletePet } = usePetsViewModel()
@@ -84,7 +82,6 @@ const PetsScreen: FC = (): JSX.Element => {
   useEffect(() => {
     if (state.petDeleted) {
       petDetailModalRef.current?.dismiss()
-      successModalRef.current?.present()
       refreshPets()
     }
   }, [state.petDeleted])
@@ -180,15 +177,6 @@ const PetsScreen: FC = (): JSX.Element => {
         secondaryActionTitle={t('petsNewScreen.confirmation.cancel')}
         onPrimaryAction={handleDeletePet}
         onSecondaryAction={handleCancelDelete}
-      />
-      <PPBottomSheet.Dialog
-        ref={successModalRef}
-        title={t('petsNewScreen.success.deleteTitle')}
-        subtitle={t('petsNewScreen.success.deleteSubtitle')}
-        lottieFile={catSuccess}
-        onPrimaryAction={() => {
-          successModalRef.current?.dismiss()
-        }}
       />
       <TouchableOpacity
         style={{

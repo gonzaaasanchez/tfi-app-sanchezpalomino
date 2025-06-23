@@ -7,6 +7,7 @@
       "accept": "Aceptar",
       "cancel": "Cancelar",
       "ups": "¡Ups!",
+      "success": "¡Éxito!",
       "emptyList": "No hay información para mostrar",
       "serviceError": "Ha ocurrido un error. Por favor, ¡intentalo nuevamente!",
       "delete": "Eliminar",
@@ -219,6 +220,20 @@
       "emptyState": {
         "title": "No tenés domicilios registrados",
         "subtitle": "Agregá tu primera dirección para comenzar"
+      },
+      "error": {
+        "loadAddresses": "Error al cargar las direcciones",
+        "deleteAddress": "Error al eliminar la dirección"
+      },
+      "confirmation": {
+        "deleteTitle": "Eliminar dirección",
+        "deleteSubtitle": "¿Estás seguro de que querés eliminar esta dirección? Esta acción no se puede deshacer.",
+        "delete": "Eliminar",
+        "cancel": "Cancelar"
+      },
+      "success": {
+        "deleteTitle": "¡Dirección eliminada!",
+        "deleteSubtitle": "La dirección se eliminó correctamente"
       }
     },
     "addressNewScreen": {

@@ -15,6 +15,7 @@ export interface UserApi {
   updateCarerConfig(carerConfig: CarerConfig): Promise<UserModel>
   addAddress(address: AddressModel): Promise<AddressModel>
   getAddresses(): Promise<AddressModel[]>
+  deleteAddress(addressId: string): Promise<void>
 }
 
 export class UserApiImpl implements UserApi {
@@ -54,6 +55,10 @@ export class UserApiImpl implements UserApi {
       '/users/me/addresses'
     )
     return response.data
+  }
+
+  async deleteAddress(addressId: string): Promise<void> {
+    await this.httpClient.delete(`/users/me/addresses/${addressId}`)
   }
 
   private async updateProfileWithAvatar(

@@ -27,4 +27,8 @@ export class UserRepositoryImpl implements UserRepository {
     const response = await this.api.getAddresses()
     return response
   }
+
+  async deleteAddress(addressId: string): Promise<void> {
+    await this.api.deleteAddress(addressId)
+  }
 }

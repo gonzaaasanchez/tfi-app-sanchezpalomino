@@ -8,4 +8,5 @@ export interface UserRepository {
   updateCarerConfig(carerConfig: CarerConfig): Promise<UserModel>
   addAddress(address: AddressModel): Promise<AddressModel>
   getAddresses(): Promise<AddressModel[]>
+  deleteAddress(addressId: string): Promise<void>
 }

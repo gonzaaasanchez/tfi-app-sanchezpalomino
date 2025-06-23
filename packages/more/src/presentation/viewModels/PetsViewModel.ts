@@ -56,7 +56,12 @@ const usePetsViewModel = (): PetsViewModel => {
 
       if (reset) {
         if (state.loading) return
-        setState((previous) => ({ ...previous, loading: true, error: null }))
+        setState((previous) => ({
+          ...previous,
+          loading: true,
+          error: null,
+          petDeleted: false,
+        }))
         const response = await getMyPetsUseCase.execute(
           1,
           state.pagination.limit
@@ -122,6 +127,11 @@ const usePetsViewModel = (): PetsViewModel => {
         loading: false,
         petDeleted: true,
       }))
+      ShowToast({
+        config: 'success',
+        title: t('petsNewScreen.success.deleteTitle'),
+        subtitle: t('petsNewScreen.success.deleteSubtitle'),
+      })
     } catch (error) {
       setState((previous) => ({
         ...previous,

@@ -116,7 +116,7 @@ const useAddressNewViewModel = (): AddressNewViewModel => {
 
     try {
       const addressToSave: AddressModel = {
-        id: '',
+        _id: '',
         name: state.name || '',
         fullAddress: state.address?.fullAddress || '',
         coords: state.address?.coords || { lat: 0, lon: 0 },

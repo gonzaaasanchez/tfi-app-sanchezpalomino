@@ -7,11 +7,13 @@ import {
 } from '@packages/common'
 import { useState, useEffect } from 'react'
 import { GetAddressesUseCase } from '../../domain/usecases/GetAddressesUseCase'
+import { DeleteAddressUseCase } from '../../domain/usecases/DeleteAddressUseCase'
 import { $ } from '../../domain/di/Types'
 
 type AddressesViewModel = {
   state: AddressesState
   loadAddresses: () => Promise<void>
+  deleteAddress: (addressId: string) => Promise<void>
 }
 
 type AddressesState = {
@@ -32,12 +34,16 @@ const useAddressesViewModel = (): AddressesViewModel => {
   const getAddressesUseCase: GetAddressesUseCase = useInjection(
     $.GetAddressesUseCase
   )
+  const deleteAddressUseCase: DeleteAddressUseCase = useInjection(
+    $.DeleteAddressUseCase
+  )
 
   const loadAddresses = async (): Promise<void> => {
     setState((previous) => ({
       ...previous,
       loading: true,
       error: null,
+      addressDeleted: false,
     }))
 
     try {
@@ -62,6 +68,41 @@ const useAddressesViewModel = (): AddressesViewModel => {
     }
   }
 
+  const deleteAddress = async (addressId: string): Promise<void> => {
+    setState((previous) => ({
+      ...previous,
+      loading: true,
+      error: null,
+    }))
+
+    try {
+      await deleteAddressUseCase.execute(addressId)
+
+      setState((previous) => ({
+        ...previous,
+        loading: false,
+        addressDeleted: true,
+      }))
+
+      ShowToast({
+        config: 'success',
+        title: t('addressesScreen.success.deleteTitle'),
+        subtitle: t('addressesScreen.success.deleteSubtitle'),
+      })
+    } catch (error) {
+      setState((previous) => ({
+        ...previous,
+        loading: false,
+        error: t('addressesScreen.error.deleteAddress'),
+      }))
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: t('addressesScreen.error.deleteAddress'),
+      })
+    }
+  }
+
   useEffect(() => {
     loadAddresses()
   }, [])
@@ -69,6 +110,7 @@ const useAddressesViewModel = (): AddressesViewModel => {
   return {
     state,
     loadAddresses,
+    deleteAddress,
   }
 }
 

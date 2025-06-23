@@ -307,6 +307,13 @@
         "commentRequired": "Dejá una descripción de tu mascota",
         "characteristicIncomplete": "La característica {{index}} no puede estar vacía"
       }
+    },
+    "addressDetailScreen": {
+      "details": "Detalles del domicilio",
+      "floor": "Piso: ",
+      "apartment": "Departamento: ",
+      "edit": "Editar",
+      "delete": "Eliminar"
     }
   }
 }

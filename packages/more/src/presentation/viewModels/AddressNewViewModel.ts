@@ -1,6 +1,6 @@
 import {
   UIState,
-  Address,
+  AddressModel,
   useI18n,
   useInjection,
   Color,
@@ -14,7 +14,7 @@ import { $ } from '../../domain/di/Types'
 type AddressNewViewModel = {
   state: AddressNewState
   setName: (name: string) => void
-  setAddress: (address: Address) => void
+  setAddress: (address: AddressModel) => void
   setFloor: (floor: string) => void
   setApartment: (apartment: string) => void
   saveAddress: () => Promise<void>
@@ -23,7 +23,7 @@ type AddressNewViewModel = {
 
 type AddressNewState = {
   name: string | null
-  address: Address | null
+  address: AddressModel | null
   floor: string
   apartment: string
   addressSaved: boolean
@@ -44,7 +44,7 @@ const useAddressNewViewModel = (): AddressNewViewModel => {
   const addAddressUseCase = useInjection<AddAddressUseCase>($.AddAddressUseCase)
   const [state, setState] = useState<AddressNewState>(initialState)
 
-  const setAddress = (address: Address): void => {
+  const setAddress = (address: AddressModel): void => {
     setState((previous) => ({
       ...previous,
       address,
@@ -115,7 +115,8 @@ const useAddressNewViewModel = (): AddressNewViewModel => {
     }))
 
     try {
-      const addressToSave: Address = {
+      const addressToSave: AddressModel = {
+        id: '',
         name: state.name || '',
         fullAddress: state.address?.fullAddress || '',
         coords: state.address?.coords || { lat: 0, lon: 0 },

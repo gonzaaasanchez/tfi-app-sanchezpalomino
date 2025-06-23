@@ -22,7 +22,6 @@ import {
   PetType,
   PetCharacteristic,
 } from './src/data/models/PetModel'
-import { LocationModel } from './src/data/models/LocationModel'
 import { FeedModel } from './src/data/models/FeedModel'
 import {
   PaginationModel,
@@ -79,8 +78,9 @@ import { PetDetail } from './src/components/PetDetail'
 import { DetailItem } from './src/components/DetailItem'
 import { ImagePickerOptions } from './src/components/ImagePickerOptions'
 import ImageWithPlaceholder from './src/components/ImageWithPlaceholder'
-import { Address } from './src/data/models/Address'
+import { AddressModel } from './src/data/models/AddressModel'
 import { GooglePlacesInput } from './src/components/GooglePlaceInput'
+import { AddressDetail } from './src/components/AddressDetail'
 export {
   Resolver,
   Token,
@@ -106,7 +106,6 @@ export {
   PetModel,
   PetType,
   PetCharacteristic,
-  LocationModel,
   FeedModel,
   PaginationModel,
   PaginatedResponse,
@@ -149,6 +148,7 @@ export {
   HomeTabsHeight,
   ImagePickerOptions,
   ImageWithPlaceholder,
-  Address,
+  AddressModel,
   GooglePlacesInput,
+  AddressDetail,
 }

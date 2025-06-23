@@ -1,4 +1,10 @@
-import { UIState, Address, useI18n, useInjection } from '@packages/common'
+import {
+  UIState,
+  AddressModel,
+  useI18n,
+  useInjection,
+  ShowToast,
+} from '@packages/common'
 import { useState, useEffect } from 'react'
 import { GetAddressesUseCase } from '../../domain/usecases/GetAddressesUseCase'
 import { $ } from '../../domain/di/Types'
@@ -9,19 +15,23 @@ type AddressesViewModel = {
 }
 
 type AddressesState = {
-  addresses: Address[]
+  addresses: AddressModel[]
+  addressDeleted: boolean
 } & UIState
 
 const initialState: AddressesState = {
   loading: false,
   error: null,
   addresses: [],
+  addressDeleted: false,
 }
 
 const useAddressesViewModel = (): AddressesViewModel => {
   const { t } = useI18n()
   const [state, setState] = useState<AddressesState>(initialState)
-  const getAddressesUseCase: GetAddressesUseCase = useInjection($.GetAddressesUseCase)
+  const getAddressesUseCase: GetAddressesUseCase = useInjection(
+    $.GetAddressesUseCase
+  )
 
   const loadAddresses = async (): Promise<void> => {
     setState((previous) => ({
@@ -44,6 +54,11 @@ const useAddressesViewModel = (): AddressesViewModel => {
         loading: false,
         error: t('addressesScreen.error.loadAddresses'),
       }))
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: t('addressesScreen.error.loadAddresses'),
+      })
     }
   }
 

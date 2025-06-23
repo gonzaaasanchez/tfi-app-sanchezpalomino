@@ -84,7 +84,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 30,
-    paddingTop: 40,
+    paddingTop: 20,
+    marginTop: 30,
+    borderTopWidth: 1,
+    borderTopColor: Color.black[200],
   },
   editButton: {
     ...LabelStyle.body({ color: Color.black[500] }),

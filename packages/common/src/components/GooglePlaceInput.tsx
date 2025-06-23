@@ -11,11 +11,11 @@ import Constants from 'expo-constants'
 import { Color, StateColor } from '../style/Color'
 import { LabelStyle } from '../style/Styles'
 import { useI18n } from '../domain/hooks/i18n'
-import { Address } from '../data/models/Address'
+import { AddressModel } from '../data/models/AddressModel'
 
 type GooglePlacesInputProps = {
   onPress: () => void
-  onSelection?: (location: Address) => void
+  onSelection?: (location: AddressModel) => void
   placeholder?: string
   readonly?: boolean
 }
@@ -59,6 +59,7 @@ const GooglePlacesInput: FC<GooglePlacesInputProps> = ({
           const location = details?.geometry?.location
           if (location && onSelection) {
             onSelection({
+              id: '',
               name: '',
               fullAddress: details?.formatted_address || '',
               coords: { lat: location.lat, lon: location.lng },

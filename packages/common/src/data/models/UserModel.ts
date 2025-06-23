@@ -1,4 +1,4 @@
-import { Address } from './Address'
+import { Address } from './AddressModel'
 
 export interface CarerConfig {
   homeCare: {

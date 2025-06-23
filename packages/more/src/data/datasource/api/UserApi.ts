@@ -2,7 +2,7 @@ import {
   HttpClient,
   UserModel,
   CarerConfig,
-  Address,
+  AddressModel,
   createFileInfo,
   isValidImageUri,
 } from '@app/common'
@@ -13,8 +13,8 @@ export interface UserApi {
     avatarFile?: string
   ): Promise<UserModel>
   updateCarerConfig(carerConfig: CarerConfig): Promise<UserModel>
-  addAddress(address: Address): Promise<Address>
-  getAddresses(): Promise<Address[]>
+  addAddress(address: AddressModel): Promise<AddressModel>
+  getAddresses(): Promise<AddressModel[]>
 }
 
 export class UserApiImpl implements UserApi {
@@ -41,16 +41,18 @@ export class UserApiImpl implements UserApi {
     return response.data
   }
 
-  async addAddress(address: Address): Promise<Address> {
-    const response = await this.httpClient.post<Address>(
+  async addAddress(address: AddressModel): Promise<AddressModel> {
+    const response = await this.httpClient.post<AddressModel>(
       '/users/me/addresses',
       address
     )
     return response.data
   }
 
-  async getAddresses(): Promise<Address[]> {
-    const response = await this.httpClient.get<Address[]>('/users/me/addresses')
+  async getAddresses(): Promise<AddressModel[]> {
+    const response = await this.httpClient.get<AddressModel[]>(
+      '/users/me/addresses'
+    )
     return response.data
   }
 

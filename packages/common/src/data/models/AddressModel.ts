@@ -1,4 +1,4 @@
-type Address = {
+type AddressModel = {
   id: string
   name: string
   fullAddress: string
@@ -9,4 +9,4 @@ type Address = {
     lon: number
   }
 }
-export { Address }
+export { AddressModel }

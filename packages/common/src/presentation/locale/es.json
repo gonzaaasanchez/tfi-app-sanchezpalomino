@@ -9,6 +9,7 @@
       "ups": "¡Ups!",
       "success": "¡Éxito!",
       "emptyList": "No hay información para mostrar",
+      "noResultsFound": "No se encontraron resultados",
       "serviceError": "Ha ocurrido un error. Por favor, ¡intentalo nuevamente!",
       "delete": "Eliminar",
       "addressPlaceholder": "Ingresá tu dirección",
@@ -238,6 +239,7 @@
     },
     "addressNewScreen": {
       "title": "Nuevo domicilio",
+      "editTitle": "Editar domicilio",
       "name": "Nombre",
       "namePlaceholder": "Ingresá el nombre de tu domicilio",
       "address": "Dirección",
@@ -247,6 +249,7 @@
       "apartment": "Departamento (opcional)",
       "apartmentPlaceholder": "Ej: A",
       "saveAddress": "Guardar dirección",
+      "updateAddress": "Actualizar dirección",
       "success": {
         "title": "¡Perfecto!",
         "message": "La dirección se guardó correctamente"

@@ -141,10 +141,10 @@ const AddressesScreen: FC = (): JSX.Element => {
             address={addressDetail}
             handlers={{
               onEdit: () => {
-                // addressDetailModalRef.current?.dismiss()
-                // navigation.dispatch(
-                //   StackActions.push('addressNew', { address: addressDetail })
-                // )
+                addressDetailModalRef.current?.dismiss()
+                navigation.dispatch(
+                  StackActions.push('addressNew', { address: addressDetail })
+                )
               },
               onDelete: () => {
                 setAddressToDelete(addressDetail)

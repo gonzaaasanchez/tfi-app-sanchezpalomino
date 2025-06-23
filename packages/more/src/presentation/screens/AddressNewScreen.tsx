@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useLayoutEffect, useState } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import {
@@ -14,24 +14,58 @@ import {
   PPBottomSheet,
   useBottomSheetModalRef,
   PPBottomSheetContainer,
+  AddressModel,
 } from '@packages/common'
 import { useAddressNewViewModel } from '../viewModels/AddressNewViewModel'
 import catSuccess from '@app/assets/lottie-json/success-cat.json'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
+
+type RouteParams = {
+  address?: AddressModel
+}
 
 const AddressNewScreen: FC = (): JSX.Element => {
   const { t } = useI18n()
-  const { state, setAddress, setFloor, setApartment, saveAddress, setName } =
-    useAddressNewViewModel()
-  const successModalRef = useBottomSheetModalRef()
   const navigation = useNavigation()
+  const route = useRoute()
+  const params = route.params as RouteParams
+  const [showAddressList, setShowAddressList] = useState(false)
+
+  const {
+    state,
+    setAddress,
+    setFloor,
+    setApartment,
+    saveAddress,
+    setName,
+    populateWithAddress,
+  } = useAddressNewViewModel()
+  const successModalRef = useBottomSheetModalRef()
 
   useEffect(() => {
-    console.log('state.addressSaved', state.addressSaved)
+    if (params?.address) {
+      populateWithAddress(params.address)
+    }
+  }, [params?.address])
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: state.isEditMode
+        ? t('addressNewScreen.editTitle')
+        : t('addressNewScreen.title'),
+    })
+  }, [state.isEditMode, navigation, t])
+
+  useEffect(() => {
     if (state.addressSaved) {
       successModalRef.current?.present()
     }
   }, [state.addressSaved])
+
+  const handleAddressSelection = (address: AddressModel) => {
+    setAddress(address)
+    setShowAddressList(false)
+  }
 
   return (
     <PPBottomSheetContainer>
@@ -51,8 +85,10 @@ const AddressNewScreen: FC = (): JSX.Element => {
               </Text>
               <GooglePlacesInput
                 placeholder={t('addressNewScreen.addressPlaceholder')}
-                onSelection={setAddress}
-                onPress={() => {}}
+                onSelection={handleAddressSelection}
+                onPress={() => setShowAddressList(true)}
+                initialValue={state.address?.fullAddress}
+                showListView={showAddressList}
               />
             </View>
 
@@ -73,7 +109,11 @@ const AddressNewScreen: FC = (): JSX.Element => {
             </View>
           </View>
           <Button.Primary
-            title={t('addressNewScreen.saveAddress')}
+            title={
+              state.isEditMode
+                ? t('addressNewScreen.updateAddress')
+                : t('addressNewScreen.saveAddress')
+            }
             state={state.loading ? ButtonState.DISABLE : ButtonState.ENABLE}
             onPress={saveAddress}
             style={styles.saveButton}

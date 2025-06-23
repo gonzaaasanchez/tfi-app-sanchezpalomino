@@ -43,10 +43,11 @@ export class UserApiImpl implements UserApi {
   }
 
   async addAddress(address: AddressModel): Promise<AddressModel> {
-    const response = await this.httpClient.post<AddressModel>(
-      '/users/me/addresses',
-      address
-    )
+    const isUpdate = !!address._id
+    const url = isUpdate ? `/users/me/addresses/${address._id}` : '/users/me/addresses'
+    const method = isUpdate ? 'put' : 'post'
+    
+    const response = await this.httpClient[method]<AddressModel>(url, address)
     return response.data
   }
 

@@ -19,6 +19,7 @@ type AddressNewViewModel = {
   setApartment: (apartment: string) => void
   saveAddress: () => Promise<void>
   validateForm: () => string[]
+  populateWithAddress: (address: AddressModel) => void
 }
 
 type AddressNewState = {
@@ -27,6 +28,8 @@ type AddressNewState = {
   floor: string
   apartment: string
   addressSaved: boolean
+  isEditMode: boolean
+  editingAddressId: string | null
 } & UIState
 
 const initialState: AddressNewState = {
@@ -37,6 +40,8 @@ const initialState: AddressNewState = {
   floor: '',
   apartment: '',
   addressSaved: false,
+  isEditMode: false,
+  editingAddressId: null,
 }
 
 const useAddressNewViewModel = (): AddressNewViewModel => {
@@ -116,7 +121,7 @@ const useAddressNewViewModel = (): AddressNewViewModel => {
 
     try {
       const addressToSave: AddressModel = {
-        _id: '',
+        _id: state.editingAddressId || null,
         name: state.name || '',
         fullAddress: state.address?.fullAddress || '',
         coords: state.address?.coords || { lat: 0, lon: 0 },
@@ -141,6 +146,18 @@ const useAddressNewViewModel = (): AddressNewViewModel => {
     }
   }
 
+  const populateWithAddress = (address: AddressModel): void => {
+    setState((previous) => ({
+      ...previous,
+      name: address.name,
+      address: address,
+      floor: address.floor || '',
+      apartment: address.apartment || '',
+      isEditMode: true,
+      editingAddressId: address._id,
+    }))
+  }
+
   return {
     state,
     setName,
@@ -149,6 +166,7 @@ const useAddressNewViewModel = (): AddressNewViewModel => {
     setApartment,
     saveAddress,
     validateForm,
+    populateWithAddress,
   }
 }
 

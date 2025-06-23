@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react'
+import React, { FC, useRef, useEffect } from 'react'
 import {
   Platform,
   StyleSheet,
@@ -18,6 +18,8 @@ type GooglePlacesInputProps = {
   onSelection?: (location: AddressModel) => void
   placeholder?: string
   readonly?: boolean
+  initialValue?: string
+  showListView?: boolean
 }
 
 const GooglePlacesInput: FC<GooglePlacesInputProps> = ({
@@ -25,12 +27,20 @@ const GooglePlacesInput: FC<GooglePlacesInputProps> = ({
   onSelection,
   readonly = false,
   placeholder,
+  initialValue,
+  showListView = true,
 }) => {
   const { t } = useI18n()
   const googlePlaceAutoCompleteRef = useRef(null)
   const googlePlaceskey = Constants.expoConfig?.extra?.googlePlacesApiKey ?? ''
 
   const isApiKeyValid = googlePlaceskey !== 'GOOGLE_PLACES_API_KEY'
+
+  useEffect(() => {
+    if (initialValue && googlePlaceAutoCompleteRef.current) {
+      googlePlaceAutoCompleteRef.current.setAddressText(initialValue)
+    }
+  }, [initialValue])
 
   return (
     <View style={styles.container}>
@@ -77,13 +87,14 @@ const GooglePlacesInput: FC<GooglePlacesInputProps> = ({
         styles={inputStyles}
         textInputProps={{
           onPress: onPress,
+          placeholderTextColor: Color.black[400],
         }}
         listEmptyComponent={
           <View style={styles.emptyComponent}>
-            <Text style={styles.emptyText}>No se encontraron resultados</Text>
+            <Text style={styles.emptyText}>{t('general.noResultsFound')}</Text>
           </View>
         }
-        listViewDisplayed={true}
+        listViewDisplayed={showListView}
         enableHighAccuracyLocation={true}
         minLength={2}
         nearbyPlacesAPI="GooglePlacesSearch"

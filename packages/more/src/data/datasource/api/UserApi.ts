@@ -49,7 +49,7 @@ export class UserApiImpl implements UserApi {
   }
 
   async addAddress(address: AddressModel): Promise<AddressModel> {
-    const isUpdate = !!address._idr
+    const isUpdate = !!address._id
     const url = isUpdate ? `/users/me/addresses/${address._id}` : '/users/me/addresses'
     const method = isUpdate ? 'put' : 'post'
     

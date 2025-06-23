@@ -25,7 +25,7 @@ const PetDetail: FC<PetDetailSheetProps> = ({ pet, baseUrl, handlers }) => {
       <View style={{ alignItems: 'center', paddingBottom: 10 }}>
         <ImageWithPlaceholder
           source={getImageFullUrl(pet.avatar, baseUrl)}
-          dimension={120}
+          dimension={170}
         />
       </View>
       <Text style={styles.petName}>{pet?.name}</Text>

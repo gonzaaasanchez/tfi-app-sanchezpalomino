@@ -90,7 +90,7 @@ const PetsNewScreen: FC = (): JSX.Element => {
     
     return (
       <View style={styles.avatarContainer}>
-        <ImageWithPlaceholder source={avatarSource} dimension={120} />
+        <ImageWithPlaceholder source={avatarSource} dimension={140} />
         <TouchableOpacity
           style={styles.uploadButton}
           activeOpacity={0.85}

@@ -11,9 +11,11 @@ import {
   PetDetail,
   DetailItem,
   ImageWithPlaceholder,
+  useInjection,
+  Types,
 } from '@packages/common'
 import { FC, useEffect, useState } from 'react'
-import { View, Text, Image, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import {
   PlaceType,
   ReservationModel,
@@ -48,6 +50,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
   const reservation = route.params.reservation
   const [petDetail, setPetDetail] = useState<PetModel>(null)
   const petDetailModalRef = useBottomSheetModalRef()
+  const baseUrl = useInjection(Types.BaseURL) as string
 
   useEffect(() => {
     setCurrentReserve(reservation)
@@ -157,7 +160,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
         dismisseable={true}
         onDismiss={() => setPetDetail(null)}
       >
-        <PetDetail pet={petDetail} />
+        <PetDetail pet={petDetail} baseUrl={baseUrl} />
       </PPBottomSheet.Empty>
     </PPBottomSheetContainer>
   )

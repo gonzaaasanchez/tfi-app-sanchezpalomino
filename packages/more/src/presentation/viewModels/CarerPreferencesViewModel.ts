@@ -8,11 +8,13 @@ import {
   setUser,
   CarerConfig,
   AppState,
+  PetType,
 } from '@packages/common'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { $ } from '../../domain/di/Types'
 import { UpdateCarerConfigUseCase } from '../../domain/usecases/UpdateCarerConfigUseCase'
+import { GetPetTypesUseCase } from '../../domain/usecases/GetPetTypesUseCase'
 import React from 'react'
 
 type CarerPreferencesState = {
@@ -20,6 +22,8 @@ type CarerPreferencesState = {
   homeCareDailyPrice: string
   petHomeCareEnabled: boolean
   petHomeCareVisitPrice: string
+  petTypesDatasource: PetType[]
+  selectedPetTypes: PetType[]
   preferencesSaved: boolean
 } & UIState
 
@@ -29,6 +33,7 @@ type CarerPreferencesViewModel = {
   setHomeCareDailyPrice: (price: string) => void
   setPetHomeCareEnabled: () => void
   setPetHomeCareVisitPrice: (price: string) => void
+  setSelectedPetTypes: (petTypes: PetType[]) => void
   validateForm: (onValidated: () => void) => void
   savePreferences: () => void
 }
@@ -38,6 +43,8 @@ const initialState: CarerPreferencesState = {
   homeCareDailyPrice: '',
   petHomeCareEnabled: false,
   petHomeCareVisitPrice: '',
+  petTypesDatasource: [],
+  selectedPetTypes: [],
   loading: false,
   error: null,
   preferencesSaved: false,
@@ -51,6 +58,13 @@ const useCarerPreferencesViewModel = (): CarerPreferencesViewModel => {
   const updateCarerConfigUseCase: UpdateCarerConfigUseCase = useInjection(
     $.UpdateCarerConfigUseCase
   )
+  const getPetTypesUseCase: GetPetTypesUseCase = useInjection(
+    $.GetPetTypesUseCase
+  )
+
+  useEffect(() => {
+    loadPetTypes()
+  }, [])
 
   // Initialize state with user's current preferences
   React.useEffect(() => {
@@ -63,9 +77,38 @@ const useCarerPreferencesViewModel = (): CarerPreferencesViewModel => {
         petHomeCareEnabled: currentUser.carerConfig.petHomeCare.enabled,
         petHomeCareVisitPrice:
           currentUser.carerConfig.petHomeCare.visitPrice?.toString() || '',
+        selectedPetTypes: currentUser.carerConfig.preferredPetTypes || [],
       }))
     }
   }, [currentUser])
+
+  const loadPetTypes = async (): Promise<void> => {
+    setState((previous) => ({
+      ...previous,
+      loading: true,
+      error: null,
+    }))
+
+    try {
+      const response = await getPetTypesUseCase.execute()
+      setState((previous) => ({
+        ...previous,
+        loading: false,
+        petTypesDatasource: response.items || [],
+      }))
+    } catch (error) {
+      setState((previous) => ({
+        ...previous,
+        loading: false,
+        error: error instanceof Error ? error.message : 'Error saving pet',
+      }))
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: error instanceof Error ? error.message : 'Error saving pet',
+      })
+    }
+  }
 
   const setHomeCareEnabled = (): void => {
     setState((previous) => ({
@@ -100,6 +143,13 @@ const useCarerPreferencesViewModel = (): CarerPreferencesViewModel => {
     setState((previous) => ({
       ...previous,
       petHomeCareVisitPrice: price,
+    }))
+  }
+
+  const setSelectedPetTypes = (petTypes: PetType[]): void => {
+    setState((previous) => ({
+      ...previous,
+      selectedPetTypes: petTypes,
     }))
   }
 
@@ -166,6 +216,14 @@ const useCarerPreferencesViewModel = (): CarerPreferencesViewModel => {
       }
     }
 
+    if (homeCareEnabled || petHomeCareEnabled) {
+      if (state.selectedPetTypes.length === 0) {
+        errors.push(
+          t('carerPreferencesScreen.validation.petPreferencesRequired')
+        )
+      }
+    }
+
     return errors
   }
 
@@ -189,6 +247,7 @@ const useCarerPreferencesViewModel = (): CarerPreferencesViewModel => {
             ? parseFloat(state.petHomeCareVisitPrice)
             : null,
         },
+        preferredPetTypes: state.selectedPetTypes,
       }
 
       const updatedUser = await updateCarerConfigUseCase.execute(carerConfig)
@@ -229,6 +288,7 @@ const useCarerPreferencesViewModel = (): CarerPreferencesViewModel => {
     setHomeCareDailyPrice,
     setPetHomeCareEnabled,
     setPetHomeCareVisitPrice,
+    setSelectedPetTypes,
     validateForm,
     savePreferences,
   }

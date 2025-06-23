@@ -12,8 +12,51 @@ import {
   GeneralStyle,
   GenericToast,
   Loader,
+  Dropdown,
+  PetType,
 } from '@packages/common'
 import { useCarerPreferencesViewModel } from '../viewModels/CarerPreferencesViewModel'
+
+interface ConfigSectionProps {
+  title: string
+  checkboxEnabled: boolean
+  onCheckboxPress: () => void
+  fieldOnChangeText: (text: string) => void
+  fieldPlaceholder: string
+  fieldRightComponent?: React.ReactNode
+  fieldValue: string
+  fieldDisabled: boolean
+}
+
+const ConfigSection: React.FC<ConfigSectionProps> = React.memo(
+  ({
+    title,
+    checkboxEnabled,
+    onCheckboxPress,
+    fieldOnChangeText,
+    fieldPlaceholder,
+    fieldRightComponent,
+    fieldValue,
+    fieldDisabled,
+  }) => {
+    return (
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionLabel}>{title}</Text>
+          <Checkbox checked={checkboxEnabled} onPress={onCheckboxPress} />
+        </View>
+        <FormField
+          placeholder={fieldPlaceholder}
+          rightComponent={fieldRightComponent}
+          value={fieldValue}
+          onChangeText={fieldOnChangeText}
+          secureTextEntry={false}
+          disabled={fieldDisabled}
+        />
+      </View>
+    )
+  }
+)
 
 const CarerPreferencesScreen: FC = (): JSX.Element => {
   const { t } = useI18n()
@@ -23,6 +66,7 @@ const CarerPreferencesScreen: FC = (): JSX.Element => {
     setHomeCareDailyPrice,
     setPetHomeCareEnabled,
     setPetHomeCareVisitPrice,
+    setSelectedPetTypes,
     validateForm,
     savePreferences,
   } = useCarerPreferencesViewModel()
@@ -33,47 +77,69 @@ const CarerPreferencesScreen: FC = (): JSX.Element => {
     })
   }
 
+  const handlePetTypesSelection = (items: { value: string; label: string }[]) => {
+    const selectedTypes = items
+      .map((item) => state.petTypesDatasource.find((type) => type._id === item.value))
+      .filter((type): type is PetType => type !== undefined)
+    setSelectedPetTypes(selectedTypes)
+  }
+
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <View style={styles.content}>
         <View>
-          <Text style={styles.title}>
-            {t('carerPreferencesScreen.description')}
-          </Text>
-          <View style={styles.section}>
+          <ConfigSection
+            title={t('carerPreferencesScreen.homeCare.label')}
+            checkboxEnabled={state.homeCareEnabled}
+            onCheckboxPress={setHomeCareEnabled}
+            fieldOnChangeText={setHomeCareDailyPrice}
+            fieldPlaceholder={t('carerPreferencesScreen.homeCare.placeholder')}
+            fieldValue={state.homeCareDailyPrice}
+            fieldDisabled={!state.homeCareEnabled}
+            fieldRightComponent={
+              <Text style={styles.price}>
+                {t('carerPreferencesScreen.homeCare.price')}
+              </Text>
+            }
+          />
+
+          <ConfigSection
+            title={t('carerPreferencesScreen.petHomeCare.label')}
+            checkboxEnabled={state.petHomeCareEnabled}
+            onCheckboxPress={setPetHomeCareEnabled}
+            fieldOnChangeText={setPetHomeCareVisitPrice}
+            fieldPlaceholder={t(
+              'carerPreferencesScreen.petHomeCare.placeholder'
+            )}
+            fieldValue={state.petHomeCareVisitPrice}
+            fieldDisabled={!state.petHomeCareEnabled}
+            fieldRightComponent={
+              <Text style={styles.price}>
+                {t('carerPreferencesScreen.petHomeCare.price')}
+              </Text>
+            }
+          />
+
+          <View style={{ ...styles.section, paddingBottom: 32 }}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionLabel}>
-                {t('carerPreferencesScreen.homeCare.label')}
+                {t('carerPreferencesScreen.petPreferences.label')}
               </Text>
-              <Checkbox
-                checked={state.homeCareEnabled}
-                onPress={setHomeCareEnabled}
-              />
             </View>
-            <FormField
-              placeholder={t('carerPreferencesScreen.homeCare.placeholder')}
-              value={state.homeCareDailyPrice}
-              onChangeText={setHomeCareDailyPrice}
-              secureTextEntry={false}
-              disabled={!state.homeCareEnabled}
-            />
-          </View>
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionLabel}>
-                {t('carerPreferencesScreen.petHomeCare.label')}
-              </Text>
-              <Checkbox
-                checked={state.petHomeCareEnabled}
-                onPress={setPetHomeCareEnabled}
-              />
-            </View>
-            <FormField
-              placeholder={t('carerPreferencesScreen.petHomeCare.placeholder')}
-              value={state.petHomeCareVisitPrice}
-              onChangeText={setPetHomeCareVisitPrice}
-              secureTextEntry={false}
-              disabled={!state.petHomeCareEnabled}
+            <Dropdown
+              data={state.petTypesDatasource.map((type) => ({
+                value: type._id || '',
+                label: type.name || '',
+              }))}
+              onFinishSelection={handlePetTypesSelection}
+              placeholder={t(
+                'carerPreferencesScreen.petPreferences.placeholder'
+              )}
+              allowsMultiSelection={true}
+              initialValue={state.selectedPetTypes.map((type) => ({
+                value: type._id || '',
+                label: type.name || '',
+              }))}
             />
           </View>
         </View>
@@ -102,13 +168,6 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     justifyContent: 'space-between',
   },
-  title: {
-    ...LabelStyle.body({
-      fontWeight: 300,
-      color: Color.black[700],
-    }),
-    marginBottom: 32,
-  },
   section: {
     ...GeneralStyle.card,
     marginBottom: 16,
@@ -128,6 +187,12 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 24,
+  },
+  price: {
+    ...LabelStyle.body({
+      color: Color.black[500],
+      fontWeight: 300,
+    }),
   },
 })
 

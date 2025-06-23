@@ -1,4 +1,5 @@
-import { Address } from './AddressModel'
+import { AddressModel } from './AddressModel'
+import { PetType } from './PetModel'
 
 export interface CarerConfig {
   homeCare: {
@@ -9,6 +10,7 @@ export interface CarerConfig {
     enabled: boolean
     visitPrice: number | null
   }
+  preferredPetTypes?: PetType[]
 }
 
 class UserModel {
@@ -19,7 +21,7 @@ class UserModel {
   email?: string
   avatar?: string
   carerConfig?: CarerConfig
-  addresses?: Address[]
+  addresses?: AddressModel[]
 
   constructor(data: Partial<UserModel>) {
     this._id = data._id || null

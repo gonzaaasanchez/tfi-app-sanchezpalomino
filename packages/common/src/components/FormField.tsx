@@ -15,6 +15,7 @@ interface FormFieldProps {
   disabled?: boolean
   multiline?: boolean
   numberOfLines?: number
+  rightComponent?: React.ReactNode
 }
 
 export const FormField: React.FC<FormFieldProps> = ({
@@ -29,6 +30,7 @@ export const FormField: React.FC<FormFieldProps> = ({
   disabled = false,
   multiline = false,
   numberOfLines = 1,
+  rightComponent,
 }) => {
   return (
     <View style={styles.container}>
@@ -41,25 +43,31 @@ export const FormField: React.FC<FormFieldProps> = ({
           {label}
         </Text>
       )}
-      <TextInput
+      <View
         style={[
-          styles.input,
+          styles.inputContainer,
           error && styles.inputError,
           disabled && styles.inputDisabled,
-          multiline && styles.inputMultiline,
         ]}
-        value={value}
-        defaultValue={defaultValue}
-        onChangeText={onChangeText}
-        onBlur={(e) => onBlur?.(e.nativeEvent.text)}
-        placeholder={placeholder}
-        secureTextEntry={secureTextEntry}
-        placeholderTextColor={disabled ? Color.black[300] : Color.black[400]}
-        editable={!disabled}
-        multiline={multiline}
-        numberOfLines={numberOfLines}
-        textAlignVertical={multiline ? 'top' : 'center'}
-      />
+      >
+        <TextInput
+          style={[styles.input, multiline && styles.inputMultiline]}
+          value={value}
+          defaultValue={defaultValue}
+          onChangeText={onChangeText}
+          onBlur={(e) => onBlur?.(e.nativeEvent.text)}
+          placeholder={placeholder}
+          secureTextEntry={secureTextEntry}
+          placeholderTextColor={disabled ? Color.black[300] : Color.black[400]}
+          editable={!disabled}
+          multiline={multiline}
+          numberOfLines={numberOfLines}
+          textAlignVertical={multiline ? 'top' : 'center'}
+        />
+        {rightComponent && (
+          <View style={styles.rightComponent}>{rightComponent}</View>
+        )}
+      </View>
       {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
   )
@@ -70,16 +78,24 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     width: '100%',
   },
-  input: {
-    ...LabelStyle.body(),
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: 'white',
     borderRadius: 8,
     borderWidth: 1,
     borderColor: Color.brand1[500],
-    paddingHorizontal: 12,
-    paddingVertical: 6,
     marginTop: 5,
     height: 48,
+  },
+  input: {
+    ...LabelStyle.body(),
+    flex: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  rightComponent: {
+    paddingRight: 12,
   },
   inputError: {
     borderColor: StateColor.error.default,
@@ -87,7 +103,6 @@ const styles = StyleSheet.create({
   inputDisabled: {
     backgroundColor: Color.black[50],
     borderColor: Color.black[200],
-    color: Color.black[400],
   },
   errorText: {
     ...LabelStyle.body2({ color: StateColor.error.default }),

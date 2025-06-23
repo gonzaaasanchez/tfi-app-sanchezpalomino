@@ -261,14 +261,19 @@
     },
     "carerPreferencesScreen": {
       "title": "Mis preferencias como cuidador",
-      "description": "Desde acá vas a poder habilitar o deshabilitar los cuidados en tu hogar y las visitas en los hogares de las mascotas, también asignar un precio por hora para las visitas y un precio por día para recibir.",
       "homeCare": {
         "label": "Habilitar cuidado en mi hogar",
-        "placeholder": "Ingresá precio diario"
+        "placeholder": "Ingresá precio diario",
+        "price": "$/día"
       },
       "petHomeCare": {
         "label": "Habilitar cuidado en hogares de mascotas",
-        "placeholder": "Ingresá precio por visita"
+        "placeholder": "Ingresá precio por visita",
+        "price": "$/visita"
+      },
+      "petPreferences": {
+        "label": "Mascotas preferidas",
+        "placeholder": "Seleccioná mascotas"
       },
       "save": "Guardar",
       "success": {
@@ -279,7 +284,8 @@
         "homeCarePriceRequired": "Tenés que ingresar un precio diario para el cuidado en tu hogar",
         "homeCarePriceInvalid": "El precio diario tiene que ser un número válido mayor a 0",
         "petHomeCarePriceRequired": "Tenés que ingresar un precio por visita para el cuidado en hogares de mascotas",
-        "petHomeCarePriceInvalid": "El precio por visita tiene que ser un número válido mayor a 0"
+        "petHomeCarePriceInvalid": "El precio por visita tiene que ser un número válido mayor a 0",
+        "petPreferencesRequired": "Tenés que seleccionar al menos un tipo de mascota que cuidás"
       }
     },
     "petsNewScreen": {

@@ -172,9 +172,10 @@ const styles = StyleSheet.create({
     ...GeneralStyle.card,
     borderRadius: 16,
     borderWidth: 1,
+    borderColor: Color.brand1[500],
     position: 'absolute',
     padding: 10,
-    maxHeight: 150,
+    maxHeight: 160,
     top: buttonHeight + buttonMarginTop + 5,
   },
   button: {

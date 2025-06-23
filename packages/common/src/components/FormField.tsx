@@ -48,6 +48,7 @@ export const FormField: React.FC<FormFieldProps> = ({
           styles.inputContainer,
           error && styles.inputError,
           disabled && styles.inputDisabled,
+          multiline && styles.inputMultiline,
         ]}
       >
         <TextInput
@@ -110,8 +111,7 @@ const styles = StyleSheet.create({
   },
   inputMultiline: {
     height: 'auto',
-    minHeight: 80,
-    paddingTop: 12,
-    paddingBottom: 12,
+    minHeight: 75,
+    paddingVertical: 5,
   },
 })

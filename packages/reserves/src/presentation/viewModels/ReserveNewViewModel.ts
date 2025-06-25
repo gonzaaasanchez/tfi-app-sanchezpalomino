@@ -1,5 +1,5 @@
-import { UIState, PetModel } from '@packages/common'
-import { useState } from 'react'
+import { UIState, PetModel, useInjection, AddressModel, useI18n } from '@packages/common'
+import { useState, useEffect } from 'react'
 import { PlaceType } from '../../data/models/ReservationModel'
 import { StackActions, useNavigation } from '@react-navigation/native'
 import {
@@ -7,6 +7,9 @@ import {
   SortField,
   SortOrder,
 } from '../../data/models/SearchCriteria'
+import { GetMyPetsUseCase } from '@packages/more/src/domain/usecases/GetMyPetsUseCase'
+import { GetAddressesUseCase } from '@packages/more/src/domain/usecases/GetAddressesUseCase'
+import { $ } from '@packages/more/src/domain/di/Types'
 
 type ReserveNewViewModel = {
   state: ReserveNewState
@@ -18,11 +21,15 @@ type ReserveNewViewModel = {
   setMaxPrice: (maxPrice: number) => void
   setVisitsPerDay: (visits: number) => void
   setSelectedPets: (pets: PetModel[]) => void
+  setSelectedAddress: (address: AddressModel | null) => void
   searchResults: () => Promise<void>
 }
 
 type ReserveNewState = {
   searchCriteria: SearchCriteria
+  userPets: PetModel[]
+  userAddresses: AddressModel[]
+  selectedAddress: AddressModel | null
 } & UIState
 
 const initialSearchCriteria: SearchCriteria = {
@@ -44,31 +51,68 @@ const initialState: ReserveNewState = {
   loading: false,
   error: null,
   searchCriteria: initialSearchCriteria,
+  userPets: [],
+  userAddresses: [],
+  selectedAddress: null,
 }
 
 const useReserveNewViewModel = (): ReserveNewViewModel => {
   const [state, setState] = useState<ReserveNewState>(initialState)
   const navigation = useNavigation()
+  const { t } = useI18n()
+  const getMyPetsUseCase = useInjection<GetMyPetsUseCase>($.GetMyPetsUseCase)
+  const getAddressesUseCase = useInjection<GetAddressesUseCase>($.GetAddressesUseCase)
+
+  useEffect(() => {
+    loadUserData()
+  }, [])
+
+  const loadUserData = async () => {
+    setState((previous) => ({ ...previous, loading: true, error: null }))
+    try {
+      const [petsResponse, addressesResponse] = await Promise.all([
+        getMyPetsUseCase.execute(1, 100),
+        getAddressesUseCase.execute(),
+      ])
+      
+      setState((previous) => ({
+        ...previous,
+        userPets: petsResponse.items || [],
+        userAddresses: addressesResponse || [],
+        loading: false,
+      }))
+    } catch (error) {
+      setState((previous) => ({
+        ...previous,
+        loading: false,
+        error: error instanceof Error ? error.message : t('reserveNewScreen.validation.errorLoadingUserData'),
+      }))
+    }
+  }
 
   const validateData: () => [boolean, string?] = () => {
-    const { searchCriteria } = state
+    const { searchCriteria, selectedAddress } = state
+    
     if (searchCriteria.fromDate > searchCriteria.toDate) {
-      return [false, 'La fecha de inicio debe ser anterior a la fecha de fin']
+      return [false, t('reserveNewScreen.validation.startDateAfterEndDate')]
     }
     if (searchCriteria.reviewsFrom < 1) {
-      return [false, 'El número de reseñas debe ser mayor a 0']
+      return [false, t('reserveNewScreen.validation.reviewsFromMin')]
     }
     if (searchCriteria.maxDistance <= 0) {
-      return [false, 'La distancia máxima debe ser mayor a 0']
+      return [false, t('reserveNewScreen.validation.maxDistanceMin')]
     }
     if (searchCriteria.maxPrice <= 0) {
-      return [false, 'El precio máximo debe ser mayor a 0']
+      return [false, t('reserveNewScreen.validation.maxPriceMin')]
     }
     if (searchCriteria.visits < 1) {
-      return [false, 'El número de visitas por día debe ser mayor a 0']
+      return [false, t('reserveNewScreen.validation.visitsPerDayMin')]
     }
     if (searchCriteria.selectedPets.length === 0) {
-      return [false, 'Debes seleccionar al menos una mascota']
+      return [false, t('reserveNewScreen.validation.petsRequired')]
+    }
+    if (searchCriteria.placeType === PlaceType.OwnerHome && !selectedAddress) {
+      return [false, t('reserveNewScreen.validation.addressRequired')]
     }
     return [true]
   }
@@ -114,6 +158,7 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
     setState((previous: ReserveNewState) => ({
       ...previous,
       searchCriteria: { ...previous.searchCriteria, placeType },
+      selectedAddress: placeType === PlaceType.CarerHome ? null : previous.selectedAddress,
     }))
   }
 
@@ -152,6 +197,13 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
     }))
   }
 
+  const setSelectedAddress = (address: AddressModel | null) => {
+    setState((previous: ReserveNewState) => ({
+      ...previous,
+      selectedAddress: address,
+    }))
+  }
+
   return {
     state,
     setFromDate,
@@ -162,6 +214,7 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
     setMaxPrice,
     setVisitsPerDay,
     setSelectedPets,
+    setSelectedAddress,
     searchResults,
   }
 }

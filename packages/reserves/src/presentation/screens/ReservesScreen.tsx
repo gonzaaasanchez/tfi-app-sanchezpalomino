@@ -81,7 +81,7 @@ const ReservesScreen: FC = (): JSX.Element => {
             />
           }
         >
-          {state.reserves?.length === 0 ? (
+          {state.reserves?.length === 0 && !state.loading ? (
             <View
               style={[styles.emptyViewContainer, { height: availableHeight }]}
             >

@@ -36,6 +36,7 @@ const ReservationNewScreen: FC = (): JSX.Element => {
     setMaxPrice,
     setVisitsPerDay,
     setSelectedPets,
+    setSelectedAddress,
     searchResults,
   } = useReserveNewViewModel()
   const { t } = useI18n()
@@ -117,25 +118,9 @@ const ReservationNewScreen: FC = (): JSX.Element => {
   }
 
   const PetSelection = () => {
-    // TODO: Replace with actual pets from API
-    const mockPets: PetModel[] = [
-      {
-        id: '1',
-        name: 'Firulais',
-        avatar: 'https://example.com/firulais.jpg',
-        type: { id: '1', name: 'Perro' },
-      },
-      {
-        id: '2',
-        name: 'Mishu',
-        avatar: 'https://example.com/mishu.jpg',
-        type: { id: '2', name: 'Gato' },
-      },
-    ]
-
     const handlePetChange = (items: { value: string; label: string }[]) => {
       const selectedPets = items
-        .map((item) => mockPets.find((pet) => pet.id === item.value))
+        .map((item) => state.userPets.find((pet) => pet.id === item.value))
         .filter((pet): pet is PetModel => pet !== undefined)
       setSelectedPets(selectedPets)
     }
@@ -147,14 +132,54 @@ const ReservationNewScreen: FC = (): JSX.Element => {
           allowsMultiSelection={true}
           placeholder={t('reserveNewScreen.selectPets')}
           onFinishSelection={handlePetChange}
-          data={mockPets.map((pet) => ({
-            value: pet.id,
-            label: pet.name,
+          data={state.userPets.map((pet) => ({
+            value: pet.id || '',
+            label: pet.name || '',
           }))}
           initialValue={state.searchCriteria.selectedPets.map((pet) => ({
-            value: pet.id,
-            label: pet.name,
+            value: pet.id || '',
+            label: pet.name || '',
           }))}
+        />
+      </View>
+    )
+  }
+
+  const LocationSelection = () => {
+    const handleAddressChange = (items: { value: string; label: string }[] | { value: string; label: string }) => {
+      // Manejar tanto arrays como objetos individuales
+      const selectedItems = Array.isArray(items) ? items : [items]
+      
+      if (selectedItems.length > 0) {
+        const selectedAddress = state.userAddresses.find(
+          (address) => address._id === selectedItems[0].value
+        )
+        setSelectedAddress(selectedAddress || null)
+      } else {
+        setSelectedAddress(null)
+      }
+    }
+
+    // Crear el initialValue de forma que siempre tenga una nueva referencia
+    const initialValue = state.selectedAddress
+      ? {
+          value: state.selectedAddress._id,
+          label: state.selectedAddress.name,
+        }
+      : undefined
+
+    return (
+      <View>
+        <Text style={styles.sectionTitle}>{t('reserveNewScreen.address')}</Text>
+        <Dropdown
+          allowsMultiSelection={false}
+          placeholder={t('reserveNewScreen.selectAddress')}
+          onFinishSelection={handleAddressChange}
+          data={state.userAddresses.map((address) => ({
+            value: address._id,
+            label: address.name,
+          }))}
+          initialValue={initialValue}
         />
       </View>
     )
@@ -340,10 +365,15 @@ const ReservationNewScreen: FC = (): JSX.Element => {
       {state.loading && <Loader loading={state.loading} />}
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <DateSelection />
-        <PlaceSelection />
         <PetSelection />
+        <PlaceSelection />
+        {state.searchCriteria.placeType === PlaceType.OwnerHome && (
+          <LocationSelection />
+        )}
+        {state.searchCriteria.placeType === PlaceType.OwnerHome && (
+          <VisitsPerDay />
+        )}
         <RateSelection />
-        <VisitsPerDay />
         <DistanceSelection />
         <PriceSelection />
       </ScrollView>

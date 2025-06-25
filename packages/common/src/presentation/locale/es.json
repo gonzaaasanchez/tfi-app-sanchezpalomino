@@ -121,7 +121,19 @@
       "kms": "{{value}} km",
       "maxPrice": "Precio máximo",
       "price": "$ {{value}}",
-      "button": "Buscar cuidadores"
+      "button": "Buscar cuidadores",
+      "address": "Dirección",
+      "selectAddress": "Seleccioná una dirección",
+      "validation": {
+        "startDateAfterEndDate": "La fecha de inicio debe ser anterior a la fecha de fin",
+        "reviewsFromMin": "El número de reseñas debe ser mayor a 0",
+        "maxDistanceMin": "La distancia máxima debe ser mayor a 0",
+        "maxPriceMin": "El precio máximo debe ser mayor a 0",
+        "visitsPerDayMin": "El número de visitas por día debe ser mayor a 0",
+        "petsRequired": "Debes seleccionar al menos una mascota",
+        "addressRequired": "Debes seleccionar una dirección",
+        "errorLoadingUserData": "Error al cargar los datos del usuario"
+      }
     },
     "servicesScreen": {
       "title": "Servicios"

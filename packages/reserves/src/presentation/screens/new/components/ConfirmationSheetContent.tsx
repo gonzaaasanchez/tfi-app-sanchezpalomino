@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import { Color, LabelStyle, useI18n, Button } from '@packages/common'
 import { SearchResultModel } from '../../../../data/models/SearchResultModel'
 import { SearchCriteria } from '../../../../data/models/SearchCriteria'
@@ -129,10 +129,11 @@ export const ConfirmationSheetContent = ({
           title={t('reserveResultsScreen.confirmation.confirm')}
           onPress={onConfirm}
         />
-        <Button.Secondary
-          title={t('reserveResultsScreen.confirmation.back')}
-          onPress={onBack}
-        />
+        <TouchableOpacity onPress={onBack}>
+          <Text style={styles.backButton}>
+            {t('reserveResultsScreen.confirmation.back')}
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   )
@@ -173,5 +174,10 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 5,
+  },
+  backButton: {
+    ...LabelStyle.body({ color: Color.black[500], textAlign: 'center' }),
+    marginTop: 20,
+    marginBottom: 15,
   },
 })

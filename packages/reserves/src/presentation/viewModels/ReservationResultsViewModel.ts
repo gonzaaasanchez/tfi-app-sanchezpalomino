@@ -99,7 +99,6 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
   const { t } = useI18n()
 
   useEffect(() => {
-    console.log('searchCriteria', searchCriteria)
     if (searchCriteria) {
       const convertedSearchCriteria = {
         ...searchCriteria,

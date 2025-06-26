@@ -111,7 +111,7 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
     if (searchCriteria.selectedPets.length === 0) {
       return [false, t('reserveNewScreen.validation.petsRequired')]
     }
-    if (searchCriteria.placeType === PlaceType.OwnerHome && !searchCriteria.selectedAddress) {
+    if (!searchCriteria.selectedAddress) {
       return [false, t('reserveNewScreen.validation.addressRequired')]
     }
     return [true]

@@ -11,6 +11,7 @@ import {
   PPMaterialIcon,
   ShowToast,
   GenericToast,
+  EmptyView,
 } from '@packages/common'
 import { useReservationResultsViewModel } from '../../viewModels/ReservationResultsViewModel'
 import { useNavigation } from '@react-navigation/native'
@@ -82,7 +83,14 @@ const ReservationResultsScreen: FC = () => {
   return (
     <PPBottomSheetContainer>
       <SafeAreaView style={styles.container} edges={['bottom']}>
-        <ScrollView style={styles.content}>
+        <ScrollView contentContainerStyle={styles.content}>
+          {!state.loading && state.results.length === 0 && (
+            <EmptyView
+              type="empty"
+              title={t('reserveResultsScreen.emptyState.title')}
+              subtitle={t('reserveResultsScreen.emptyState.subtitle')}
+            />
+          )}
           {state.results.map((result) => (
             <SearchResultCard
               key={result.caregiver._id}
@@ -105,9 +113,13 @@ const ReservationResultsScreen: FC = () => {
           confirmSortAndOrder={confirmSortAndOrder}
         />
       </PPBottomSheet.Empty>
-      <PPBottomSheet.Empty ref={confirmationBottomSheetRef} dismisseable={true}>
+      <PPBottomSheet.Empty
+        ref={confirmationBottomSheetRef}
+        dismisseable={true}
+        onDismiss={() => setUserToRequest(null)}
+      >
         <ConfirmationSheetContent
-          userToRequest={state.userToRequest}
+          resultItem={state.userToRequest}
           searchCriteria={state.searchCriteria}
           onConfirm={() => {
             confirmationBottomSheetRef.current?.dismiss()
@@ -137,7 +149,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.mainBackground,
   },
   content: {
-    flex: 1,
+    flexGrow: 1,
     padding: 20,
   },
 })

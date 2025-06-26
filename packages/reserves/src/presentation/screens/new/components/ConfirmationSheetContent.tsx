@@ -6,24 +6,23 @@ import { SearchCriteria } from '../../../../data/models/SearchCriteria'
 import { PlaceType } from '../../../../data/models/ReservationModel'
 
 type ConfirmationSheetContentProps = {
-  userToRequest: SearchResultModel
+  resultItem: SearchResultModel
   searchCriteria: SearchCriteria
   onConfirm: () => void
   onBack: () => void
 }
 
 export const ConfirmationSheetContent = ({
-  userToRequest,
+  resultItem,
   searchCriteria,
   onConfirm,
   onBack,
 }: ConfirmationSheetContentProps) => {
   const { t } = useI18n()
 
-  if (!userToRequest) return null
+  if (!resultItem) return null
 
-  const { caregiver, totalPrice, commission, totalWithCommission } =
-    userToRequest
+  const { caregiver, totalPrice, commission, totalWithCommission } = resultItem
 
   const ConfirmationInfoRow = ({
     title,
@@ -88,21 +87,24 @@ export const ConfirmationSheetContent = ({
         title={t('reserveResultsScreen.confirmation.dates')}
         content={`${new Date(searchCriteria.fromDate).toLocaleDateString()} - ${new Date(
           searchCriteria.toDate
-        ).toLocaleDateString()}`}
+        ).toLocaleDateString()} (${resultItem.daysCount} días)`}
       />
       <ConfirmationInfoRow
         title={t('reserveResultsScreen.confirmation.carer')}
         content={caregiver.fullName}
       />
-      <ConfirmationInfoRow
-        title={t('reserveResultsScreen.confirmation.location')}
-        content={
-          searchCriteria.placeType === PlaceType.OwnerHome
-            ? t('reserveResultsScreen.confirmation.ownerHome')
-            : t('reserveResultsScreen.confirmation.carerHome')
-        }
-      />
-
+      {searchCriteria.placeType === PlaceType.OwnerHome && (
+        <ConfirmationInfoRow
+          title={t('reserveResultsScreen.confirmation.location')}
+          content={`${t('reserveResultsScreen.confirmation.ownerHome')} (${searchCriteria.selectedAddress?.fullAddress})`}
+        />
+      )}
+      {searchCriteria.placeType === PlaceType.CarerHome && (
+        <ConfirmationInfoRow
+          title={t('reserveResultsScreen.confirmation.location')}
+          content={`${t('reserveResultsScreen.confirmation.carerHome')} (${caregiver.addresses[0]?.fullAddress})`}
+        />
+      )}
       <View style={styles.paymentSection}>
         <Text style={styles.paymentTitle}>
           {t('reserveResultsScreen.confirmation.payment')}
@@ -155,17 +157,17 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   paymentTitle: {
-    ...LabelStyle.title3({ color: Color.black[700] }),
+    ...LabelStyle.body({ color: Color.black[800] }),
     marginBottom: 12,
   },
   paymentRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: 5,
   },
   totalRow: {
     marginTop: 8,
-    paddingTop: 12,
+    paddingTop: 10,
     borderTopWidth: 1,
     borderTopColor: Color.black[200],
   },

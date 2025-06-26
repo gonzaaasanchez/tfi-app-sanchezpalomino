@@ -8,6 +8,8 @@ export interface CareDetailsModel {
 
 export interface SearchResultModel {
   caregiver: UserModel
+  distance: number
+  daysCount: number
   totalPrice: number
   commission: number
   totalWithCommission: number

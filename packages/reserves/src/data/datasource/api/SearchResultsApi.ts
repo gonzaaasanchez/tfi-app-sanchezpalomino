@@ -24,9 +24,7 @@ export class SearchResultsApiImpl implements SearchResultsApi {
       startDate: DateUtils.YYYYMMDD(searchCriteria.fromDate),
       endDate: DateUtils.YYYYMMDD(searchCriteria.toDate),
       careLocation: searchCriteria.placeType.toString(),
-      ...(searchCriteria.placeType === PlaceType.OwnerHome && {
-        userAddressId: searchCriteria.selectedAddress?._id,
-      }),
+      userAddressId: searchCriteria.selectedAddress?._id,
       petIds: searchCriteria.selectedPets.map((pet) => pet.id || ''),
       maxDistance: searchCriteria.maxDistance,
       maxPrice: searchCriteria.maxPrice,

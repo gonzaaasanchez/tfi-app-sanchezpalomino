@@ -374,13 +374,12 @@ const ReservationNewScreen: FC = (): JSX.Element => {
         <PetSelection />
         <PlaceSelection />
         {state.searchCriteria.placeType === PlaceType.OwnerHome && (
-          <LocationSelection />
-        )}
-        {state.searchCriteria.placeType === PlaceType.OwnerHome && (
           <VisitsPerDay />
         )}
-        <RateSelection />
+        <LocationSelection />
         <DistanceSelection />
+
+        <RateSelection />
         <PriceSelection />
       </ScrollView>
       <View style={{ paddingHorizontal: 20 }}>

@@ -39,7 +39,7 @@ export const SearchResultCard: FC<{
 
           <View style={styles.row}>
             <PPMaterialIcon icon="location-on" size={16} />
-            <Text style={styles.detail}>{'FALTA DISTANCIA'} km</Text>
+            <Text style={styles.detail}>A {result.distance} km</Text>
           </View>
           <View style={styles.row}>
             <PPMaterialIcon icon="star" size={16} />

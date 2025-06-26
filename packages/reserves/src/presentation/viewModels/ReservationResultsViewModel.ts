@@ -53,7 +53,7 @@ const initialState: ReservationResultsState = {
   userToRequest: null,
   sortOptions: [
     {
-      field: SortField.TOTAL_PRICE,
+      field: SortField.PRICE,
       label: 'reserveResultsScreen.sort.totalPrice',
     },
     {
@@ -151,6 +151,7 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
       sortBy: { field, order },
     }
     setState((prev) => ({ ...prev, searchCriteria: updatedCriteria }))
+    searchResults(updatedCriteria)
   }
 
   const setUserToRequest = (user: SearchResultModel) => {

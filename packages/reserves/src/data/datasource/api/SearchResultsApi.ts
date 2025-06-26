@@ -1,11 +1,6 @@
 import { HttpClient, PaginatedResponse, DateUtils } from '@packages/common'
 import { SearchResultModel } from '../../models/SearchResultModel'
-import {
-  SearchCriteria,
-  SortField,
-  SortOrder,
-} from '../../models/SearchCriteria'
-import { PlaceType } from '../../models/ReservationModel'
+import { SearchCriteria } from '../../models/SearchCriteria'
 import { BaseResponse } from '@packages/common/src/data/http/BaseResponse'
 
 export interface SearchResultsApi {
@@ -31,9 +26,16 @@ export class SearchResultsApiImpl implements SearchResultsApi {
       visitsPerDay: searchCriteria.visits,
     }
 
+    const queryParams = new URLSearchParams({
+      sortBy: searchCriteria.sortBy.field,
+      sortOrder: searchCriteria.sortBy.order,
+    })
+
+    const url = `/caregiver-search?${queryParams.toString()}`
+
     const response = await this.httpClient.post<
       BaseResponse<PaginatedResponse<SearchResultModel>>
-    >('/caregiver-search', requestBody)
+    >(url, requestBody)
 
     const apiData =
       response.data as unknown as PaginatedResponse<SearchResultModel> & {

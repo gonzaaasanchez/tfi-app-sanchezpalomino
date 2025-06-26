@@ -9,7 +9,7 @@ export enum SortOrder {
 export enum SortField {
   DISTANCE = 'distance',
   REVIEWS = 'reviews',
-  TOTAL_PRICE = 'totalPrice',
+  PRICE = 'price',
 }
 
 export type SortOption = {

@@ -25,7 +25,7 @@ const ReservationResultsScreen: FC = () => {
   const { state, setSortAndOrder, setUserToRequest, sendReservationRequest } =
     useReservationResultsViewModel()
   const [sortField, setSortField] = useState<SortField>(
-    state.searchCriteria?.sortBy?.field || SortField.REVIEWS
+    state.searchCriteria?.sortBy?.field || SortField.PRICE
   )
   const [sortOrder, setSortOrder] = useState<SortOrder>(
     state.searchCriteria?.sortBy?.order || SortOrder.DESC
@@ -82,7 +82,7 @@ const ReservationResultsScreen: FC = () => {
 
   return (
     <PPBottomSheetContainer>
-      <SafeAreaView style={styles.container} edges={['bottom']}>
+      <SafeAreaView style={styles.container} edges={[]}>
         <ScrollView contentContainerStyle={styles.content}>
           {!state.loading && state.results.length === 0 && (
             <EmptyView

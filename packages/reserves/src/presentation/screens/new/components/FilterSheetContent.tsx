@@ -114,18 +114,18 @@ export const FilterSheetContent = ({
 const styles = StyleSheet.create({
   sortSheetTitle: {
     ...LabelStyle.title2({ color: Color.black[700] }),
-    marginBottom: 5,
+    marginBottom: 8,
   },
   sortOption: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 16,
+    paddingVertical: 8,
   },
   separator: {
     height: 1,
     backgroundColor: Color.black[100],
   },
   sectionSeparator: {
-    height: 16,
+    height: 10,
   },
 })

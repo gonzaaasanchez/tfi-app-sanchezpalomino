@@ -42,7 +42,7 @@ const initialSearchCriteria: SearchCriteria = {
   userAddresses: [],
   selectedAddress: null,
   sortBy: {
-    field: SortField.TOTAL_PRICE,
+    field: SortField.PRICE,
     order: SortOrder.ASC,
   },
 }

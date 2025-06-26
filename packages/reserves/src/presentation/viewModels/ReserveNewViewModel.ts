@@ -27,20 +27,20 @@ type ReserveNewViewModel = {
 
 type ReserveNewState = {
   searchCriteria: SearchCriteria
-  userPets: PetModel[]
-  userAddresses: AddressModel[]
-  selectedAddress: AddressModel | null
 } & UIState
 
 const initialSearchCriteria: SearchCriteria = {
-  fromDate: new Date(),
-  toDate: new Date(new Date().setDate(new Date().getDate() + 1)),
+  fromDate: new Date(new Date().setDate(new Date().getDate() + 1)),
+  toDate: new Date(new Date().setDate(new Date().getDate() + 2)),
   placeType: PlaceType.OwnerHome,
   reviewsFrom: 1,
   maxDistance: 5,
   maxPrice: 50000,
   visits: 1,
   selectedPets: [],
+  userPets: [],
+  userAddresses: [],
+  selectedAddress: null,
   sortBy: {
     field: SortField.TOTAL_PRICE,
     order: SortOrder.ASC,
@@ -51,9 +51,6 @@ const initialState: ReserveNewState = {
   loading: false,
   error: null,
   searchCriteria: initialSearchCriteria,
-  userPets: [],
-  userAddresses: [],
-  selectedAddress: null,
 }
 
 const useReserveNewViewModel = (): ReserveNewViewModel => {
@@ -77,8 +74,11 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
       
       setState((previous) => ({
         ...previous,
-        userPets: petsResponse.items || [],
-        userAddresses: addressesResponse || [],
+        searchCriteria: {
+          ...previous.searchCriteria,
+          userPets: petsResponse.items || [],
+          userAddresses: addressesResponse || [],
+        },
         loading: false,
       }))
     } catch (error) {
@@ -91,7 +91,7 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
   }
 
   const validateData: () => [boolean, string?] = () => {
-    const { searchCriteria, selectedAddress } = state
+    const { searchCriteria } = state
     
     if (searchCriteria.fromDate > searchCriteria.toDate) {
       return [false, t('reserveNewScreen.validation.startDateAfterEndDate')]
@@ -111,7 +111,7 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
     if (searchCriteria.selectedPets.length === 0) {
       return [false, t('reserveNewScreen.validation.petsRequired')]
     }
-    if (searchCriteria.placeType === PlaceType.OwnerHome && !selectedAddress) {
+    if (searchCriteria.placeType === PlaceType.OwnerHome && !searchCriteria.selectedAddress) {
       return [false, t('reserveNewScreen.validation.addressRequired')]
     }
     return [true]
@@ -157,8 +157,11 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
   const setPlaceType = (placeType: PlaceType) => {
     setState((previous: ReserveNewState) => ({
       ...previous,
-      searchCriteria: { ...previous.searchCriteria, placeType },
-      selectedAddress: placeType === PlaceType.CarerHome ? null : previous.selectedAddress,
+      searchCriteria: { 
+        ...previous.searchCriteria, 
+        placeType,
+        selectedAddress: placeType === PlaceType.CarerHome ? null : previous.searchCriteria.selectedAddress,
+      },
     }))
   }
 
@@ -200,7 +203,7 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
   const setSelectedAddress = (address: AddressModel | null) => {
     setState((previous: ReserveNewState) => ({
       ...previous,
-      selectedAddress: address,
+      searchCriteria: { ...previous.searchCriteria, selectedAddress: address },
     }))
   }
 

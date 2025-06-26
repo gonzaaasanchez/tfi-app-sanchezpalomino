@@ -1,8 +1,8 @@
 import { DateUtils, PetModel, UserModel } from '@packages/common'
 
 enum PlaceType {
-  OwnerHome = 'OwnerHome',
-  CarerHome = 'CarerHome',
+  OwnerHome = 'pet_home',
+  CarerHome = 'caregiver_home',
 }
 
 enum ReservationStatus {

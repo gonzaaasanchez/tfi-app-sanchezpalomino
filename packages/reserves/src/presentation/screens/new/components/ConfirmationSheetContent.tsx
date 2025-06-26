@@ -22,7 +22,8 @@ export const ConfirmationSheetContent = ({
 
   if (!userToRequest) return null
 
-  const { user, price } = userToRequest
+  const { caregiver, totalPrice, commission, totalWithCommission } =
+    userToRequest
 
   const ConfirmationInfoRow = ({
     title,
@@ -91,7 +92,7 @@ export const ConfirmationSheetContent = ({
       />
       <ConfirmationInfoRow
         title={t('reserveResultsScreen.confirmation.carer')}
-        content={user.fullName}
+        content={caregiver.fullName}
       />
       <ConfirmationInfoRow
         title={t('reserveResultsScreen.confirmation.location')}
@@ -108,15 +109,15 @@ export const ConfirmationSheetContent = ({
         </Text>
         <PaymentInfoRow
           label={t('reserveResultsScreen.confirmation.caregiverFee')}
-          amount={price.fee}
+          amount={totalPrice}
         />
         <PaymentInfoRow
           label={t('reserveResultsScreen.confirmation.commission')}
-          amount={price.charge}
+          amount={commission}
         />
         <PaymentInfoRow
           label={t('reserveResultsScreen.confirmation.total')}
-          amount={price.total}
+          amount={totalWithCommission}
           isTotal
         />
       </View>

@@ -120,7 +120,9 @@ const ReservationNewScreen: FC = (): JSX.Element => {
   const PetSelection = () => {
     const handlePetChange = (items: { value: string; label: string }[]) => {
       const selectedPets = items
-        .map((item) => state.userPets.find((pet) => pet.id === item.value))
+        .map((item) =>
+          state.searchCriteria.userPets.find((pet) => pet.id === item.value)
+        )
         .filter((pet): pet is PetModel => pet !== undefined)
       setSelectedPets(selectedPets)
     }
@@ -132,7 +134,7 @@ const ReservationNewScreen: FC = (): JSX.Element => {
           allowsMultiSelection={true}
           placeholder={t('reserveNewScreen.selectPets')}
           onFinishSelection={handlePetChange}
-          data={state.userPets.map((pet) => ({
+          data={state.searchCriteria.userPets.map((pet) => ({
             value: pet.id || '',
             label: pet.name || '',
           }))}
@@ -146,12 +148,16 @@ const ReservationNewScreen: FC = (): JSX.Element => {
   }
 
   const LocationSelection = () => {
-    const handleAddressChange = (items: { value: string; label: string }[] | { value: string; label: string }) => {
+    const handleAddressChange = (
+      items:
+        | { value: string; label: string }[]
+        | { value: string; label: string }
+    ) => {
       // Manejar tanto arrays como objetos individuales
       const selectedItems = Array.isArray(items) ? items : [items]
-      
+
       if (selectedItems.length > 0) {
-        const selectedAddress = state.userAddresses.find(
+        const selectedAddress = state.searchCriteria.userAddresses.find(
           (address) => address._id === selectedItems[0].value
         )
         setSelectedAddress(selectedAddress || null)
@@ -161,10 +167,10 @@ const ReservationNewScreen: FC = (): JSX.Element => {
     }
 
     // Crear el initialValue de forma que siempre tenga una nueva referencia
-    const initialValue = state.selectedAddress
+    const initialValue = state.searchCriteria.selectedAddress
       ? {
-          value: state.selectedAddress._id,
-          label: state.selectedAddress.name,
+          value: state.searchCriteria.selectedAddress._id,
+          label: state.searchCriteria.selectedAddress.name,
         }
       : undefined
 
@@ -175,7 +181,7 @@ const ReservationNewScreen: FC = (): JSX.Element => {
           allowsMultiSelection={false}
           placeholder={t('reserveNewScreen.selectAddress')}
           onFinishSelection={handleAddressChange}
-          data={state.userAddresses.map((address) => ({
+          data={state.searchCriteria.userAddresses.map((address) => ({
             value: address._id,
             label: address.name,
           }))}

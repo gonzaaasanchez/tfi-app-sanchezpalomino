@@ -10,6 +10,7 @@ import {
   useI18n,
   PPMaterialIcon,
   ShowToast,
+  GenericToast,
 } from '@packages/common'
 import { useReservationResultsViewModel } from '../../viewModels/ReservationResultsViewModel'
 import { useNavigation } from '@react-navigation/native'
@@ -84,13 +85,14 @@ const ReservationResultsScreen: FC = () => {
         <ScrollView style={styles.content}>
           {state.results.map((result) => (
             <SearchResultCard
-              key={result.user.id}
+              key={result.caregiver._id}
               result={result}
               onPress={() => setUserToRequest(result)}
             />
           ))}
         </ScrollView>
         {state.loading && <Loader loading={state.loading} />}
+        <GenericToast overrideOffset={10} />
       </SafeAreaView>
       <PPBottomSheet.Empty ref={filterBottomSheetRef} dismisseable={true}>
         <FilterSheetContent

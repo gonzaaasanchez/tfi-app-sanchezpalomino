@@ -1,17 +1,15 @@
 import { UserModel } from '@packages/common'
 
-interface SearchResultModel {
-  user: UserModel
-  distance: number
-  rate: {
-    value: number
-    count: number
-  }
-  price: {
-    fee: number
-    charge: number
-    total: number
-  }
+export interface CareDetailsModel {
+  daysCount: number
+  visitsCount: number
+  pricePerVisit: number
 }
 
-export { SearchResultModel } 
+export interface SearchResultModel {
+  caregiver: UserModel
+  totalPrice: number
+  commission: number
+  totalWithCommission: number
+  careDetails: CareDetailsModel
+} 

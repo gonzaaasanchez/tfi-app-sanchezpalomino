@@ -1,4 +1,10 @@
-import { UIState, useInjection } from '@packages/common'
+import {
+  UIState,
+  useInjection,
+  PaginationModel,
+  ShowToast,
+  useI18n,
+} from '@packages/common'
 import { useState, useEffect } from 'react'
 import { SearchResultsUseCase } from '../../domain/usecases/SearchResultsUseCase'
 import { $ } from '../../domain/di/Types'
@@ -30,6 +36,7 @@ export type OrderOptionDatasource = {
 
 type ReservationResultsState = {
   results: SearchResultModel[]
+  pagination: PaginationModel | null
   searchCriteria: SearchCriteria
   sortOptions: readonly SortOptionDatasource[]
   sortOrderOptions: readonly OrderOptionDatasource[]
@@ -41,6 +48,7 @@ const initialState: ReservationResultsState = {
   loading: false,
   error: null,
   results: [],
+  pagination: null,
   searchCriteria: null,
   userToRequest: null,
   sortOptions: [
@@ -88,18 +96,25 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
   const route =
     useRoute<RouteProp<ReservationResultsScreenProps, 'reservationResults'>>()
   const { searchCriteria } = route.params
+  const { t } = useI18n()
 
   useEffect(() => {
-    setState((prev) => ({ ...prev, searchCriteria }))
-  }, [])
-
-  useEffect(() => {
-    if (state.searchCriteria) {
-      searchResults()
+    console.log('searchCriteria', searchCriteria)
+    if (searchCriteria) {
+      const convertedSearchCriteria = {
+        ...searchCriteria,
+        fromDate: new Date(searchCriteria.fromDate),
+        toDate: new Date(searchCriteria.toDate),
+      }
+      setState((prev) => ({ ...prev, searchCriteria: convertedSearchCriteria }))
+      searchResults(convertedSearchCriteria)
     }
-  }, [state.searchCriteria])
+  }, [searchCriteria])
 
-  const searchResults = async (): Promise<void> => {
+  const searchResults = async (criteria?: SearchCriteria): Promise<void> => {
+    const searchCriteriaToUse = criteria || state.searchCriteria
+    if (!searchCriteriaToUse) return
+
     setState((previous) => ({
       ...previous,
       loading: true,
@@ -107,19 +122,27 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
     }))
 
     try {
-      const results = await searchResultsUseCase.execute(state.searchCriteria)
+      const response = await searchResultsUseCase.execute(searchCriteriaToUse)
       setState((previous) => ({
         ...previous,
         loading: false,
         error: null,
-        results,
+        results: response.items || [],
+        pagination: response.pagination || null,
       }))
     } catch (error) {
       setState((previous) => ({
         ...previous,
         loading: false,
         error: error.message,
+        results: [],
+        pagination: null,
       }))
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: error.message,
+      })
     }
   }
 

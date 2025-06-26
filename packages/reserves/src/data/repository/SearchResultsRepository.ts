@@ -2,6 +2,7 @@ import SearchResultsRepository from '../../domain/repository/SearchResultsReposi
 import { SearchResultModel } from '../models/SearchResultModel'
 import { SearchResultsApi } from '../datasource/api/SearchResultsApi'
 import { SearchCriteria } from '../models/SearchCriteria'
+import { PaginatedResponse } from '@packages/common'
 
 class SearchResultsRepositoryImpl implements SearchResultsRepository {
   private readonly api: SearchResultsApi
@@ -10,7 +11,9 @@ class SearchResultsRepositoryImpl implements SearchResultsRepository {
     this.api = api
   }
 
-  async searchResults(searchCriteria: SearchCriteria): Promise<SearchResultModel[]> {
+  async searchResults(
+    searchCriteria: SearchCriteria
+  ): Promise<PaginatedResponse<SearchResultModel>> {
     return this.api.getSearchResults(searchCriteria)
   }
 }

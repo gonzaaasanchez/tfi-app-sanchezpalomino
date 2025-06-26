@@ -1,4 +1,4 @@
-import { PetModel } from '@packages/common'
+import { PetModel, AddressModel } from '@packages/common'
 import { PlaceType } from './ReservationModel'
 
 export enum SortOrder {
@@ -26,5 +26,8 @@ export type SearchCriteria = {
   maxPrice: number
   visits: number
   selectedPets: PetModel[]
+  userPets: PetModel[]
+  userAddresses: AddressModel[]
+  selectedAddress: AddressModel | null
   sortBy: SortOption
 }

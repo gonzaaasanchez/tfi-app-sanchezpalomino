@@ -1,11 +1,15 @@
 import { FC } from 'react'
-import { TouchableOpacity, View, Text, Image, StyleSheet } from 'react-native'
+import { TouchableOpacity, View, Text, StyleSheet } from 'react-native'
 import {
   Color,
   GeneralStyle,
+  getImageFullUrl,
+  ImageWithPlaceholder,
   LabelStyle,
   PPMaterialIcon,
+  Types,
   useI18n,
+  useInjection,
 } from '@packages/common'
 import { SearchResultModel } from '../../../../data/models/SearchResultModel'
 
@@ -13,33 +17,34 @@ export const SearchResultCard: FC<{
   result: SearchResultModel
   onPress: () => void
 }> = ({ result, onPress }) => {
+  const baseUrl = useInjection(Types.BaseURL) as string
+
   const { t } = useI18n()
 
   return (
     <TouchableOpacity activeOpacity={0.85} onPress={onPress}>
       <View style={styles.cardContainer}>
         <View style={styles.leftContainer}>
-          <Image
-            source={{ uri: result.user.avatar }}
-            style={styles.profileImage}
-            resizeMode="cover"
+          <ImageWithPlaceholder
+            source={getImageFullUrl(result.caregiver.avatar, baseUrl)}
+            dimension={60}
           />
         </View>
         <View style={styles.rightContainer}>
-          <Text style={styles.userName}>{result.user.fullName}</Text>
+          <Text style={styles.userName}>{result.caregiver.fullName}</Text>
           <View style={styles.row}>
             <PPMaterialIcon icon="phone" size={16} />
-            <Text style={styles.detail}>{result.user.phoneNumber}</Text>
+            <Text style={styles.detail}>{result.caregiver.phoneNumber}</Text>
           </View>
 
           <View style={styles.row}>
             <PPMaterialIcon icon="location-on" size={16} />
-            <Text style={styles.detail}>{result.distance} km</Text>
+            <Text style={styles.detail}>{'FALTA DISTANCIA'} km</Text>
           </View>
           <View style={styles.row}>
             <PPMaterialIcon icon="star" size={16} />
             <Text style={styles.detail}>
-              {result.rate.value} ({result.rate.count}{' '}
+              {'FALTA RATE'} ({'FALTA RATE COUNT'}{' '}
               {t('reserveResultsScreen.reviews')})
             </Text>
           </View>
@@ -48,20 +53,20 @@ export const SearchResultCard: FC<{
               <PPMaterialIcon icon="attach-money" size={16} />
               <Text style={styles.detail}>
                 {t('reserveResultsScreen.price.caretakerFee')}: $
-                {result.price.fee}
+                {result.totalPrice}
               </Text>
             </View>
             <View style={styles.priceRow}>
               <PPMaterialIcon icon="percent" size={16} />
               <Text style={styles.detail}>
                 {t('reserveResultsScreen.price.commission')}: $
-                {result.price.charge}
+                {result.commission}
               </Text>
             </View>
             <View style={[styles.priceRow, styles.totalPriceRow]}>
               <PPMaterialIcon icon="payments" size={16} />
               <Text style={[styles.detail, styles.totalPrice]}>
-                {t('reserveResultsScreen.price.total')}: ${result.price.total}
+                {t('reserveResultsScreen.price.total')}: ${result.totalPrice}
               </Text>
             </View>
           </View>
@@ -80,14 +85,6 @@ const styles = StyleSheet.create({
   },
   leftContainer: {
     marginRight: 12,
-  },
-  profileImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: Color.brand1[100],
-    borderWidth: 1,
-    borderColor: Color.brand1[300],
   },
   row: {
     flexDirection: 'row',

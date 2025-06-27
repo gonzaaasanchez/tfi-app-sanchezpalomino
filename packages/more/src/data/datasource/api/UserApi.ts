@@ -37,6 +37,7 @@ export class UserApiImpl implements UserApi {
     const backendCarerConfig = {
       ...carerConfig,
       petTypes: carerConfig.petTypes?.map((type) => type._id || '') || [],
+      careAddress: carerConfig.careAddress || carerConfig.careAddressData?._id || '',
     }
 
     const response = await this.httpClient.put<UserModel>(

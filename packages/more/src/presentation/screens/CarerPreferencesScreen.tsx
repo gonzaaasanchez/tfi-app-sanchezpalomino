@@ -1,5 +1,12 @@
 import React, { FC } from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import {
   Color,
@@ -67,6 +74,7 @@ const CarerPreferencesScreen: FC = (): JSX.Element => {
     setPetHomeCareEnabled,
     setPetHomeCareVisitPrice,
     setSelectedPetTypes,
+    setSelectedAddress,
     validateForm,
     savePreferences,
   } = useCarerPreferencesViewModel()
@@ -77,79 +85,151 @@ const CarerPreferencesScreen: FC = (): JSX.Element => {
     })
   }
 
-  const handlePetTypesSelection = (items: { value: string; label: string }[]) => {
+  const handlePetTypesSelection = (
+    items: { value: string; label: string }[]
+  ) => {
     const selectedTypes = items
-      .map((item) => state.petTypesDatasource.find((type) => type._id === item.value))
+      .map((item) =>
+        state.petTypesDatasource.find((type) => type._id === item.value)
+      )
       .filter((type): type is PetType => type !== undefined)
     setSelectedPetTypes(selectedTypes)
   }
 
+  const handleAddressSelection = (
+    items: { value: string; label: string }[] | { value: string; label: string }
+  ) => {
+    // Handle both array and single object cases
+    const selectedItem = Array.isArray(items) ? items[0] : items
+    
+    if (selectedItem && selectedItem.value) {
+      const selectedAddress = state.addressesDatasource.find(
+        (address) => address._id === selectedItem.value
+      )
+      setSelectedAddress(selectedAddress || null)
+    } else {
+      setSelectedAddress(null)
+    }
+  }
+
+  const PetsSection = () => {
+    return (
+      <View style={{ ...styles.section, paddingBottom: 32 }}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionLabel}>
+            {t('carerPreferencesScreen.petPreferences.label')}
+          </Text>
+        </View>
+        <Dropdown
+          data={state.petTypesDatasource.map((type) => ({
+            value: type._id || '',
+            label: type.name || '',
+          }))}
+          onFinishSelection={handlePetTypesSelection}
+          placeholder={t('carerPreferencesScreen.petPreferences.placeholder')}
+          allowsMultiSelection={true}
+          initialValue={state.selectedPetTypes.map((type) => ({
+            value: type._id || '',
+            label: type.name || '',
+          }))}
+        />
+      </View>
+    )
+  }
+
+  const AddressSection = () => {
+    return (
+      <View style={{ ...styles.section, paddingBottom: 32 }}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionLabel}>{'Dirección de cuidado'}</Text>
+        </View>
+        <Dropdown
+          data={state.addressesDatasource.map((address) => ({
+            value: address._id || '',
+            label: address.name || '',
+          }))}
+          onFinishSelection={handleAddressSelection}
+          placeholder={'Seleccioná una dirección'}
+          initialValue={
+            state.selectedAddress
+              ? {
+                  value: state.selectedAddress._id || '',
+                  label: state.selectedAddress.name || '',
+                }
+              : undefined
+          }
+        />
+      </View>
+    )
+  }
+
+  const HomeCareSection = () => {
+    return (
+      <ConfigSection
+        title={t('carerPreferencesScreen.homeCare.label')}
+        checkboxEnabled={state.homeCareEnabled}
+        onCheckboxPress={setHomeCareEnabled}
+        fieldOnChangeText={setHomeCareDailyPrice}
+        fieldPlaceholder={t('carerPreferencesScreen.homeCare.placeholder')}
+        fieldValue={state.homeCareDailyPrice}
+        fieldDisabled={!state.homeCareEnabled}
+        fieldRightComponent={
+          <Text style={styles.price}>
+            {t('carerPreferencesScreen.homeCare.price')}
+          </Text>
+        }
+      />
+    )
+  }
+
+  const PetHomeCareSection = () => {
+    return (
+      <ConfigSection
+        title={t('carerPreferencesScreen.petHomeCare.label')}
+        checkboxEnabled={state.petHomeCareEnabled}
+        onCheckboxPress={setPetHomeCareEnabled}
+        fieldOnChangeText={setPetHomeCareVisitPrice}
+        fieldPlaceholder={t('carerPreferencesScreen.petHomeCare.placeholder')}
+        fieldValue={state.petHomeCareVisitPrice}
+        fieldDisabled={!state.petHomeCareEnabled}
+        fieldRightComponent={
+          <Text style={styles.price}>
+            {t('carerPreferencesScreen.petHomeCare.price')}
+          </Text>
+        }
+      />
+    )
+  }
+
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
-      <View style={styles.content}>
-        <View>
-          <ConfigSection
-            title={t('carerPreferencesScreen.homeCare.label')}
-            checkboxEnabled={state.homeCareEnabled}
-            onCheckboxPress={setHomeCareEnabled}
-            fieldOnChangeText={setHomeCareDailyPrice}
-            fieldPlaceholder={t('carerPreferencesScreen.homeCare.placeholder')}
-            fieldValue={state.homeCareDailyPrice}
-            fieldDisabled={!state.homeCareEnabled}
-            fieldRightComponent={
-              <Text style={styles.price}>
-                {t('carerPreferencesScreen.homeCare.price')}
-              </Text>
-            }
-          />
-
-          <ConfigSection
-            title={t('carerPreferencesScreen.petHomeCare.label')}
-            checkboxEnabled={state.petHomeCareEnabled}
-            onCheckboxPress={setPetHomeCareEnabled}
-            fieldOnChangeText={setPetHomeCareVisitPrice}
-            fieldPlaceholder={t(
-              'carerPreferencesScreen.petHomeCare.placeholder'
-            )}
-            fieldValue={state.petHomeCareVisitPrice}
-            fieldDisabled={!state.petHomeCareEnabled}
-            fieldRightComponent={
-              <Text style={styles.price}>
-                {t('carerPreferencesScreen.petHomeCare.price')}
-              </Text>
-            }
-          />
-
-          <View style={{ ...styles.section, paddingBottom: 32 }}>
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionLabel}>
-                {t('carerPreferencesScreen.petPreferences.label')}
-              </Text>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={50}
+        style={styles.container}
+      >
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.content}>
+            <View style={{ flexDirection: 'column-reverse' }}>
+              <PetHomeCareSection />
+              <HomeCareSection />
+              <PetsSection />
+              <AddressSection />
             </View>
-            <Dropdown
-              data={state.petTypesDatasource.map((type) => ({
-                value: type._id || '',
-                label: type.name || '',
-              }))}
-              onFinishSelection={handlePetTypesSelection}
-              placeholder={t(
-                'carerPreferencesScreen.petPreferences.placeholder'
-              )}
-              allowsMultiSelection={true}
-              initialValue={state.selectedPetTypes.map((type) => ({
-                value: type._id || '',
-                label: type.name || '',
-              }))}
-            />
           </View>
-        </View>
-        <View style={styles.buttonContainer}>
-          <Button.Primary
-            title={t('carerPreferencesScreen.save')}
-            onPress={handleSave}
-            state={state.loading ? ButtonState.DISABLE : ButtonState.ENABLE}
-          />
-        </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+
+      <View style={styles.buttonContainer}>
+        <Button.Primary
+          title={t('carerPreferencesScreen.save')}
+          onPress={handleSave}
+          state={state.loading ? ButtonState.DISABLE : ButtonState.ENABLE}
+        />
       </View>
       {state.loading && <Loader loading={state.loading} />}
       <GenericToast overrideOffset={10} />
@@ -162,8 +242,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Color.mainBackground,
   },
-  content: {
+  scrollView: {
     flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+  },
+  content: {
     paddingHorizontal: 24,
     paddingVertical: 20,
     justifyContent: 'space-between',
@@ -186,7 +271,9 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   buttonContainer: {
-    marginTop: 24,
+    paddingHorizontal: 24,
+    paddingBottom: 20,
+    backgroundColor: Color.mainBackground,
   },
   price: {
     ...LabelStyle.body({

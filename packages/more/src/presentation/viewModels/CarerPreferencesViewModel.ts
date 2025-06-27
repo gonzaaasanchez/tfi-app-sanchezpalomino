@@ -9,13 +9,14 @@ import {
   CarerConfig,
   AppState,
   PetType,
+  AddressModel,
 } from '@packages/common'
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { $ } from '../../domain/di/Types'
 import { UpdateCarerConfigUseCase } from '../../domain/usecases/UpdateCarerConfigUseCase'
 import { GetPetTypesUseCase } from '../../domain/usecases/GetPetTypesUseCase'
-import React from 'react'
+import { GetAddressesUseCase } from '../../domain/usecases/GetAddressesUseCase'
 
 type CarerPreferencesState = {
   homeCareEnabled: boolean
@@ -24,6 +25,8 @@ type CarerPreferencesState = {
   petHomeCareVisitPrice: string
   petTypesDatasource: PetType[]
   selectedPetTypes: PetType[]
+  addressesDatasource: AddressModel[]
+  selectedAddress: AddressModel | null
   preferencesSaved: boolean
 } & UIState
 
@@ -34,6 +37,7 @@ type CarerPreferencesViewModel = {
   setPetHomeCareEnabled: () => void
   setPetHomeCareVisitPrice: (price: string) => void
   setSelectedPetTypes: (petTypes: PetType[]) => void
+  setSelectedAddress: (address: AddressModel | null) => void
   validateForm: (onValidated: () => void) => void
   savePreferences: () => void
 }
@@ -45,6 +49,8 @@ const initialState: CarerPreferencesState = {
   petHomeCareVisitPrice: '',
   petTypesDatasource: [],
   selectedPetTypes: [],
+  addressesDatasource: [],
+  selectedAddress: null,
   loading: false,
   error: null,
   preferencesSaved: false,
@@ -61,13 +67,15 @@ const useCarerPreferencesViewModel = (): CarerPreferencesViewModel => {
   const getPetTypesUseCase: GetPetTypesUseCase = useInjection(
     $.GetPetTypesUseCase
   )
-
+  const getAddressesUseCase: GetAddressesUseCase = useInjection(
+    $.GetAddressesUseCase
+  )
   useEffect(() => {
-    loadPetTypes()
+    loadInitialData()
   }, [])
 
   // Initialize state with user's current preferences
-  React.useEffect(() => {
+  useEffect(() => {
     if (currentUser?.carerConfig) {
       setState((previous) => ({
         ...previous,
@@ -78,11 +86,28 @@ const useCarerPreferencesViewModel = (): CarerPreferencesViewModel => {
         petHomeCareVisitPrice:
           currentUser.carerConfig.petHomeCare.visitPrice?.toString() || '',
         selectedPetTypes: currentUser.carerConfig.petTypes || [],
+        selectedAddress: currentUser.carerConfig.careAddressData || null,
       }))
     }
   }, [currentUser])
 
-  const loadPetTypes = async (): Promise<void> => {
+  // Sync selectedAddress when addressesDatasource is loaded
+  useEffect(() => {
+    if (state.addressesDatasource.length > 0 && currentUser?.carerConfig?.careAddressData) {
+      const matchingAddress = state.addressesDatasource.find(
+        address => address._id === currentUser.carerConfig.careAddressData?._id
+      )
+      
+      if (matchingAddress && (!state.selectedAddress || state.selectedAddress._id !== matchingAddress._id)) {
+        setState((previous) => ({
+          ...previous,
+          selectedAddress: matchingAddress,
+        }))
+      }
+    }
+  }, [state.addressesDatasource, currentUser?.carerConfig?.careAddressData])
+
+  const loadInitialData = async (): Promise<void> => {
     setState((previous) => ({
       ...previous,
       loading: true,
@@ -90,22 +115,28 @@ const useCarerPreferencesViewModel = (): CarerPreferencesViewModel => {
     }))
 
     try {
-      const response = await getPetTypesUseCase.execute()
+      const [petTypesResponse, addressesResponse] = await Promise.all([
+        getPetTypesUseCase.execute(),
+        getAddressesUseCase.execute(),
+      ])
+
       setState((previous) => ({
         ...previous,
         loading: false,
-        petTypesDatasource: response.items || [],
+        error: null,
+        petTypesDatasource: petTypesResponse.items || [],
+        addressesDatasource: addressesResponse || [],
       }))
     } catch (error) {
       setState((previous) => ({
         ...previous,
         loading: false,
-        error: error instanceof Error ? error.message : 'Error saving pet',
+        error: error instanceof Error ? error.message : 'Error loading data',
       }))
       ShowToast({
         config: 'error',
         title: t('general.ups'),
-        subtitle: error instanceof Error ? error.message : 'Error saving pet',
+        subtitle: error instanceof Error ? error.message : 'Error loading data',
       })
     }
   }
@@ -150,6 +181,13 @@ const useCarerPreferencesViewModel = (): CarerPreferencesViewModel => {
     setState((previous) => ({
       ...previous,
       selectedPetTypes: petTypes,
+    }))
+  }
+
+  const setSelectedAddress = (address: AddressModel | null): void => {
+    setState((previous) => ({
+      ...previous,
+      selectedAddress: address,
     }))
   }
 
@@ -222,6 +260,9 @@ const useCarerPreferencesViewModel = (): CarerPreferencesViewModel => {
           t('carerPreferencesScreen.validation.petPreferencesRequired')
         )
       }
+      if (!state.selectedAddress) {
+        errors.push(t('carerPreferencesScreen.validation.addressRequired'))
+      }
     }
 
     return errors
@@ -248,6 +289,7 @@ const useCarerPreferencesViewModel = (): CarerPreferencesViewModel => {
             : null,
         },
         petTypes: state.selectedPetTypes,
+        careAddress: state.selectedAddress?._id || null,
       }
 
       const updatedUser = await updateCarerConfigUseCase.execute(carerConfig)
@@ -289,6 +331,7 @@ const useCarerPreferencesViewModel = (): CarerPreferencesViewModel => {
     setPetHomeCareEnabled,
     setPetHomeCareVisitPrice,
     setSelectedPetTypes,
+    setSelectedAddress,
     validateForm,
     savePreferences,
   }

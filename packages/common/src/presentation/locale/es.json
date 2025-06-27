@@ -301,7 +301,8 @@
         "homeCarePriceInvalid": "El precio diario tiene que ser un número válido mayor a 0",
         "petHomeCarePriceRequired": "Tenés que ingresar un precio por visita para el cuidado en hogares de mascotas",
         "petHomeCarePriceInvalid": "El precio por visita tiene que ser un número válido mayor a 0",
-        "petPreferencesRequired": "Tenés que seleccionar al menos un tipo de mascota que cuidás"
+        "petPreferencesRequired": "Tenés que seleccionar al menos un tipo de mascota que cuidás",
+        "addressRequired": "Tenés que seleccionar una dirección para aparecer en tus resultados de búsqueda"
       }
     },
     "petsNewScreen": {

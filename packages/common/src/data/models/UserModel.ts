@@ -11,6 +11,8 @@ export interface CarerConfig {
     visitPrice: number | null
   }
   petTypes?: PetType[]
+  careAddressData?: AddressModel
+  careAddress?: string
 }
 
 class UserModel {

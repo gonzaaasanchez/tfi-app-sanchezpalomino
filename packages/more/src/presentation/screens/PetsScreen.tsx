@@ -1,12 +1,5 @@
 import React, { FC, useState, useEffect } from 'react'
-import {
-  StyleSheet,
-  View,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  RefreshControl,
-} from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
   Color,
@@ -26,6 +19,7 @@ import {
   getImageFullUrl,
   Types,
   GenericToast,
+  PaginatedScrollView,
 } from '@packages/common'
 import { useNavigation, StackActions } from '@react-navigation/native'
 import { usePetsViewModel } from '../viewModels/PetsViewModel'
@@ -63,7 +57,7 @@ const PetsScreen: FC = (): JSX.Element => {
   const deleteConfirmationModalRef = useBottomSheetModalRef()
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
-  const { state, refreshPets, onReachedBottom, deletePet } = usePetsViewModel()
+  const { state, loadPets, deletePet } = usePetsViewModel()
   const { t } = useI18n()
   const baseUrl = useInjection(Types.BaseURL) as string
 
@@ -82,21 +76,9 @@ const PetsScreen: FC = (): JSX.Element => {
   useEffect(() => {
     if (state.petDeleted) {
       petDetailModalRef.current?.dismiss()
-      refreshPets()
+      loadPets({ reset: true })
     }
   }, [state.petDeleted])
-
-  const handleScroll = (event: any) => {
-    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent
-    const paddingToBottom = 20
-    const isCloseToBottom =
-      layoutMeasurement.height + contentOffset.y >=
-      contentSize.height - paddingToBottom
-
-    if (isCloseToBottom) {
-      onReachedBottom()
-    }
-  }
 
   const handleDeletePet = () => {
     deleteConfirmationModalRef.current?.dismiss()
@@ -114,39 +96,27 @@ const PetsScreen: FC = (): JSX.Element => {
   return (
     <PPBottomSheetContainer>
       <SafeAreaView style={styles.container} edges={['bottom']}>
-        <ScrollView
+        <PaginatedScrollView
+          pagination={state.pagination}
+          onLoadMore={() => loadPets({ reset: false })}
+          onRefresh={() => loadPets({ reset: true })}
           contentContainerStyle={styles.scrollContainer}
-          refreshControl={
-            <RefreshControl
-              refreshing={state.loading}
-              onRefresh={refreshPets}
-              tintColor={Color.brand1[100]}
-            />
-          }
-          onScroll={handleScroll}
-          scrollEventThrottle={400}
-        >
-          {!state.loading && state.pets.length === 0 && (
-            <EmptyView
-              type="empty"
-              title={t('petsScreen.emptyState.title')}
-              subtitle={t('petsScreen.emptyState.subtitle')}
-            />
-          )}
-          {state.pets.map((pet) => (
+          renderItem={(pet) => (
             <PetCard
               key={pet.id}
               pet={pet}
               onPress={() => setPetDetail(pet)}
               baseUrl={baseUrl}
             />
-          ))}
-          {/* {state.loadingMore && (
-            <View style={styles.loadingMoreContainer}>
-              <Loader loading={true} />
-            </View>
-          )} */}
-        </ScrollView>
+          )}
+          emptyComponent={
+            <EmptyView
+              type="empty"
+              title={t('petsScreen.emptyState.title')}
+              subtitle={t('petsScreen.emptyState.subtitle')}
+            />
+          }
+        />
       </SafeAreaView>
       <PPBottomSheet.Empty
         ref={petDetailModalRef}
@@ -189,7 +159,7 @@ const PetsScreen: FC = (): JSX.Element => {
       >
         <PPMaterialIcon icon="add" size={30} color={'white'} />
       </TouchableOpacity>
-      {state.loading && <Loader loading={state.loading} />}
+      {state.loading || (state.pagination.loading && <Loader loading={true} />)}
       <GenericToast overrideOffset={10} />
     </PPBottomSheetContainer>
   )
@@ -229,10 +199,6 @@ const styles = StyleSheet.create({
     ...LabelStyle.callout2({ color: Color.black[500] }),
     marginLeft: 6,
     flexShrink: 1,
-  },
-  loadingMoreContainer: {
-    paddingVertical: 20,
-    alignItems: 'center',
   },
 })
 

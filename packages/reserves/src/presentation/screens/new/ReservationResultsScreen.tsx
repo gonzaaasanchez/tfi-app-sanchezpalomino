@@ -109,9 +109,8 @@ const ReservationResultsScreen: FC = () => {
             />
           }
         />
-        {state.loading || state.pagination.loading && (
-          <Loader loading={true} opacity={0.7} />
-        )}
+        {state.loading ||
+          (state.pagination.loading && <Loader loading={true} />)}
         <GenericToast overrideOffset={10} />
       </SafeAreaView>
       <PPBottomSheet.Empty ref={filterBottomSheetRef} dismisseable={true}>

@@ -5,39 +5,40 @@ import {
   useInjection,
   PaginationModel,
   ShowToast,
+  usePagination,
+  LoadFunction,
 } from '@packages/common'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { GetMyPetsUseCase } from '../../domain/usecases/GetMyPetsUseCase'
 import { DeletePetUseCase } from '../../domain/usecases/DeletePetUseCase'
 import { $ } from '../../domain/di/Types'
 
 type PetsState = {
-  pets: PetModel[]
-  pagination: PaginationModel
-  loadingMore: boolean
   petDeleted: boolean
+  pagination: {
+    items: PetModel[]
+    pagination: PaginationModel
+    loading: boolean
+    loadingMore: boolean
+  }
 } & UIState
 
 type PetsViewModel = {
   state: PetsState
   loadPets: ({ reset }: { reset: boolean }) => Promise<void>
-  refreshPets: () => Promise<void>
-  onReachedBottom: () => void
   deletePet: (petId: string) => Promise<void>
 }
 
 const initialState: PetsState = {
-  pets: [],
-  pagination: {
-    page: 1,
-    limit: 10,
-    total: 0,
-    totalPages: 0,
-  },
   loading: false,
-  loadingMore: false,
   error: null,
   petDeleted: false,
+  pagination: {
+    items: [],
+    pagination: { page: 1, limit: 10, total: 0, totalPages: 0 },
+    loading: false,
+    loadingMore: false,
+  },
 }
 
 const usePetsViewModel = (): PetsViewModel => {
@@ -46,76 +47,36 @@ const usePetsViewModel = (): PetsViewModel => {
   const getMyPetsUseCase = useInjection<GetMyPetsUseCase>($.GetMyPetsUseCase)
   const deletePetUseCase = useInjection<DeletePetUseCase>($.DeletePetUseCase)
 
+  // Create load function for pagination hook
+  const loadPetsFunction: LoadFunction<PetModel> = useCallback(
+    async (page: number, limit: number) => {
+      const response = await getMyPetsUseCase.execute(page, limit)
+
+      return {
+        items: response.items || [],
+        pagination: response.pagination,
+      }
+    },
+    [getMyPetsUseCase]
+  )
+
+  const pagination = usePagination(loadPetsFunction)
+
   useEffect(() => {
     loadPets({ reset: true })
   }, [])
 
   const loadPets = async ({ reset }: { reset: boolean }): Promise<void> => {
     try {
-      if (state.loading || state.loadingMore) return
-
-      if (reset) {
-        if (state.loading) return
-        setState((previous) => ({
-          ...previous,
-          loading: true,
-          error: null,
-          petDeleted: false,
-        }))
-        const response = await getMyPetsUseCase.execute(
-          1,
-          state.pagination.limit
-        )
-        setState((previous) => ({
-          ...previous,
-          pets: response.items ?? [],
-          pagination: response.pagination,
-          loading: false,
-        }))
-      } else {
-        if (
-          !state.pagination ||
-          state.pagination.page >= state.pagination.totalPages
-        )
-          return
-
-        setState((previous) => ({ ...previous, loadingMore: true }))
-        const nextPage = state.pagination.page + 1
-        const response = await getMyPetsUseCase.execute(
-          nextPage,
-          state.pagination.limit
-        )
-
-        setState((previous) => ({
-          ...previous,
-          pets: [...previous.pets, ...(response.items ?? [])],
-          pagination: response.pagination,
-          loadingMore: false,
-        }))
-      }
+      await pagination.loadItems(reset)
     } catch (error) {
-      setState((previous) => ({
-        ...previous,
-        loading: false,
-        loadingMore: false,
-        error:
-          error instanceof Error ? error.message : 'Error al cargar mascotas',
-      }))
       ShowToast({
         config: 'error',
         title: t('general.ups'),
         subtitle:
-          error instanceof Error ? error.message : 'Error al eliminar mascota',
+          error instanceof Error ? error.message : 'Error al cargar mascotas',
       })
     }
-  }
-
-  const refreshPets = async (): Promise<void> => {
-    await loadPets({ reset: true })
-  }
-
-  const onReachedBottom = (): void => {
-    loadPets({ reset: false })
   }
 
   const deletePet = async (petId: string): Promise<void> => {
@@ -149,10 +110,17 @@ const usePetsViewModel = (): PetsViewModel => {
   }
 
   return {
-    state,
+    state: {
+      ...state,
+      loading: state.loading,
+      pagination: {
+        items: pagination.state.items,
+        pagination: pagination.state.pagination,
+        loading: pagination.state.loading,
+        loadingMore: pagination.state.loadingMore,
+      },
+    },
     loadPets,
-    refreshPets,
-    onReachedBottom,
     deletePet,
   }
 }

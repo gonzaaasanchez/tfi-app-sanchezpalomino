@@ -12,9 +12,11 @@ class SearchResultsRepositoryImpl implements SearchResultsRepository {
   }
 
   async searchResults(
-    searchCriteria: SearchCriteria
+    searchCriteria: SearchCriteria,
+    page: number,
+    limit: number
   ): Promise<PaginatedResponse<SearchResultModel>> {
-    return this.api.getSearchResults(searchCriteria)
+    return this.api.getSearchResults(searchCriteria, page, limit)
   }
 }
 

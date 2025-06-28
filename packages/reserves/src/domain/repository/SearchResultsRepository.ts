@@ -4,7 +4,9 @@ import { PaginatedResponse } from '@packages/common'
 
 interface SearchResultsRepository {
   searchResults(
-    searchCriteria: SearchCriteria
+    searchCriteria: SearchCriteria,
+    page: number,
+    limit: number
   ): Promise<PaginatedResponse<SearchResultModel>>
 }
 

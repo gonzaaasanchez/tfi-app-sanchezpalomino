@@ -1,4 +1,18 @@
-type GetReserveType = 'sent' | 'received'
-type GetReserveStatus = 'confirmed' | 'pending' | 'cancelled'
+import { PlaceType } from '../ReservationModel'
 
-export { GetReserveType as ReserveType, GetReserveStatus as ReserveStatus }
+type ReserveType = 'sent' | 'received'
+type ReserveStatus = 'confirmed' | 'pending' | 'cancelled'
+
+interface CreateReservationData {
+  startDate: string
+  endDate: string
+  careLocation: PlaceType
+  caregiverId: string
+  petIds: string[]
+  visitsPerDay?: number
+  userAddressId?: string
+  caregiverAddressId?: string
+  distance: number
+}
+
+export { ReserveType, ReserveStatus, CreateReservationData }

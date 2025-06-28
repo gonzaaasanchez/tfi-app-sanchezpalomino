@@ -1,4 +1,12 @@
-import { UIState, PetModel, useInjection, AddressModel, useI18n } from '@packages/common'
+import {
+  UIState,
+  PetModel,
+  useInjection,
+  AddressModel,
+  useI18n,
+  ShowToast,
+  DateUtils,
+} from '@packages/common'
 import { useState, useEffect } from 'react'
 import { PlaceType } from '../../data/models/ReservationModel'
 import { StackActions, useNavigation } from '@react-navigation/native'
@@ -58,7 +66,9 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
   const navigation = useNavigation()
   const { t } = useI18n()
   const getMyPetsUseCase = useInjection<GetMyPetsUseCase>($.GetMyPetsUseCase)
-  const getAddressesUseCase = useInjection<GetAddressesUseCase>($.GetAddressesUseCase)
+  const getAddressesUseCase = useInjection<GetAddressesUseCase>(
+    $.GetAddressesUseCase
+  )
 
   useEffect(() => {
     loadUserData()
@@ -71,7 +81,7 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
         getMyPetsUseCase.execute(1, 100),
         getAddressesUseCase.execute(),
       ])
-      
+
       setState((previous) => ({
         ...previous,
         searchCriteria: {
@@ -85,15 +95,21 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
       setState((previous) => ({
         ...previous,
         loading: false,
-        error: error instanceof Error ? error.message : t('reserveNewScreen.validation.errorLoadingUserData'),
+        error:
+          error instanceof Error
+            ? error.message
+            : t('reserveNewScreen.validation.errorLoadingUserData'),
       }))
     }
   }
 
   const validateData: () => [boolean, string?] = () => {
     const { searchCriteria } = state
-    
-    if (searchCriteria.fromDate > searchCriteria.toDate) {
+
+    if (
+      DateUtils.YYYYMMDD(searchCriteria.fromDate) >
+      DateUtils.YYYYMMDD(searchCriteria.toDate)
+    ) {
       return [false, t('reserveNewScreen.validation.startDateAfterEndDate')]
     }
     if (searchCriteria.reviewsFrom < 1) {
@@ -124,6 +140,11 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
         ...previous,
         error: error,
       }))
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: error,
+      })
       return
     }
 
@@ -157,10 +178,13 @@ const useReserveNewViewModel = (): ReserveNewViewModel => {
   const setPlaceType = (placeType: PlaceType) => {
     setState((previous: ReserveNewState) => ({
       ...previous,
-      searchCriteria: { 
-        ...previous.searchCriteria, 
+      searchCriteria: {
+        ...previous.searchCriteria,
         placeType,
-        selectedAddress: placeType === PlaceType.CarerHome ? null : previous.searchCriteria.selectedAddress,
+        selectedAddress:
+          placeType === PlaceType.CarerHome
+            ? null
+            : previous.searchCriteria.selectedAddress,
       },
     }))
   }

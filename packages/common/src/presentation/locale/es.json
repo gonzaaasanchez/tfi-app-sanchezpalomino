@@ -125,14 +125,25 @@
       "address": "Dirección",
       "selectAddress": "Seleccioná una dirección",
       "validation": {
-        "startDateAfterEndDate": "La fecha de inicio debe ser anterior a la fecha de fin",
+        "startDateAfterEndDate": "La fecha de fin debe ser igual o posterior a la fecha de inicio",
         "reviewsFromMin": "El número de reseñas debe ser mayor a 0",
         "maxDistanceMin": "La distancia máxima debe ser mayor a 0",
         "maxPriceMin": "El precio máximo debe ser mayor a 0",
         "visitsPerDayMin": "El número de visitas por día debe ser mayor a 0",
         "petsRequired": "Debes seleccionar al menos una mascota",
         "addressRequired": "Debes seleccionar una dirección",
-        "errorLoadingUserData": "Error al cargar los datos del usuario"
+        "errorLoadingUserData": "Error al cargar los datos del usuario",
+        "usecase": {
+          "startDateRequired": "La fecha de inicio es requerida",
+          "endDateRequired": "La fecha de fin es requerida",
+          "caregiverIdRequired": "El ID del cuidador es requerido",
+          "distanceNegative": "La distancia no puede ser negativa",
+          "startDateBeforeToday": "La fecha de inicio no puede ser anterior a hoy",
+          "endDateBeforeStartDate": "La fecha de fin debe ser igual o posterior a la fecha de inicio",
+          "userAddressRequired": "La dirección del usuario es requerida para cuidado en hogar de la mascota",
+          "visitsPerDayRequired": "El número de visitas por día debe ser al menos 1",
+          "caregiverAddressRequired": "La dirección del cuidador es requerida para cuidado en hogar del cuidador"
+        }
       }
     },
     "servicesScreen": {

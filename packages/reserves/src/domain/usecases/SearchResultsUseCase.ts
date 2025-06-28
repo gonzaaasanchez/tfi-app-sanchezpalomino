@@ -11,19 +11,25 @@ class SearchResultsUseCase {
   }
 
   async execute(
-    searchCriteria: SearchCriteria
+    searchCriteria: SearchCriteria,
+    page: number,
+    limit: number
   ): Promise<PaginatedResponse<SearchResultModel>> {
-    const response = await this.searchResultsRepository.searchResults(searchCriteria)
-    
-    // Convertir los objetos planos del API en instancias de clase para que funcionen los getters
-    const convertedItems = response.items.map(item => ({
+    const response = await this.searchResultsRepository.searchResults(
+      searchCriteria,
+      page,
+      limit
+    )
+
+    // convert the flat objects from the API to class instances so that the getters work
+    const convertedItems = response.items.map((item) => ({
       ...item,
-      caregiver: new UserModel(item.caregiver)
+      caregiver: new UserModel(item.caregiver),
     }))
 
     return {
       items: convertedItems,
-      pagination: response.pagination
+      pagination: response.pagination,
     }
   }
 }

@@ -5,7 +5,6 @@ import {
   LabelStyle,
   Loader,
   PPMaterialIcon,
-  ShowToast,
   useI18n,
   Dropdown,
   PetModel,
@@ -40,16 +39,6 @@ const ReservationNewScreen: FC = (): JSX.Element => {
     searchResults,
   } = useReserveNewViewModel()
   const { t } = useI18n()
-
-  useEffect(() => {
-    if (state.error) {
-      ShowToast({
-        config: 'error',
-        title: t('general.ups'),
-        subtitle: state.error,
-      })
-    }
-  }, [state.error])
 
   const DateSelection = () => {
     const dates = [

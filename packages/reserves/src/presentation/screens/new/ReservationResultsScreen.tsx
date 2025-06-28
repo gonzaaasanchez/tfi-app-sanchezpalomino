@@ -22,8 +22,13 @@ import { ConfirmationSheetContent } from './components/ConfirmationSheetContent'
 import catSuccess from '@app/assets/lottie-json/success-cat.json'
 
 const ReservationResultsScreen: FC = () => {
-  const { state, setSortAndOrder, setUserToRequest, sendReservationRequest } =
-    useReservationResultsViewModel()
+  const {
+    state,
+    setSortAndOrder,
+    setUserToRequest,
+    sendReservationRequest,
+    onReachedBottom,
+  } = useReservationResultsViewModel()
   const [sortField, setSortField] = useState<SortField>(
     state.searchCriteria?.sortBy?.field || SortField.PRICE
   )
@@ -75,6 +80,18 @@ const ReservationResultsScreen: FC = () => {
     }
   }, [state.error])
 
+  const handleScroll = (event: any) => {
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent
+    const paddingToBottom = 20
+    const isCloseToBottom =
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+
+    if (isCloseToBottom) {
+      onReachedBottom()
+    }
+  }
+
   const confirmSortAndOrder = () => {
     setSortAndOrder(sortField, sortOrder)
     filterBottomSheetRef.current?.dismiss()
@@ -83,7 +100,10 @@ const ReservationResultsScreen: FC = () => {
   return (
     <PPBottomSheetContainer>
       <SafeAreaView style={styles.container} edges={[]}>
-        <ScrollView contentContainerStyle={styles.content}>
+        <ScrollView
+          contentContainerStyle={styles.content}
+          onScroll={handleScroll}
+        >
           {!state.loading && state.results.length === 0 && (
             <EmptyView
               type="empty"

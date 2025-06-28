@@ -4,6 +4,7 @@ import {
   PaginationModel,
   ShowToast,
   useI18n,
+  DateUtils,
 } from '@packages/common'
 import { useState, useEffect } from 'react'
 import { SearchResultsUseCase } from '../../domain/usecases/SearchResultsUseCase'
@@ -15,8 +16,8 @@ import {
   SortField,
   SortOrder,
 } from '../../data/models/SearchCriteria'
+import { CreateReservationUseCase } from '../../domain/usecases/CreateReservationUseCase'
 import { PlaceType } from '../../data/models/ReservationModel'
-import { SendReservationRequestUseCase } from '../../domain/usecases/SendReservationRequestUseCase'
 
 type ReservationResultsScreenProps = {
   reservationResults: {
@@ -36,19 +37,26 @@ export type OrderOptionDatasource = {
 
 type ReservationResultsState = {
   results: SearchResultModel[]
-  pagination: PaginationModel | null
+  pagination: PaginationModel
   searchCriteria: SearchCriteria
   sortOptions: readonly SortOptionDatasource[]
   sortOrderOptions: readonly OrderOptionDatasource[]
   userToRequest: SearchResultModel | null
   requestSent: boolean
+  loadingMore: boolean
 } & UIState
 
 const initialState: ReservationResultsState = {
   loading: false,
+  loadingMore: false,
   error: null,
   results: [],
-  pagination: null,
+  pagination: {
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 0,
+  },
   searchCriteria: null,
   userToRequest: null,
   sortOptions: [
@@ -80,10 +88,12 @@ const initialState: ReservationResultsState = {
 
 type ReservationResultsViewModel = {
   state: ReservationResultsState
-  searchResults: () => Promise<void>
+  searchResults: ({ reset }: { reset: boolean }) => Promise<void>
   setSortAndOrder: (field: SortField, order: SortOrder) => void
   setUserToRequest: (user: SearchResultModel) => void
   sendReservationRequest: () => Promise<void>
+  onReachedBottom: () => void
+  refreshResults: () => Promise<void>
 }
 
 const useReservationResultsViewModel = (): ReservationResultsViewModel => {
@@ -91,8 +101,9 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
   const searchResultsUseCase: SearchResultsUseCase = useInjection(
     $.SearchResultsUseCase
   )
-  const sendReservationRequestUseCase: SendReservationRequestUseCase =
-    useInjection($.SendReservationRequestUseCase)
+  const createReservationUseCase: CreateReservationUseCase = useInjection(
+    $.CreateReservationUseCase
+  )
   const route =
     useRoute<RouteProp<ReservationResultsScreenProps, 'reservationResults'>>()
   const { searchCriteria } = route.params
@@ -106,41 +117,86 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
         toDate: new Date(searchCriteria.toDate),
       }
       setState((prev) => ({ ...prev, searchCriteria: convertedSearchCriteria }))
-      searchResults(convertedSearchCriteria)
     }
   }, [searchCriteria])
 
-  const searchResults = async (criteria?: SearchCriteria): Promise<void> => {
-    const searchCriteriaToUse = criteria || state.searchCriteria
-    if (!searchCriteriaToUse) return
+  useEffect(() => {
+    if (state.searchCriteria && !state.loading) {
+      searchResults({ reset: true })
+    }
+  }, [state.searchCriteria])
 
-    setState((previous) => ({
-      ...previous,
-      loading: true,
-      error: null,
-    }))
-
+  const searchResults = async ({
+    reset,
+  }: {
+    reset: boolean
+  }): Promise<void> => {
     try {
-      const response = await searchResultsUseCase.execute(searchCriteriaToUse)
-      setState((previous) => ({
-        ...previous,
-        loading: false,
-        error: null,
-        results: response.items || [],
-        pagination: response.pagination || null,
-      }))
+      if (state.loading || state.loadingMore) return
+
+      if (!state.searchCriteria) {
+        return
+      }
+
+      if (reset) {
+        if (state.loading) return
+        setState((previous) => ({
+          ...previous,
+          loading: true,
+          error: null,
+          requestSent: false,
+        }))
+        const response = await searchResultsUseCase.execute(
+          state.searchCriteria,
+          state.pagination.page,
+          state.pagination.limit
+        )
+        setState((previous) => ({
+          ...previous,
+          results: response.items || [],
+          pagination: response.pagination || {
+            page: 1,
+            limit: 10,
+            total: 0,
+            totalPages: 0,
+          },
+          loading: false,
+        }))
+      } else {
+        if (
+          !state.pagination ||
+          state.pagination.page >= state.pagination.totalPages
+        )
+          return
+
+        setState((previous) => ({ ...previous, loadingMore: true }))
+        const nextPage = state.pagination.page + 1
+        const response = await searchResultsUseCase.execute(
+          state.searchCriteria,
+          nextPage,
+          state.pagination.limit
+        )
+
+        setState((previous) => ({
+          ...previous,
+          results: [...previous.results, ...(response.items || [])],
+          pagination: response.pagination || previous.pagination,
+          loadingMore: false,
+        }))
+      }
     } catch (error) {
       setState((previous) => ({
         ...previous,
         loading: false,
-        error: error.message,
-        results: [],
-        pagination: null,
+        loadingMore: false,
+        error:
+          error instanceof Error ? error.message : 'Error al buscar resultados',
       }))
       ShowToast({
         config: 'error',
         title: t('general.ups'),
-        subtitle: error.message,
+        subtitle:
+          error instanceof Error ? error.message : 'Error al buscar resultados',
       })
     }
   }
@@ -151,11 +207,19 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
       sortBy: { field, order },
     }
     setState((prev) => ({ ...prev, searchCriteria: updatedCriteria }))
-    searchResults(updatedCriteria)
+    searchResults({ reset: true })
   }
 
   const setUserToRequest = (user: SearchResultModel) => {
     setState((prev) => ({ ...prev, userToRequest: user }))
+  }
+
+  const onReachedBottom = (): void => {
+    searchResults({ reset: false })
+  }
+
+  const refreshResults = async (): Promise<void> => {
+    await searchResults({ reset: true })
   }
 
   const sendReservationRequest = async (): Promise<void> => {
@@ -166,7 +230,19 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
     }))
 
     try {
-      await sendReservationRequestUseCase.execute()
+      await createReservationUseCase.execute({
+        startDate: DateUtils.YYYYMMDD(state.searchCriteria.fromDate),
+        endDate: DateUtils.YYYYMMDD(state.searchCriteria.toDate),
+        careLocation: state.searchCriteria.placeType,
+        caregiverId: state.userToRequest.caregiver._id,
+        petIds: state.searchCriteria.selectedPets.map((pet) => pet.id),
+        visitsPerDay: state.searchCriteria.visits,
+        userAddressId:
+          state.searchCriteria.placeType === PlaceType.OwnerHome &&
+          state.searchCriteria.selectedAddress._id,
+        distance: state.searchCriteria.maxDistance,
+      })
+
       setState((previous) => ({
         ...previous,
         loading: false,
@@ -177,8 +253,15 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
       setState((previous) => ({
         ...previous,
         loading: false,
-        error: error.message,
+        error:
+          error instanceof Error ? error.message : 'Error al enviar solicitud',
       }))
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle:
+          error instanceof Error ? error.message : 'Error al enviar solicitud',
+      })
     }
   }
 
@@ -188,6 +271,8 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
     setSortAndOrder,
     setUserToRequest,
     sendReservationRequest,
+    onReachedBottom,
+    refreshResults,
   }
 }
 

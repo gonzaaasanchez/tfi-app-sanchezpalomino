@@ -5,7 +5,9 @@ import { BaseResponse } from '@packages/common/src/data/http/BaseResponse'
 
 export interface SearchResultsApi {
   getSearchResults(
-    searchCriteria: SearchCriteria
+    searchCriteria: SearchCriteria,
+    page: number,
+    limit: number
   ): Promise<PaginatedResponse<SearchResultModel>>
 }
 
@@ -13,7 +15,9 @@ export class SearchResultsApiImpl implements SearchResultsApi {
   constructor(private readonly httpClient: HttpClient) {}
 
   async getSearchResults(
-    searchCriteria: SearchCriteria
+    searchCriteria: SearchCriteria,
+    page: number,
+    limit: number
   ): Promise<PaginatedResponse<SearchResultModel>> {
     const requestBody: any = {
       startDate: DateUtils.YYYYMMDD(searchCriteria.fromDate),
@@ -29,6 +33,8 @@ export class SearchResultsApiImpl implements SearchResultsApi {
     const queryParams = new URLSearchParams({
       sortBy: searchCriteria.sortBy.field,
       sortOrder: searchCriteria.sortBy.order,
+      page: page.toString(),
+      limit: limit.toString(),
     })
 
     const url = `/caregiver-search?${queryParams.toString()}`
@@ -42,7 +48,7 @@ export class SearchResultsApiImpl implements SearchResultsApi {
         searchParams: any
       }
 
-    // Extraer solo los campos que necesita PaginatedResponse
+    // extract only the fields that PaginatedResponse needs
     return {
       items: apiData.items,
       pagination: apiData.pagination,

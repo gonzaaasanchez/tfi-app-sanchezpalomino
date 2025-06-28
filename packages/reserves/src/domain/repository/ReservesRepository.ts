@@ -1,4 +1,8 @@
-import { ReserveType, ReserveStatus } from '../../data/models/local/Types'
+import {
+  ReserveType,
+  ReserveStatus,
+  CreateReservationData,
+} from '../../data/models/local/Types'
 import { ReservationModel } from '../../data/models/ReservationModel'
 
 interface ReservesRepository {
@@ -6,7 +10,7 @@ interface ReservesRepository {
     type: ReserveType,
     status: ReserveStatus
   ): Promise<ReservationModel[]>
-  sendReservationRequest(): Promise<void>
+  createReservation(data: CreateReservationData): Promise<ReservationModel>
 }
 
 export default ReservesRepository

@@ -1,17 +1,17 @@
 import { HttpClient } from '@app/common'
 import { ReservationModel } from '../../models/ReservationModel'
 import {
-  GetReceivedReservatiosMockedResponse,
-  GetSentReservatiosMockedResponse,
-} from '../../models/local/GetReservatiosMockedResponse'
-import { ReserveStatus, ReserveType } from '../../models/local/Types'
+  ReserveStatus,
+  ReserveType,
+  CreateReservationData,
+} from '../../models/local/Types'
 
 interface ReservesApi {
   getReserves(
     type: ReserveType,
     status: ReserveStatus
   ): Promise<ReservationModel[]>
-  sendReservationRequest(): Promise<void>
+  createReservation(data: CreateReservationData): Promise<ReservationModel>
 }
 
 class ReservesApiImpl implements ReservesApi {
@@ -29,29 +29,32 @@ class ReservesApiImpl implements ReservesApi {
     type: ReserveType,
     status: ReserveStatus
   ): Promise<ReservationModel[]> {
-    // const response = await this.httpClient.get<ReservationModel[]>('/reserves')
+    // const response = await this.httpClient.get<ReservationModel[]>('/reservations')
     // return response
-    await this.delay(2000)
-    if (type === 'sent') {
-      return status === 'confirmed'
-        ? GetSentReservatiosMockedResponse.pending
-        : []
-    }
-    switch (status) {
-      case 'cancelled':
-        return GetReceivedReservatiosMockedResponse.cancelled
-      case 'confirmed':
-        return GetReceivedReservatiosMockedResponse.confirmed
-      case 'pending':
-        return GetReceivedReservatiosMockedResponse.pending
-    }
+    await this.delay(1000)
+    return []
   }
 
-  async sendReservationRequest(): Promise<void> {
-    // TODO: Implement real API call
-    // await this.httpClient.post('/reserves/request', {})
-    await this.delay(3000)
-    return Promise.resolve()
+  async createReservation(
+    data: CreateReservationData
+  ): Promise<ReservationModel> {
+    const requestBody: any = {
+      startDate: data.startDate,
+      endDate: data.endDate,
+      careLocation: data.careLocation,
+      caregiverId: data.caregiverId,
+      petIds: data.petIds,
+      distance: data.distance,
+      visitsPerDay: data.visitsPerDay,
+      userAddressId: data.userAddressId,
+      caregiverAddressId: data.caregiverAddressId,
+    }
+    const response = await this.httpClient.post<ReservationModel>(
+      '/reservations',
+      requestBody
+    )
+
+    return response.data
   }
 }
 

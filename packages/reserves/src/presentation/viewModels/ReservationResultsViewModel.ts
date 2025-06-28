@@ -1,13 +1,13 @@
 import {
   UIState,
   useInjection,
-  PaginationModel,
   ShowToast,
   useI18n,
   DateUtils,
+  usePagination,
+  LoadFunction,
 } from '@packages/common'
-import { useState, useEffect } from 'react'
-import { SearchResultsUseCase } from '../../domain/usecases/SearchResultsUseCase'
+import { useState, useEffect, useCallback } from 'react'
 import { $ } from '../../domain/di/Types'
 import { SearchResultModel } from '../../data/models/SearchResultModel'
 import { useRoute, RouteProp } from '@react-navigation/native'
@@ -17,7 +17,9 @@ import {
   SortOrder,
 } from '../../data/models/SearchCriteria'
 import { CreateReservationUseCase } from '../../domain/usecases/CreateReservationUseCase'
+import { SearchResultsUseCase } from '../../domain/usecases/SearchResultsUseCase'
 import { PlaceType } from '../../data/models/ReservationModel'
+import { PaginationModel } from '@packages/common'
 
 type ReservationResultsScreenProps = {
   reservationResults: {
@@ -36,27 +38,22 @@ export type OrderOptionDatasource = {
 }
 
 type ReservationResultsState = {
-  results: SearchResultModel[]
-  pagination: PaginationModel
   searchCriteria: SearchCriteria
   sortOptions: readonly SortOptionDatasource[]
   sortOrderOptions: readonly OrderOptionDatasource[]
   userToRequest: SearchResultModel | null
   requestSent: boolean
-  loadingMore: boolean
+  pagination: {
+    items: SearchResultModel[]
+    pagination: PaginationModel
+    loading: boolean // Pagination loading
+    loadingMore: boolean
+  }
 } & UIState
 
 const initialState: ReservationResultsState = {
   loading: false,
-  loadingMore: false,
   error: null,
-  results: [],
-  pagination: {
-    page: 1,
-    limit: 10,
-    total: 0,
-    totalPages: 0,
-  },
   searchCriteria: null,
   userToRequest: null,
   sortOptions: [
@@ -84,6 +81,12 @@ const initialState: ReservationResultsState = {
     },
   ] as const,
   requestSent: false,
+  pagination: {
+    items: [],
+    pagination: { page: 1, limit: 10, total: 0, totalPages: 0 },
+    loading: false,
+    loadingMore: false,
+  },
 }
 
 type ReservationResultsViewModel = {
@@ -92,8 +95,6 @@ type ReservationResultsViewModel = {
   setSortAndOrder: (field: SortField, order: SortOrder) => void
   setUserToRequest: (user: SearchResultModel) => void
   sendReservationRequest: () => Promise<void>
-  onReachedBottom: () => void
-  refreshResults: () => Promise<void>
 }
 
 const useReservationResultsViewModel = (): ReservationResultsViewModel => {
@@ -109,6 +110,32 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
   const { searchCriteria } = route.params
   const { t } = useI18n()
 
+  // Create load function for pagination hook
+  const loadSearchResults: LoadFunction<SearchResultModel> = useCallback(
+    async (page: number, limit: number) => {
+      if (!state.searchCriteria) {
+        return {
+          items: [],
+          pagination: { page, limit, total: 0, totalPages: 0 },
+        }
+      }
+
+      const response = await searchResultsUseCase.execute(
+        state.searchCriteria,
+        page,
+        limit
+      )
+
+      return {
+        items: response.items || [],
+        pagination: response.pagination,
+      }
+    },
+    [state.searchCriteria, searchResultsUseCase]
+  )
+
+  const pagination = usePagination(loadSearchResults)
+
   useEffect(() => {
     if (searchCriteria) {
       const convertedSearchCriteria = {
@@ -121,7 +148,7 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
   }, [searchCriteria])
 
   useEffect(() => {
-    if (state.searchCriteria && !state.loading) {
+    if (state.searchCriteria && !pagination.state.loading) {
       searchResults({ reset: true })
     }
   }, [state.searchCriteria])
@@ -132,66 +159,8 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
     reset: boolean
   }): Promise<void> => {
     try {
-      if (state.loading || state.loadingMore) return
-
-      if (!state.searchCriteria) {
-        return
-      }
-
-      if (reset) {
-        if (state.loading) return
-        setState((previous) => ({
-          ...previous,
-          loading: true,
-          error: null,
-          requestSent: false,
-        }))
-        const response = await searchResultsUseCase.execute(
-          state.searchCriteria,
-          state.pagination.page,
-          state.pagination.limit
-        )
-        setState((previous) => ({
-          ...previous,
-          results: response.items || [],
-          pagination: response.pagination || {
-            page: 1,
-            limit: 10,
-            total: 0,
-            totalPages: 0,
-          },
-          loading: false,
-        }))
-      } else {
-        if (
-          !state.pagination ||
-          state.pagination.page >= state.pagination.totalPages
-        )
-          return
-
-        setState((previous) => ({ ...previous, loadingMore: true }))
-        const nextPage = state.pagination.page + 1
-        const response = await searchResultsUseCase.execute(
-          state.searchCriteria,
-          nextPage,
-          state.pagination.limit
-        )
-
-        setState((previous) => ({
-          ...previous,
-          results: [...previous.results, ...(response.items || [])],
-          pagination: response.pagination || previous.pagination,
-          loadingMore: false,
-        }))
-      }
+      await pagination.loadItems(reset)
     } catch (error) {
-      setState((previous) => ({
-        ...previous,
-        loading: false,
-        loadingMore: false,
-        error:
-          error instanceof Error ? error.message : 'Error al buscar resultados',
-      }))
       ShowToast({
         config: 'error',
         title: t('general.ups'),
@@ -212,14 +181,6 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
 
   const setUserToRequest = (user: SearchResultModel) => {
     setState((prev) => ({ ...prev, userToRequest: user }))
-  }
-
-  const onReachedBottom = (): void => {
-    searchResults({ reset: false })
-  }
-
-  const refreshResults = async (): Promise<void> => {
-    await searchResults({ reset: true })
   }
 
   const sendReservationRequest = async (): Promise<void> => {
@@ -266,13 +227,20 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
   }
 
   return {
-    state,
+    state: {
+      ...state,
+      loading: state.loading,
+      pagination: {
+        items: pagination.state.items,
+        pagination: pagination.state.pagination,
+        loading: pagination.state.loading,
+        loadingMore: pagination.state.loadingMore,
+      },
+    },
     searchResults,
     setSortAndOrder,
     setUserToRequest,
     sendReservationRequest,
-    onReachedBottom,
-    refreshResults,
   }
 }
 

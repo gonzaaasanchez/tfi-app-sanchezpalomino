@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 import {
   Color,
   Loader,
@@ -12,6 +12,7 @@ import {
   ShowToast,
   GenericToast,
   EmptyView,
+  PaginatedScrollView,
 } from '@packages/common'
 import { useReservationResultsViewModel } from '../../viewModels/ReservationResultsViewModel'
 import { useNavigation } from '@react-navigation/native'
@@ -27,7 +28,7 @@ const ReservationResultsScreen: FC = () => {
     setSortAndOrder,
     setUserToRequest,
     sendReservationRequest,
-    onReachedBottom,
+    searchResults,
   } = useReservationResultsViewModel()
   const [sortField, setSortField] = useState<SortField>(
     state.searchCriteria?.sortBy?.field || SortField.PRICE
@@ -80,18 +81,6 @@ const ReservationResultsScreen: FC = () => {
     }
   }, [state.error])
 
-  const handleScroll = (event: any) => {
-    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent
-    const paddingToBottom = 20
-    const isCloseToBottom =
-      layoutMeasurement.height + contentOffset.y >=
-      contentSize.height - paddingToBottom
-
-    if (isCloseToBottom) {
-      onReachedBottom()
-    }
-  }
-
   const confirmSortAndOrder = () => {
     setSortAndOrder(sortField, sortOrder)
     filterBottomSheetRef.current?.dismiss()
@@ -100,26 +89,29 @@ const ReservationResultsScreen: FC = () => {
   return (
     <PPBottomSheetContainer>
       <SafeAreaView style={styles.container} edges={[]}>
-        <ScrollView
+        <PaginatedScrollView
+          pagination={state.pagination}
+          onLoadMore={() => searchResults({ reset: false })}
+          onRefresh={() => searchResults({ reset: true })}
           contentContainerStyle={styles.content}
-          onScroll={handleScroll}
-        >
-          {!state.loading && state.results.length === 0 && (
-            <EmptyView
-              type="empty"
-              title={t('reserveResultsScreen.emptyState.title')}
-              subtitle={t('reserveResultsScreen.emptyState.subtitle')}
-            />
-          )}
-          {state.results.map((result) => (
+          renderItem={(result) => (
             <SearchResultCard
               key={result.caregiver._id}
               result={result}
               onPress={() => setUserToRequest(result)}
             />
-          ))}
-        </ScrollView>
-        {state.loading && <Loader loading={state.loading} />}
+          )}
+          emptyComponent={
+            <EmptyView
+              type="empty"
+              title={t('reserveResultsScreen.emptyState.title')}
+              subtitle={t('reserveResultsScreen.emptyState.subtitle')}
+            />
+          }
+        />
+        {state.loading || state.pagination.loading && (
+          <Loader loading={true} opacity={0.7} />
+        )}
         <GenericToast overrideOffset={10} />
       </SafeAreaView>
       <PPBottomSheet.Empty ref={filterBottomSheetRef} dismisseable={true}>

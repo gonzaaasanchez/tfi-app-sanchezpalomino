@@ -1,3 +1,4 @@
+import React, { FC, useEffect, useState } from 'react'
 import {
   Color,
   LabelStyle,
@@ -13,8 +14,8 @@ import {
   ImageWithPlaceholder,
   useInjection,
   Types,
+  PaymentInfoComponent,
 } from '@packages/common'
-import { FC, useEffect, useState } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import {
   PlaceType,
@@ -72,76 +73,84 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
     }
   }, [petDetail])
 
-  return (
-    <PPBottomSheetContainer>
-      <View style={styles.container}>
-        <View style={styles.card}>
-          <View style={styles.userContainer}>
-            <ImageWithPlaceholder
-              source={state.currentReserve?.placeDetailAvatar}
-              dimension={70}
-            />
-            <View>
-              <Text style={LabelStyle.title2()}>
-                {state.currentReserve?.placeDetailUsername}
-              </Text>
-              <Text style={LabelStyle.callout2()}>
-                {state.currentReserve?.placeDetailPhoneNumber}
-              </Text>
+  const UserCard = () => {
+    return (
+      <View style={styles.card}>
+        <View style={styles.userContainer}>
+          <ImageWithPlaceholder
+            source={state.currentReserve?.placeDetailAvatar}
+            dimension={70}
+          />
+          <View>
+            <Text style={LabelStyle.title2()}>
+              {state.currentReserve?.placeDetailUsername}
+            </Text>
+            <Text style={LabelStyle.callout2()}>
+              {state.currentReserve?.placeDetailPhoneNumber}
+            </Text>
+          </View>
+        </View>
+      </View>
+    )
+  }
+
+  const PetsCard = () => {
+    return (
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>{t('reserveDetailScreen.pets')}</Text>
+        <View style={styles.detailContainer}>
+          {state.currentReserve?.pets?.map((pet) => (
+            <View key={pet.id}>
+              <DetailItem
+                icon="pets"
+                value={`${pet.name} (${pet.petType?.name})`}
+                onPress={() => setPetDetail(pet)}
+              />
             </View>
-          </View>
+          ))}
         </View>
+      </View>
+    )
+  }
 
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>{t('reserveDetailScreen.pets')}</Text>
-          <View style={styles.detailContainer}>
-            {state.currentReserve?.pets?.map((pet) => (
-              <View key={pet.id}>
-                <DetailItem
-                  icon="pets"
-                  value={`${pet.name} (${pet.petType?.name})`}
-                  onPress={() => setPetDetail(pet)}
-                />
-              </View>
-            ))}
-          </View>
-        </View>
-
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>
-            {t('reserveDetailScreen.details')}
-          </Text>
-          <View style={styles.detailContainer}>
+  const DetailsCard = () => {
+    return (
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>{t('reserveDetailScreen.details')}</Text>
+        <View style={styles.detailContainer}>
+          <DetailItem
+            icon="home-filled"
+            title={t('reserveDetailScreen.where')}
+            value={t(state.currentReserve?.placeDetailText)}
+          />
+          <DetailItem
+            icon="map-marker"
+            title={t('reserveDetailScreen.location')}
+            value={t('reserveDetailScreen.distanceFormat', {
+              location: state.currentReserve?.address?.fullAddress || '',
+              distance: state.currentReserve?.distance?.toString() || '0',
+            })}
+          />
+          <DetailItem
+            icon="calendar-today"
+            title={t('reserveDetailScreen.date')}
+            value={state.currentReserve?.visitsRangeDate}
+          />
+          {state.currentReserve?.careLocation === PlaceType.OwnerHome && (
             <DetailItem
-              icon="home-filled"
-              title={t('reserveDetailScreen.where')}
-              value={t(state.currentReserve?.placeDetailText)}
+              icon="numbers"
+              title={t('reserveDetailScreen.visitsPerDay')}
+              value={state.currentReserve?.visitsCount?.toString() || '0'}
             />
-            {/* {state.currentReserve?.careLocation === PlaceType.CarerHome && ( */}
-              <DetailItem
-                icon="map-marker"
-                title={t('reserveDetailScreen.location')}
-                value={t('reserveDetailScreen.distanceFormat', {
-                  location: state.currentReserve?.address?.fullAddress || '',
-                  distance: state.currentReserve?.distance?.toString() || '0',
-                })}
-              />
-            {/* )} */}
-            <DetailItem
-              icon="calendar-today"
-              title={t('reserveDetailScreen.date')}
-              value={state.currentReserve?.visitsRangeDate}
-            />
-            {state.currentReserve?.careLocation === PlaceType.OwnerHome && (
-              <DetailItem
-                icon="numbers"
-                title={t('reserveDetailScreen.visitsPerDay')}
-                value={state.currentReserve?.visitsCount?.toString() || '0'}
-              />
-            )}
-          </View>
+          )}
         </View>
+      </View>
+    )
+  }
 
+  const ActionsCard = () => {
+    return (
+      <>
         {state.currentReserve?.createdByUser && (
           <OwnerReservationActions cancel={cancelReserveOwner} />
         )}
@@ -154,6 +163,24 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
             cancel={cancelReserveCarer}
           />
         )}
+      </>
+    )
+  }
+
+  return (
+    <PPBottomSheetContainer>
+      <View style={styles.container}>
+        <UserCard />
+        <PetsCard />
+        <DetailsCard />
+        <PaymentInfoComponent
+          totalPrice={state.currentReserve?.totalPrice}
+          commission={state.currentReserve?.commission}
+          totalOwner={state.currentReserve?.totalOwner}
+          totalCaregiver={state.currentReserve?.totalCaregiver}
+          needsShadow={true}
+        />
+        <ActionsCard />
       </View>
       <PPBottomSheet.Empty
         ref={petDetailModalRef}

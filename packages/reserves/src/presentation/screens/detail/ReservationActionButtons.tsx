@@ -1,10 +1,7 @@
 import { Button, useI18n } from '@packages/common'
-import {
-  ReservationModel,
-  ReservationStatus,
-} from '@packages/reserves/src/data/models/ReservationModel'
 import { FC } from 'react'
 import { View } from 'react-native'
+import { ReservationModel, ReserveStatus } from '../../../data/models/ReservationModel'
 
 type CarerReservationActionsProps = {
   reservation?: ReservationModel
@@ -28,20 +25,20 @@ const CarerReservationActions: FC<CarerReservationActionsProps> = ({
   const primaryButtonTitle = t('reserveDetailScreen.acceptReserve')
   const secondaryButtonTitle =
     {
-      [ReservationStatus.Pending]: t('reserveDetailScreen.rejectReserve'),
-      [ReservationStatus.Started]: t('reserveDetailScreen.cancelReserve'),
-      [ReservationStatus.Confirmed]: t('reserveDetailScreen.cancelReserve'),
+      [ReserveStatus.Pending]: t('reserveDetailScreen.rejectReserve'),
+      [ReserveStatus.Started]: t('reserveDetailScreen.cancelReserve'),
+      [ReserveStatus.Confirmed]: t('reserveDetailScreen.cancelReserve'),
     }[reservation.status] || ''
 
   const primaryButtonNedded = (): boolean => {
-    return reservation.status === ReservationStatus.Pending
+    return reservation.status === ReserveStatus.Pending
   }
 
   const secondaryButtonNedded = (): boolean => {
     return (
-      reservation?.status === ReservationStatus.Pending ||
-      reservation?.status === ReservationStatus.Started ||
-      reservation?.status === ReservationStatus.Confirmed
+      reservation?.status === ReserveStatus.Pending ||
+      reservation?.status === ReserveStatus.Started ||
+      reservation?.status === ReserveStatus.Confirmed
     )
   }
 
@@ -51,11 +48,11 @@ const CarerReservationActions: FC<CarerReservationActionsProps> = ({
 
   const secondaryButtonTapped = (): void => {
     switch (reservation?.status) {
-      case ReservationStatus.Pending:
+      case ReserveStatus.Pending:
         reject()
         break
-      case ReservationStatus.Confirmed:
-      case ReservationStatus.Started:
+      case ReserveStatus.Confirmed:
+      case ReserveStatus.Started:
         cancel()
         break
     }

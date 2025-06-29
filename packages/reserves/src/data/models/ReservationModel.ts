@@ -31,7 +31,8 @@ class ReservationModel {
   endDate: string
   totalPrice?: string
   commission?: string
-  totalWithCommission?: string
+  totalOwner?: string
+  totalCaregiver?: string
   distance?: number
   status: ReserveStatus
   createdAt?: string
@@ -49,7 +50,8 @@ class ReservationModel {
     this.endDate = data.endDate
     this.totalPrice = data.totalPrice
     this.commission = data.commission
-    this.totalWithCommission = data.totalWithCommission
+    this.totalOwner = data.totalOwner
+    this.totalCaregiver = data.totalCaregiver
     this.distance = data.distance
     this.status = data.status
     this.createdAt = data.createdAt
@@ -78,7 +80,7 @@ class ReservationModel {
   }
 
   get createdForUser(): boolean {
-    const createdForUser = this.caregiver?.id === '6855f7a879c07ee2898525f7'
+    const createdForUser = this.caregiver?.id === '685b709c823da31e445fde56'
     return createdForUser
   }
 

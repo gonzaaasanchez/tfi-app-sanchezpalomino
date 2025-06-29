@@ -1,6 +1,12 @@
 import React from 'react'
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
-import { Color, LabelStyle, useI18n, Button } from '@packages/common'
+import {
+  Color,
+  LabelStyle,
+  useI18n,
+  Button,
+  PaymentInfoComponent,
+} from '@packages/common'
 import { SearchResultModel } from '../../../../data/models/SearchResultModel'
 import { SearchCriteria } from '../../../../data/models/SearchCriteria'
 import { PlaceType } from '../../../../data/models/ReservationModel'
@@ -22,7 +28,7 @@ export const ConfirmationSheetContent = ({
 
   if (!resultItem) return null
 
-  const { caregiver, totalPrice, commission, totalWithCommission } = resultItem
+  const { caregiver, totalPrice, commission, totalOwner } = resultItem
 
   const ConfirmationInfoRow = ({
     title,
@@ -39,37 +45,6 @@ export const ConfirmationSheetContent = ({
       </Text>
       <Text style={LabelStyle.callout2({ color: Color.black[500] })}>
         {content}
-      </Text>
-    </View>
-  )
-
-  const PaymentInfoRow = ({
-    label,
-    amount,
-    isTotal,
-  }: {
-    label: string
-    amount: number
-    isTotal?: boolean
-  }) => (
-    <View style={[styles.paymentRow, isTotal && styles.totalRow]}>
-      <Text
-        style={
-          isTotal
-            ? LabelStyle.title3({ color: Color.black[700] })
-            : LabelStyle.body({ color: Color.black[700], fontSize: 15 })
-        }
-      >
-        {label}
-      </Text>
-      <Text
-        style={
-          isTotal
-            ? LabelStyle.title3({ color: Color.black[700] })
-            : LabelStyle.body({ color: Color.black[700], fontSize: 15 })
-        }
-      >
-        ${amount}
       </Text>
     </View>
   )
@@ -105,24 +80,12 @@ export const ConfirmationSheetContent = ({
           content={`${t('reserveResultsScreen.confirmation.carerHome')} (${caregiver.addresses[0]?.fullAddress})`}
         />
       )}
-      <View style={styles.paymentSection}>
-        <Text style={styles.paymentTitle}>
-          {t('reserveResultsScreen.confirmation.payment')}
-        </Text>
-        <PaymentInfoRow
-          label={t('reserveResultsScreen.confirmation.caregiverFee')}
-          amount={totalPrice}
-        />
-        <PaymentInfoRow
-          label={t('reserveResultsScreen.confirmation.commission')}
-          amount={commission}
-        />
-        <PaymentInfoRow
-          label={t('reserveResultsScreen.confirmation.total')}
-          amount={totalWithCommission}
-          isTotal
-        />
-      </View>
+
+      <PaymentInfoComponent
+        totalPrice={totalPrice.toString()}
+        commission={commission.toString()}
+        totalOwner={totalOwner.toString()}
+      />
 
       <View style={styles.buttonContainer}>
         <Button.Primary
@@ -149,28 +112,6 @@ const styles = StyleSheet.create({
   },
   confirmationSection: {
     marginBottom: 10,
-  },
-  paymentSection: {
-    marginTop: 8,
-    marginBottom: 10,
-    padding: 16,
-    backgroundColor: Color.brand1[50],
-    borderRadius: 8,
-  },
-  paymentTitle: {
-    ...LabelStyle.body({ color: Color.black[800] }),
-    marginBottom: 12,
-  },
-  paymentRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 5,
-  },
-  totalRow: {
-    marginTop: 8,
-    paddingTop: 10,
-    borderTopWidth: 1,
-    borderTopColor: Color.black[200],
   },
   buttonContainer: {
     marginTop: 5,

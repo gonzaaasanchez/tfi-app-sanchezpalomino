@@ -12,6 +12,6 @@ export interface SearchResultModel {
   daysCount: number
   totalPrice: number
   commission: number
-  totalWithCommission: number
+  totalOwner: number
   careDetails: CareDetailsModel
 } 

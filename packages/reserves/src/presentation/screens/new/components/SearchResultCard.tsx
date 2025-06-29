@@ -66,7 +66,7 @@ export const SearchResultCard: FC<{
             <View style={[styles.priceRow, styles.totalPriceRow]}>
               <PPMaterialIcon icon="payments" size={16} />
               <Text style={[styles.detail, styles.totalPrice]}>
-                {t('reserveResultsScreen.price.total')}: ${result.totalPrice}
+                {t('reserveResultsScreen.price.total')}: ${result.totalOwner}
               </Text>
             </View>
           </View>

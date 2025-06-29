@@ -88,6 +88,7 @@ import {
   LoadFunction,
 } from './src/hooks/usePagination'
 import { PaginatedScrollView } from './src/components/PaginatedScrollView'
+import { PaymentInfoComponent } from './src/components/PaymentInfoComponent'
 
 export {
   Resolver,
@@ -164,4 +165,5 @@ export {
   PaginationConfig,
   LoadFunction,
   PaginatedScrollView,
+  PaymentInfoComponent,
 }

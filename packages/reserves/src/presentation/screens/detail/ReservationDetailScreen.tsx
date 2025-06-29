@@ -17,7 +17,7 @@ import {
   PaymentInfoComponent,
   getImageFullUrl,
 } from '@packages/common'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, SafeAreaView } from 'react-native'
 import {
   PlaceType,
   ReservationModel,
@@ -181,30 +181,36 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
   // Show loading or return null if reservation is not loaded yet
   if (!state.currentReserve) {
     return (
-      <PPBottomSheetContainer>
-        <View style={styles.container}>
-          <Text>{t('general.loading')}</Text>
-        </View>
-      </PPBottomSheetContainer>
+      <View style={styles.container}>
+        <Text>{t('general.loading')}</Text>
+      </View>
     )
   }
 
   return (
     <PPBottomSheetContainer>
-      <View style={styles.container}>
-        <UserCard />
-        <PetsCard />
-        <DetailsCard />
-        <PaymentInfoComponent
-          isUserRequest={isUserRequest}
-          totalPrice={state.currentReserve?.totalPrice}
-          commission={state.currentReserve?.commission}
-          totalOwner={state.currentReserve?.totalOwner}
-          totalCaregiver={state.currentReserve?.totalCaregiver}
-          needsShadow={true}
-        />
-        <ActionsCard />
-      </View>
+      <SafeAreaView style={styles.mainContainer}>
+        <ScrollView
+          style={styles.scrollContainer}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator
+        >
+          <UserCard />
+          <PetsCard />
+          <DetailsCard />
+          <PaymentInfoComponent
+            isUserRequest={isUserRequest}
+            totalPrice={state.currentReserve?.totalPrice}
+            commission={state.currentReserve?.commission}
+            totalOwner={state.currentReserve?.totalOwner}
+            totalCaregiver={state.currentReserve?.totalCaregiver}
+            needsShadow={true}
+          />
+        </ScrollView>
+        <View style={styles.actionsContainer}>
+          <ActionsCard />
+        </View>
+      </SafeAreaView>
       <PPBottomSheet.Empty
         ref={petDetailModalRef}
         dismisseable={true}
@@ -217,12 +223,27 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: Color.mainBackground,
+  },
+  scrollContainer: {
+    flex: 1,
+  },
+  scrollContent: {
+    padding: 20,
+  },
   container: {
     flex: 1,
     padding: 20,
     backgroundColor: Color.mainBackground,
   },
-  /* Card */
+  actionsContainer: {
+    paddingHorizontal: 50,
+    paddingTop: 7,
+    borderTopWidth: 1,
+    borderTopColor: Color.brand2[200],
+  },
   card: {
     ...GeneralStyle.card,
     marginBottom: 16,
@@ -235,7 +256,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     gap: 5,
   },
-  /* User */
   userContainer: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -28,15 +28,30 @@ const ReservationsHeader: React.FC<ReservationsHeaderProps> = ({
     { key: ReserveType.Caregiver, label: t('reservesScreen.types.received') },
   ]
 
-  const statuses: Option<ReserveStatus>[] = [
+  const availableStatuses: Option<ReserveStatus>[] = [
     {
       key: ReserveStatus.Confirmed,
       label: t('reservesScreen.statuses.accepted'),
     },
     { key: ReserveStatus.Pending, label: t('reservesScreen.statuses.pending') },
     {
+      key: ReserveStatus.Started,
+      label: t('En curso'),
+    },
+  ]
+
+  const unavailableStatuses: Option<ReserveStatus>[] = [
+    {
       key: ReserveStatus.CancelledCarer && ReserveStatus.CancelledOwner,
+      label: t('Canceladas'),
+    },
+    {
+      key: ReserveStatus.Rejected,
       label: t('reservesScreen.statuses.rejected'),
+    },
+    {
+      key: ReserveStatus.Finished,
+      label: t('Finalizadas'),
     },
   ]
 
@@ -54,19 +69,17 @@ const ReservationsHeader: React.FC<ReservationsHeaderProps> = ({
     onStatusSelected(selectedStatus)
   }, [selectedStatus])
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.segmentedControl}>
+  const TypesSegmentedControl = () => {
+    return (
+      <View style={[styles.segmentedControl, styles.typesSegmentedControl]}>
         {types.map((type) => (
           <TouchableOpacity
             key={type.key}
             style={[
-              styles.buttonContainer,
+              styles.typeButtonContainer,
               selectedType === type.key && styles.selectedButton,
             ]}
-            onPress={() => {
-              setSelectedType(type.key)
-            }}
+            onPress={() => setSelectedType(type.key)}
           >
             <Text
               style={LabelStyle.callout({
@@ -78,20 +91,29 @@ const ReservationsHeader: React.FC<ReservationsHeaderProps> = ({
           </TouchableOpacity>
         ))}
       </View>
-      <View style={styles.segmentedControl}>
+    )
+  }
+
+  const StatusesSegmentedControl = ({
+    statuses,
+    additionalStyle,
+  }: {
+    statuses: Option<ReserveStatus>[]
+    additionalStyle?: any
+  }) => {
+    return (
+      <View style={[styles.segmentedControl, additionalStyle]}>
         {statuses.map((status) => (
           <TouchableOpacity
             key={status.key}
             style={[
-              styles.buttonContainer,
+              styles.statusButtonContainer,
               selectedStatus === status.key && styles.selectedButton,
             ]}
-            onPress={() => {
-              setSelectedStatus(status.key)
-            }}
+            onPress={() => setSelectedStatus(status.key)}
           >
             <Text
-              style={LabelStyle.callout({
+              style={LabelStyle.callout2({
                 color:
                   selectedStatus === status.key ? 'white' : Color.black[500],
               })}
@@ -101,6 +123,21 @@ const ReservationsHeader: React.FC<ReservationsHeaderProps> = ({
           </TouchableOpacity>
         ))}
       </View>
+    )
+  }
+
+  return (
+    <View style={styles.container}>
+      <TypesSegmentedControl />
+      <View style={styles.separator} />
+      <StatusesSegmentedControl
+        statuses={availableStatuses}
+        additionalStyle={styles.statusesAvailableSegmentedControl}
+      />
+      <StatusesSegmentedControl
+        statuses={unavailableStatuses}
+        additionalStyle={styles.statusesUnavailableSegmentedControl}
+      />
     </View>
   )
 }
@@ -112,7 +149,6 @@ const styles = StyleSheet.create({
     backgroundColor: Color.brand2[50],
     borderBottomColor: Color.brand2[200],
     borderBottomWidth: 1,
-    gap: 16,
   },
   segmentedControl: {
     flexDirection: 'row',
@@ -120,15 +156,36 @@ const styles = StyleSheet.create({
     backgroundColor: Color.mainBackground,
     overflow: 'hidden',
   },
-  buttonContainer: {
+  typesSegmentedControl: {
+    marginBottom: 0,
+  },
+  statusesAvailableSegmentedControl: {
+    marginBottom: 5,
+  },
+  statusesUnavailableSegmentedControl: {
+    marginBottom: 0,
+  },
+  typeButtonContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 8,
   },
+  statusButtonContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 5,
+  },
   selectedButton: {
     backgroundColor: Color.brand1[700],
     borderRadius: 24,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: Color.brand2[100],
+    marginVertical: 12,
+    marginHorizontal: 12,
   },
 })
 

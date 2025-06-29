@@ -14,6 +14,7 @@ enum ReserveType {
 enum ReserveStatus {
   Pending = 'pending',
   Confirmed = 'confirmed',
+  Rejected = 'rejected',
   Started = 'started',
   Finished = 'finished',
   CancelledOwner = 'cancelled_owner',

@@ -1,7 +1,10 @@
 import { Button, useI18n } from '@packages/common'
 import { FC } from 'react'
 import { View } from 'react-native'
-import { ReservationModel, ReserveStatus } from '../../../data/models/ReservationModel'
+import {
+  ReservationModel,
+  ReserveStatus,
+} from '../../../data/models/ReservationModel'
 
 type CarerReservationActionsProps = {
   reservation?: ReservationModel
@@ -41,8 +44,8 @@ const CarerReservationActions: FC<CarerReservationActionsProps> = ({
   const secondaryButtonNedded = (): boolean => {
     return (
       reservation?.status === ReserveStatus.Pending ||
-      reservation?.status === ReserveStatus.Started ||
-      reservation?.status === ReserveStatus.Confirmed
+      reservation?.status === ReserveStatus.Confirmed ||
+      reservation?.status === ReserveStatus.Started
     )
   }
 

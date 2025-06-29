@@ -122,6 +122,21 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
   }
 
   const DetailsCard = () => {
+    const getLocationValue = () => {
+      const address = state.currentReserve?.address
+      const distance = state.currentReserve?.distance?.toString() || '0'
+      
+      const mainAddress = t('reserveDetailScreen.distanceFormat', {
+        location: address?.fullAddress || '',
+        distance,
+      })
+      const secondaryAddress = address?.secondaryAddress(t) || ''
+      
+      return secondaryAddress 
+        ? `${mainAddress}\n${secondaryAddress}`
+        : mainAddress
+    }
+
     return (
       <View style={styles.card}>
         <Text style={styles.cardTitle}>{t('reserveDetailScreen.details')}</Text>
@@ -137,10 +152,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
           <DetailItem
             icon="map-marker"
             title={t('reserveDetailScreen.location')}
-            value={t('reserveDetailScreen.distanceFormat', {
-              location: state.currentReserve?.address?.fullAddress || '',
-              distance: state.currentReserve?.distance?.toString() || '0',
-            })}
+            value={getLocationValue()}
           />
           <DetailItem
             icon="calendar-today"

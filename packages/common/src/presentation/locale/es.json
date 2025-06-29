@@ -1,5 +1,9 @@
 {
   "translation": {
+    "address": {
+      "floor": "Piso",
+      "apartment": "Departamento"
+    },
     "general": {
       "comingSoon": "Próximamente...",
       "wereWorking": "¡Estamos trabajando!",

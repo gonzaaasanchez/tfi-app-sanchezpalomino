@@ -1,7 +1,7 @@
 import { Color, LabelStyle, useI18n } from '@packages/common'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { ReserveType, ReserveStatus } from '../../data/models/local/Types'
+import { ReserveType, ReserveStatus } from '../../data/models/ReservationModel'
 
 type Option<K extends string> = {
   key: K
@@ -24,14 +24,20 @@ const ReservationsHeader: React.FC<ReservationsHeaderProps> = ({
   const { t } = useI18n()
 
   const types: Option<ReserveType>[] = [
-    { key: 'sent', label: t('reservesScreen.types.sent') },
-    { key: 'received', label: t('reservesScreen.types.received') },
+    { key: ReserveType.Owner, label: t('reservesScreen.types.sent') },
+    { key: ReserveType.Caregiver, label: t('reservesScreen.types.received') },
   ]
 
   const statuses: Option<ReserveStatus>[] = [
-    { key: 'confirmed', label: t('reservesScreen.statuses.accepted') },
-    { key: 'pending', label: t('reservesScreen.statuses.pending') },
-    { key: 'cancelled', label: t('reservesScreen.statuses.rejected') },
+    {
+      key: ReserveStatus.Confirmed,
+      label: t('reservesScreen.statuses.accepted'),
+    },
+    { key: ReserveStatus.Pending, label: t('reservesScreen.statuses.pending') },
+    {
+      key: ReserveStatus.CancelledCarer && ReserveStatus.CancelledOwner,
+      label: t('reservesScreen.statuses.rejected'),
+    },
   ]
 
   const [selectedType, setSelectedType] =

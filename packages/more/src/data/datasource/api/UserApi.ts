@@ -36,7 +36,7 @@ export class UserApiImpl implements UserApi {
     // Convert PetType objects to IDs for backend
     const backendCarerConfig = {
       ...carerConfig,
-      petTypes: carerConfig.petTypes?.map((type) => type._id || '') || [],
+      petTypes: carerConfig.petTypes?.map((type) => type.id || '') || [],
       careAddress: carerConfig.careAddress || carerConfig.careAddressData?._id || '',
     }
 

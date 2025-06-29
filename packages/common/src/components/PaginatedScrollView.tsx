@@ -62,17 +62,23 @@ export const PaginatedScrollView = <T,>({
         refreshControl={
           onRefresh ? (
             <RefreshControl
-              refreshing={pagination.loading && pagination.items.length !== 0}
+              refreshing={pagination.loading && pagination.items.length === 0}
               onRefresh={onRefresh}
               tintColor={Color.brand1[100]}
             />
           ) : undefined
         }
+        contentContainerStyle={[
+          scrollViewProps.contentContainerStyle,
+          pagination.items.length === 0 &&
+            !pagination.loading &&
+            styles.emptyContainer,
+        ]}
       >
         {pagination.items.length > 0 &&
           pagination.items.map((item, index) => renderItem(item, index))}
+        {pagination.items.length === 0 && !pagination.loading && emptyComponent}
       </ScrollView>
-      {pagination.items.length === 0 && !pagination.loading && emptyComponent}
       {pagination.loadingMore && (
         <View style={styles.loaderContent}>
           <SafeAreaView edges={['bottom']}>
@@ -93,6 +99,11 @@ const styles = StyleSheet.create({
     height: 60,
     paddingBottom: 10,
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

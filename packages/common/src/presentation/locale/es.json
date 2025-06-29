@@ -8,7 +8,6 @@
       "cancel": "Cancelar",
       "ups": "¡Ups!",
       "success": "¡Éxito!",
-      "emptyList": "No hay información para mostrar",
       "noResultsFound": "No se encontraron resultados",
       "serviceError": "Ha ocurrido un error. Por favor, ¡intentalo nuevamente!",
       "delete": "Eliminar",
@@ -67,6 +66,7 @@
       "title": "Feed Screen"
     },
     "reservesScreen": {
+      "noData": "No tenemos reservas para mostrarte",
       "title": "Reservas",
       "types": {
         "sent": "Enviadas",
@@ -141,8 +141,7 @@
           "startDateBeforeToday": "La fecha de inicio no puede ser anterior a hoy",
           "endDateBeforeStartDate": "La fecha de fin debe ser igual o posterior a la fecha de inicio",
           "userAddressRequired": "La dirección del usuario es requerida para cuidado en hogar de la mascota",
-          "visitsPerDayRequired": "El número de visitas por día debe ser al menos 1",
-          "caregiverAddressRequired": "La dirección del cuidador es requerida para cuidado en hogar del cuidador"
+          "visitsPerDayRequired": "El número de visitas por día debe ser al menos 1"
         }
       }
     },

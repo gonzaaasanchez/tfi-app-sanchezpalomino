@@ -81,10 +81,10 @@ export class PetApiImpl implements PetApi {
     const petBody = {
       name: pet.name,
       comment: pet.comment,
-      petTypeId: pet.petType?._id,
+      petTypeId: pet.petType?.id,
       characteristics:
         pet.characteristics?.map((char) => ({
-          characteristicId: char._id,
+          characteristicId: char.id,
           value: char.value,
         })) || [],
     }
@@ -120,10 +120,10 @@ export class PetApiImpl implements PetApi {
     const petBody = {
       name: pet.name,
       comment: pet.comment,
-      petTypeId: pet.petType?._id,
+      petTypeId: pet.petType?.id,
       characteristics:
         pet.characteristics?.map((char) => ({
-          characteristicId: char._id,
+          characteristicId: char.id,
           value: char.value,
         })) || [],
     }

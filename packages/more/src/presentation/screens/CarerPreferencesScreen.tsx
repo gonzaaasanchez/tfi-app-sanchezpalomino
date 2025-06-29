@@ -90,7 +90,7 @@ const CarerPreferencesScreen: FC = (): JSX.Element => {
   ) => {
     const selectedTypes = items
       .map((item) =>
-        state.petTypesDatasource.find((type) => type._id === item.value)
+        state.petTypesDatasource.find((type) => type.id === item.value)
       )
       .filter((type): type is PetType => type !== undefined)
     setSelectedPetTypes(selectedTypes)
@@ -122,14 +122,14 @@ const CarerPreferencesScreen: FC = (): JSX.Element => {
         </View>
         <Dropdown
           data={state.petTypesDatasource.map((type) => ({
-            value: type._id || '',
+            value: type.id || '',
             label: type.name || '',
           }))}
           onFinishSelection={handlePetTypesSelection}
           placeholder={t('carerPreferencesScreen.petPreferences.placeholder')}
           allowsMultiSelection={true}
           initialValue={state.selectedPetTypes.map((type) => ({
-            value: type._id || '',
+            value: type.id || '',
             label: type.name || '',
           }))}
         />

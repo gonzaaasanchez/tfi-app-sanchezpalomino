@@ -1,15 +1,18 @@
+import { CreateReservationData } from '../../data/models/local/Types'
 import {
-  ReserveType,
+  ReservationModel,
   ReserveStatus,
-  CreateReservationData,
-} from '../../data/models/local/Types'
-import { ReservationModel } from '../../data/models/ReservationModel'
+  ReserveType,
+} from '../../data/models/ReservationModel'
+import { PaginatedResponse } from '@app/common'
 
 interface ReservesRepository {
   getReserves(
     type: ReserveType,
-    status: ReserveStatus
-  ): Promise<ReservationModel[]>
+    status: ReserveStatus,
+    page?: number,
+    limit?: number
+  ): Promise<PaginatedResponse<ReservationModel>>
   createReservation(data: CreateReservationData): Promise<ReservationModel>
 }
 

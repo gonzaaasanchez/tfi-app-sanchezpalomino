@@ -39,7 +39,11 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
   }
 
   return (
-    <TouchableOpacity activeOpacity={0.85} onPress={onReservationSelected}>
+    <TouchableOpacity
+      style={styles.mainContainer}
+      activeOpacity={0.85}
+      onPress={onReservationSelected}
+    >
       <View style={styles.cardContainer}>
         <View style={styles.leftContainer}>
           <ImageWithPlaceholder
@@ -68,6 +72,10 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    paddingTop: 15,
+    paddingHorizontal: 20,
+  },
   cardContainer: {
     ...GeneralStyle.card,
     flexDirection: 'row',

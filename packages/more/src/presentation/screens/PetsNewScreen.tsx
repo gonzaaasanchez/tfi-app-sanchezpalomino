@@ -123,7 +123,7 @@ const PetsNewScreen: FC = (): JSX.Element => {
           </Text>
           <Dropdown
             data={state.petTypesDatasource.map((type) => ({
-              value: type._id || '',
+              value: type.id || '',
               label: type.name || '',
             }))}
             placeholder={t('petsNewScreen.typePlaceholder')}
@@ -131,7 +131,7 @@ const PetsNewScreen: FC = (): JSX.Element => {
             initialValue={
               state.pet.petType
                 ? {
-                    value: state.pet.petType._id || '',
+                    value: state.pet.petType.id || '',
                     label: state.pet.petType.name || '',
                   }
                 : undefined
@@ -162,7 +162,7 @@ const PetsNewScreen: FC = (): JSX.Element => {
             <View style={styles.characteristicInputs}>
               <Dropdown
                 data={state.characteristicsDatasource.map((char) => ({
-                  value: char._id || '',
+                  value: char.id || '',
                   label: char.name || '',
                 }))}
                 placeholder={t('petsNewScreen.characteristicPlaceholder')}
@@ -170,9 +170,9 @@ const PetsNewScreen: FC = (): JSX.Element => {
                   setCharacteristicType(index, value)
                 }
                 initialValue={
-                  state.pet.characteristics?.[index]?._id
+                  state.pet.characteristics?.[index]?.id
                     ? {
-                        value: state.pet.characteristics[index]._id || '',
+                        value: state.pet.characteristics[index].id || '',
                         label: state.pet.characteristics[index].name || '',
                       }
                     : undefined

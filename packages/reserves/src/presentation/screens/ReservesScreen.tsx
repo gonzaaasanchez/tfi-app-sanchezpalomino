@@ -7,11 +7,10 @@ import {
   GeneralStyle,
   HomeTabsHeight,
   EmptyView,
+  PaginatedScrollView,
 } from '@packages/common'
 import React, { FC, useCallback, useEffect, useState } from 'react'
 import {
-  RefreshControl,
-  ScrollView,
   StyleSheet,
   View,
   LayoutChangeEvent,
@@ -24,17 +23,15 @@ import { StackActions, useNavigation } from '@react-navigation/native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const ReservesScreen: FC = (): JSX.Element => {
-  const { state, setReserveType, setReserveStatus, getReserves } =
+  const { state, setReserveType, setReserveStatus, loadReserves } =
     useReservesViewModel()
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
-  const [isRefreshing, setIsRefreshing] = useState(false)
   const [availableHeight, setAvailableHeight] = useState<number>(0)
 
   const { t } = useI18n()
 
   useEffect(() => {
-    setIsRefreshing(false)
     if (state.error) {
       ShowToast({
         config: 'error',
@@ -43,15 +40,6 @@ const ReservesScreen: FC = (): JSX.Element => {
       })
     }
   }, [state.error])
-
-  useEffect(() => {
-    getReserves()
-  }, [state.selectedStatus, state.selectedType])
-
-  const onRefresh = useCallback(() => {
-    setIsRefreshing(true)
-    getReserves().finally(() => setIsRefreshing(false))
-  }, [getReserves])
 
   const handleLayout = (event: LayoutChangeEvent) => {
     const { height } = event.nativeEvent.layout
@@ -62,54 +50,43 @@ const ReservesScreen: FC = (): JSX.Element => {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
-        {state.loading && <Loader loading={state.loading} />}
         <ReservationsHeader
           defaultSelectedStatus={state.selectedStatus}
           defaultSelectedType={state.selectedType}
           onTypeSelected={(type) => setReserveType(type)}
           onStatusSelected={(status) => setReserveStatus(status)}
         />
-        <ScrollView
-          contentContainerStyle={styles.scrollContainer}
-          contentInsetAdjustmentBehavior="always"
+        <PaginatedScrollView
           onLayout={handleLayout}
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefreshing}
-              onRefresh={onRefresh}
-              tintColor={Color.brand1[100]}
+          pagination={state.pagination}
+          onLoadMore={() => loadReserves({ reset: false })}
+          onRefresh={() => loadReserves({ reset: true })}
+          renderItem={(item, index) => (
+            <ReservationCard
+              key={index}
+              reservation={item}
+              onReservationSelected={() => {
+                navigation.dispatch(
+                  StackActions.push('reservationDetail', {
+                    reservation: item,
+                  })
+                )
+              }}
             />
-          }
-        >
-          {state.reserves?.length === 0 && !state.loading ? (
-            <View
-              style={[styles.emptyViewContainer, { height: availableHeight }]}
-            >
+          )}
+          emptyComponent={
+            <View style={styles.emptyViewContainer}>
               <EmptyView
                 type="error"
                 title={t('general.ups')}
-                subtitle={t('general.emptyList')}
+                subtitle={t('reservesScreen.noData')}
               />
             </View>
-          ) : (
-            state.reserves.map((reservation, index) => (
-              <ReservationCard
-                key={index}
-                reservation={reservation}
-                onReservationSelected={() => {
-                  navigation.dispatch(
-                    StackActions.push('reservationDetail', {
-                      reservation: reservation,
-                    })
-                  )
-                }}
-              />
-            ))
-          )}
-        </ScrollView>
+          }
+        />
       </View>
 
-      {state.selectedType === 'sent' && (
+      {state.selectedType === 'owner' && (
         <TouchableOpacity
           style={{
             ...GeneralStyle.addFloatingButton,
@@ -122,6 +99,8 @@ const ReservesScreen: FC = (): JSX.Element => {
           <PPMaterialIcon icon="add" size={30} color={'white'} />
         </TouchableOpacity>
       )}
+
+      {(state.loading || state.pagination.loading) && <Loader loading={true} />}
     </View>
   )
 }
@@ -132,8 +111,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.mainBackground,
   },
   emptyViewContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginBottom: Number(GeneralStyle.addFloatingButton.height) + 20,
   },
   scrollContainer: {
     padding: 20,

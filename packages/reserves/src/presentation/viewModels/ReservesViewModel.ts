@@ -1,29 +1,53 @@
-import { UIState, useInjection } from '@packages/common'
-import { useState } from 'react'
-import { ReserveStatus, ReserveType } from '../../data/models/local/Types'
+import {
+  UIState,
+  useInjection,
+  usePagination,
+  PaginationModel,
+  LoadFunction,
+} from '@packages/common'
+import { useState, useEffect, useCallback } from 'react'
 import { GetReservesUseCase } from '../../domain/usecases/GetReservesUseCase'
 import { $ } from '../../domain/di/Types'
-import { ReservationModel } from '../../data/models/ReservationModel'
+import {
+  ReservationModel,
+  ReserveStatus,
+  ReserveType,
+} from '../../data/models/ReservationModel'
 
 type ReservesViewModel = {
   state: ReservesState
   setReserveType: (type: ReserveType) => void
   setReserveStatus: (status: ReserveStatus) => void
-  getReserves: () => Promise<void>
+  loadReserves: ({ reset }: { reset: boolean }) => Promise<void>
 }
 
 type ReservesState = {
   selectedType: ReserveType
   selectedStatus: ReserveStatus
-  reserves: ReservationModel[]
+  pagination: {
+    items: ReservationModel[]
+    pagination: PaginationModel
+    loading: boolean
+    loadingMore: boolean
+  }
 } & UIState
 
 const initialState: ReservesState = {
   loading: false,
   error: null,
-  selectedType: 'sent',
-  selectedStatus: 'confirmed',
-  reserves: [],
+  selectedType: ReserveType.Owner,
+  selectedStatus: ReserveStatus.Confirmed,
+  pagination: {
+    items: [],
+    pagination: {
+      page: 1,
+      limit: 10,
+      total: 0,
+      totalPages: 0,
+    },
+    loading: false,
+    loadingMore: false,
+  },
 }
 
 const useReservesViewModel = (): ReservesViewModel => {
@@ -32,52 +56,73 @@ const useReservesViewModel = (): ReservesViewModel => {
     $.GetReservesUseCase
   )
 
-  const setReserveType: (status: ReserveType) => void = async (type) => {
+  // Create load function for pagination hook
+  const loadReservesFunction: LoadFunction<ReservationModel> = useCallback(
+    async (page: number, limit: number) => {
+      const response = await getReservesUseCase.execute(
+        state.selectedType,
+        state.selectedStatus,
+        page,
+        limit
+      )
+
+      return {
+        items: response.items || [],
+        pagination: response.pagination,
+      }
+    },
+    [getReservesUseCase, state.selectedType, state.selectedStatus]
+  )
+
+  const pagination = usePagination(loadReservesFunction)
+
+  const setReserveType = (type: ReserveType): void => {
     setState((previous) => ({
       ...previous,
       selectedType: type,
     }))
-    getReserves()
   }
 
-  const setReserveStatus: (status: ReserveStatus) => void = async (status) => {
+  const setReserveStatus = (status: ReserveStatus): void => {
     setState((previous) => ({
       ...previous,
       selectedStatus: status,
     }))
   }
 
-  const getReserves = async (): Promise<void> => {
-    setState((previous) => ({
-      ...previous,
-      loading: true,
-      error: null,
-    }))
-
+  const loadReserves = async ({ reset }: { reset: boolean }): Promise<void> => {
     try {
-      const reserves: ReservationModel[] = (
-        await getReservesUseCase.execute(
-          state.selectedType,
-          state.selectedStatus
-        )
-      ).map((item) => new ReservationModel(item))
-
-      setState((previous) => ({
-        ...previous,
-        loading: false,
-        error: null,
-        reserves: reserves,
-      }))
+      await pagination.loadItems(reset)
     } catch (error) {
       setState((previous) => ({
         ...previous,
-        loading: false,
-        error: error.message,
+        error:
+          error instanceof Error ? error.message : 'Error al cargar reservas',
       }))
     }
   }
 
-  return { state, setReserveType, setReserveStatus, getReserves }
+  // Load data when filters are set
+  useEffect(() => {
+    if (state.selectedStatus && state.selectedType) {
+      loadReserves({ reset: true })
+    }
+  }, [state.selectedStatus, state.selectedType])
+
+  return {
+    state: {
+      ...state,
+      pagination: {
+        items: pagination.state.items,
+        pagination: pagination.state.pagination,
+        loading: pagination.state.loading,
+        loadingMore: pagination.state.loadingMore,
+      },
+    },
+    setReserveType,
+    setReserveStatus,
+    loadReserves,
+  }
 }
 
 export { useReservesViewModel }

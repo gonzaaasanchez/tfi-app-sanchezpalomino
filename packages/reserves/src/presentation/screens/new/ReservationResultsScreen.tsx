@@ -96,7 +96,7 @@ const ReservationResultsScreen: FC = () => {
           contentContainerStyle={styles.content}
           renderItem={(result) => (
             <SearchResultCard
-              key={result.caregiver._id}
+              key={result.caregiver.id}
               result={result}
               onPress={() => setUserToRequest(result)}
             />
@@ -109,8 +109,9 @@ const ReservationResultsScreen: FC = () => {
             />
           }
         />
-        {state.loading ||
-          (state.pagination.loading && <Loader loading={true} />)}
+        {(state.loading || state.pagination.loading) && (
+          <Loader loading={true} />
+        )}
         <GenericToast overrideOffset={10} />
       </SafeAreaView>
       <PPBottomSheet.Empty ref={filterBottomSheetRef} dismisseable={true}>

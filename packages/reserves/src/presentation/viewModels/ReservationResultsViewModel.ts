@@ -191,18 +191,20 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
     }))
 
     try {
-      await createReservationUseCase.execute({
-        startDate: DateUtils.YYYYMMDD(state.searchCriteria.fromDate),
-        endDate: DateUtils.YYYYMMDD(state.searchCriteria.toDate),
-        careLocation: state.searchCriteria.placeType,
-        caregiverId: state.userToRequest.caregiver._id,
-        petIds: state.searchCriteria.selectedPets.map((pet) => pet.id),
-        visitsPerDay: state.searchCriteria.visits,
-        userAddressId:
-          state.searchCriteria.placeType === PlaceType.OwnerHome &&
-          state.searchCriteria.selectedAddress._id,
-        distance: state.searchCriteria.maxDistance,
-      })
+      await createReservationUseCase.execute(
+        {
+          startDate: DateUtils.YYYYMMDD(state.searchCriteria.fromDate),
+          endDate: DateUtils.YYYYMMDD(state.searchCriteria.toDate),
+          careLocation: state.searchCriteria.placeType,
+          caregiverId: state.userToRequest.caregiver.id,
+          petIds: state.searchCriteria.selectedPets.map((pet) => pet.id),
+          visitsPerDay: state.searchCriteria.visits,
+          userAddressId: state.searchCriteria.selectedAddress?._id,
+          caregiverAddressId: state.userToRequest.caregiver.carerConfig?.careAddress,
+          distance: state.searchCriteria.maxDistance,
+        },
+        t
+      )
 
       setState((previous) => ({
         ...previous,

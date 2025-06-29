@@ -1,6 +1,10 @@
-import { ReserveType, ReserveStatus } from '../../data/models/local/Types'
-import { ReservationModel } from '../../data/models/ReservationModel'
+import {
+  ReservationModel,
+  ReserveStatus,
+  ReserveType,
+} from '../../data/models/ReservationModel'
 import ReservesRepository from '../repository/ReservesRepository'
+import { PaginatedResponse } from '@app/common'
 
 class GetReservesUseCase {
   private reservesRepository: ReservesRepository
@@ -8,11 +12,14 @@ class GetReservesUseCase {
   constructor(reservesRepository: ReservesRepository) {
     this.reservesRepository = reservesRepository
   }
+
   async execute(
     type: ReserveType,
-    status: ReserveStatus
-  ): Promise<ReservationModel[]> {
-    return await this.reservesRepository.getReserves(type, status)
+    status: ReserveStatus,
+    page?: number,
+    limit?: number
+  ): Promise<PaginatedResponse<ReservationModel>> {
+    return await this.reservesRepository.getReserves(type, status, page, limit)
   }
 }
 

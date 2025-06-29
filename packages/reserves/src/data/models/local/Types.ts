@@ -1,8 +1,5 @@
 import { PlaceType } from '../ReservationModel'
 
-type ReserveType = 'sent' | 'received'
-type ReserveStatus = 'confirmed' | 'pending' | 'cancelled'
-
 interface CreateReservationData {
   startDate: string
   endDate: string
@@ -15,4 +12,4 @@ interface CreateReservationData {
   distance: number
 }
 
-export { ReserveType, ReserveStatus, CreateReservationData }
+export { CreateReservationData }

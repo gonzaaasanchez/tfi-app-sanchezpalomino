@@ -16,7 +16,7 @@ export interface CarerConfig {
 }
 
 class UserModel {
-  _id?: string
+  id?: string
   firstName?: string
   lastName?: string
   phoneNumber?: string
@@ -26,7 +26,7 @@ class UserModel {
   addresses?: AddressModel[]
 
   constructor(data: Partial<UserModel>) {
-    this._id = data._id || null
+    this.id = data.id || null
     this.firstName = data.firstName || null
     this.lastName = data.lastName || null
     this.phoneNumber = data.phoneNumber || null

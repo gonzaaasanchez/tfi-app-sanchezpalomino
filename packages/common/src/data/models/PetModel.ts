@@ -1,12 +1,12 @@
 import { getImageFullUrl } from '../../utils/ImageUtils'
 
 type PetType = {
-  _id?: string
+  id?: string
   name?: string
 }
 
 type PetCharacteristic = {
-  _id?: string
+  id?: string
   name?: string
   value?: string // user in creation form
 }

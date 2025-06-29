@@ -35,7 +35,7 @@ const PetDetail: FC<PetDetailSheetProps> = ({ pet, baseUrl, handlers }) => {
         {t('reserveDetailScreen.petDetails')}
       </Text>
       {pet.characteristics?.map((characteristic, index) => (
-        <View key={characteristic._id || index}>
+        <View key={characteristic.id || index}>
           <DetailItem
             icon="pets"
             iconSize={14}

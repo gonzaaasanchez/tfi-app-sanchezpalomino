@@ -1,11 +1,16 @@
-import { DateUtils, PetModel, UserModel } from '@packages/common'
+import { AddressModel, DateUtils, PetModel, UserModel } from '@packages/common'
 
 enum PlaceType {
   OwnerHome = 'pet_home',
   CarerHome = 'caregiver_home',
 }
 
-enum ReservationStatus {
+enum ReserveType {
+  Owner = 'owner',
+  Caregiver = 'caregiver',
+}
+
+enum ReserveStatus {
   Pending = 'pending',
   Confirmed = 'confirmed',
   Started = 'started',
@@ -16,29 +21,39 @@ enum ReservationStatus {
 
 class ReservationModel {
   id?: string
-  userOwner?: UserModel
-  userCarer?: UserModel
-  placeType: PlaceType
-  visitsPerDay: number
+  user?: UserModel
+  caregiver?: UserModel
+  careLocation: PlaceType
+  address?: AddressModel
+  visitsCount: number
   pets?: PetModel[]
   startDate: string
   endDate: string
-  location?: string
-  status: ReservationStatus
+  totalPrice?: string
+  commission?: string
+  totalWithCommission?: string
   distance?: number
+  status: ReserveStatus
+  createdAt?: string
+  updatedAt?: string
 
-  constructor(data: Partial<ReservationModel>) {
+  constructor(data: Partial<ReservationModel> | any) {
     this.id = data.id
-    this.userOwner = data.userOwner
-    this.userCarer = data.userCarer
-    this.placeType = data.placeType
-    this.visitsPerDay = data.visitsPerDay
+    this.user = data.user ? new UserModel(data.user) : undefined
+    this.caregiver = data.caregiver ? new UserModel(data.caregiver) : undefined
+    this.careLocation = data.careLocation
+    this.address = data.address ? new AddressModel(data.address) : undefined
+    this.visitsCount = data.visitsCount
     this.pets = data.pets
     this.startDate = data.startDate
     this.endDate = data.endDate
-    this.location = data.location
-    this.status = data.status
+    this.totalPrice = data.totalPrice
+    this.commission = data.commission
+    this.totalWithCommission = data.totalWithCommission
     this.distance = data.distance
+    this.status = data.status
+    this.createdAt = data.createdAt
+    this.updatedAt = data.updatedAt
   }
 
   get formattedStartDate(): string {
@@ -54,21 +69,21 @@ class ReservationModel {
   }
 
   /*
-  / The following methods decides whether to show userOwner | userCarer info in reservation detail screens
+  / The following methods decides whether to show user | caregiver info in reservation detail screens
   */
 
   get createdByUser(): boolean {
-    const createdByUser = this.userOwner?._id === 'u100'
+    const createdByUser = this.user?.id === '6855f7a879c07ee2898525f7'
     return createdByUser
   }
 
   get createdForUser(): boolean {
-    const createdForUser = this.userCarer?._id === 'u100'
+    const createdForUser = this.caregiver?.id === '6855f7a879c07ee2898525f7'
     return createdForUser
   }
 
   get placeDetailText(): string {
-    const isCarerHome = this.placeType === PlaceType.OwnerHome
+    const isCarerHome = this.careLocation === PlaceType.OwnerHome
     const isSinglePet = this.pets?.length === 1
 
     const getTranslationKey = (
@@ -101,20 +116,18 @@ class ReservationModel {
   }
 
   get placeDetailAvatar(): string {
-    return this.createdByUser ? this.userCarer?.avatar : this.userOwner?.avatar
+    return this.createdByUser ? this.caregiver?.avatar : this.user?.avatar
   }
 
   get placeDetailUsername(): string {
-    return this.createdByUser
-      ? this.userCarer?.fullName
-      : this.userOwner?.fullName
+    return this.createdByUser ? this.caregiver?.fullName : this.user?.fullName
   }
 
   get placeDetailPhoneNumber(): string {
     return this.createdByUser
-      ? this.userCarer?.phoneNumber
-      : this.userOwner?.phoneNumber
+      ? this.caregiver?.phoneNumber
+      : this.user?.phoneNumber
   }
 }
 
-export { UserModel, PlaceType, ReservationStatus, ReservationModel }
+export { UserModel, PlaceType, ReserveStatus, ReserveType, ReservationModel }

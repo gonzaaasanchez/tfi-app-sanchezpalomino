@@ -1,16 +1,18 @@
-import { HttpClient } from '@app/common'
-import { ReservationModel } from '../../models/ReservationModel'
+import { HttpClient, PaginatedResponse } from '@app/common'
 import {
+  ReservationModel,
   ReserveStatus,
   ReserveType,
-  CreateReservationData,
-} from '../../models/local/Types'
+} from '../../models/ReservationModel'
+import { CreateReservationData } from '../../models/local/Types'
 
 interface ReservesApi {
   getReserves(
     type: ReserveType,
-    status: ReserveStatus
-  ): Promise<ReservationModel[]>
+    status: ReserveStatus,
+    page?: number,
+    limit?: number
+  ): Promise<PaginatedResponse<ReservationModel>>
   createReservation(data: CreateReservationData): Promise<ReservationModel>
 }
 
@@ -21,18 +23,28 @@ class ReservesApiImpl implements ReservesApi {
     this.httpClient = httpClient
   }
 
-  async delay(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms))
-  }
-
   async getReserves(
     type: ReserveType,
-    status: ReserveStatus
-  ): Promise<ReservationModel[]> {
-    // const response = await this.httpClient.get<ReservationModel[]>('/reservations')
-    // return response
-    await this.delay(1000)
-    return []
+    status: ReserveStatus,
+    page: number = 1,
+    limit: number = 10
+  ): Promise<PaginatedResponse<ReservationModel>> {
+    const queryParams = new URLSearchParams({
+      role: type,
+      status,
+      page: page.toString(),
+      limit: limit.toString(),
+    })
+
+    const response = await this.httpClient.get<
+      PaginatedResponse<ReservationModel>
+    >(`/reservations?${queryParams.toString()}`)
+
+    const rawData = response.data
+    return {
+      items: rawData.items.map((item) => new ReservationModel(item)),
+      pagination: rawData.pagination,
+    }
   }
 
   async createReservation(

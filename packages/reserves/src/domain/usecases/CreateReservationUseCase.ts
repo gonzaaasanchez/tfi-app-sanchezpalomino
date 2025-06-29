@@ -1,7 +1,6 @@
 import ReservesRepository from '../repository/ReservesRepository'
 import { CreateReservationData } from '../../data/models/local/Types'
 import { ReservationModel, PlaceType } from '../../data/models/ReservationModel'
-import { useI18n } from '@packages/common'
 
 class CreateReservationUseCase {
   private reservesRepository: ReservesRepository
@@ -10,14 +9,18 @@ class CreateReservationUseCase {
     this.reservesRepository = reservesRepository
   }
 
-  async execute(data: CreateReservationData): Promise<ReservationModel> {
-    this.validateReservationData(data)
+  async execute(
+    data: CreateReservationData,
+    t: (key: string) => string
+  ): Promise<ReservationModel> {
+    this.validateReservationData(data, t)
     return await this.reservesRepository.createReservation(data)
   }
 
-  private validateReservationData(data: CreateReservationData): void {
-    const { t } = useI18n()
-
+  private validateReservationData(
+    data: CreateReservationData,
+    t: (key: string) => string
+  ): void {
     if (!data.startDate) {
       throw new Error(
         t('reserveNewScreen.validation.usecase.startDateRequired')
@@ -59,21 +62,16 @@ class CreateReservationUseCase {
       )
     }
 
+    if (!data.userAddressId) {
+      throw new Error(
+        t('reserveNewScreen.validation.usecase.userAddressRequired')
+      )
+    }
+
     if (data.careLocation === PlaceType.OwnerHome) {
-      if (!data.userAddressId) {
-        throw new Error(
-          t('reserveNewScreen.validation.usecase.userAddressRequired')
-        )
-      }
       if (!data.visitsPerDay || data.visitsPerDay < 1) {
         throw new Error(
           t('reserveNewScreen.validation.usecase.visitsPerDayRequired')
-        )
-      }
-    } else if (data.careLocation === PlaceType.CarerHome) {
-      if (!data.caregiverAddressId) {
-        throw new Error(
-          t('reserveNewScreen.validation.usecase.caregiverAddressRequired')
         )
       }
     }

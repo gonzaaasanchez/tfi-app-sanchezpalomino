@@ -80,6 +80,28 @@
       "card": {
         "pet": "Mascota",
         "pets": "Mascotas"
+      },
+      "placeDetail": {
+        "userRequest": {
+          "ownerHome": {
+            "singlePet": "La cuida en tu hogar",
+            "multiplePets": "Las cuida en tu hogar"
+          },
+          "carerHome": {
+            "singlePet": "La llevás al hogar del cuidador",
+            "multiplePets": "Las llevás al hogar del cuidador"
+          }
+        },
+        "carerRequest": {
+          "ownerHome": {
+            "singlePet": "La visitás en su hogar",
+            "multiplePets": "Las visitás en su hogar"
+          },
+          "carerHome": {
+            "singlePet": "La recibís en tu hogar",
+            "multiplePets": "Las recibís en tu hogar"
+          }
+        }
       }
     },
     "reserveDetailScreen": {
@@ -89,14 +111,6 @@
       "details": "Detalles de la visita:",
       "date": "Cuándo: ",
       "placeType": "Dónde: ",
-      "placeTypeCarerHome": "La cuida en tu hogar",
-      "placeTypeCarerHomePlural": "Las cuida en tu hogar",
-      "placeTypeCarerVisit": "La llevás al hogar del ciudador",
-      "placeTypeCarerVisitPlural": "Las llevás al hogar del ciudador",
-      "placeTypeOwnerHome": "La recibís en tu hogar",
-      "placeTypeOwnerHomePlural": "Las recibís en tu hogar",
-      "placeTypeOwnerVisit": "La visitás en su hogar",
-      "placeTypeOwnerVisitPlural": "Las visitás en su hogar",
       "where": "Dónde: ",
       "location": "Dirección: ",
       "visitsPerDay": "Cantidad de visitas por día: ",
@@ -188,6 +202,20 @@
       "emptyState": {
         "title": "No se encontraron cuidadores",
         "subtitle": "No hay cuidadores disponibles con los criterios de búsqueda seleccionados. Intentá ajustar los filtros."
+      }
+    },
+    "paymentInfo": {
+      "userPayment": {
+        "title": "Vas a pagar",
+        "caregiverFee": "Honorarios cuidador",
+        "commission": "Comisión",
+        "total": "Total"
+      },
+      "caregiverPayment": {
+        "title": "Vas a cobrar",
+        "fees": "Honorarios",
+        "commission": "Comisión",
+        "total": "Total"
       }
     },
     "moreScreen": {

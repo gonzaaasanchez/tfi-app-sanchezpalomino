@@ -5,6 +5,7 @@ import { GeneralStyle, LabelStyle } from '../style/Styles'
 import { useI18n } from '../domain/hooks/i18n'
 
 type PaymentInfoRowProps = {
+  isUserRequest?: boolean
   totalPrice: string
   commission: string
   totalOwner?: string
@@ -13,6 +14,7 @@ type PaymentInfoRowProps = {
 }
 
 export const PaymentInfoComponent = ({
+  isUserRequest = true,
   totalPrice,
   commission,
   totalOwner,
@@ -60,26 +62,36 @@ export const PaymentInfoComponent = ({
       }}
     >
       <Text style={styles.paymentTitle}>
-        {t('reserveResultsScreen.confirmation.payment')}
+        {isUserRequest
+          ? t('paymentInfo.userPayment.title')
+          : t('paymentInfo.caregiverPayment.title')}
       </Text>
       <PaymentInfoRowComponent
-        label={t('reserveResultsScreen.confirmation.caregiverFee')}
+        label={
+          isUserRequest
+            ? t('paymentInfo.userPayment.caregiverFee')
+            : t('paymentInfo.caregiverPayment.fees')
+        }
         amount={totalPrice}
       />
       <PaymentInfoRowComponent
-        label={t('reserveResultsScreen.confirmation.commission')}
+        label={
+          isUserRequest
+            ? t('paymentInfo.userPayment.commission')
+            : t('paymentInfo.caregiverPayment.commission')
+        }
         amount={commission}
       />
       {totalOwner && (
         <PaymentInfoRowComponent
-          label={t('reserveResultsScreen.confirmation.total')}
+          label={t('paymentInfo.userPayment.total')}
           amount={totalOwner}
           isTotal
         />
       )}
       {totalCaregiver && (
         <PaymentInfoRowComponent
-          label={t('reserveResultsScreen.confirmation.total')}
+          label={t('paymentInfo.caregiverPayment.total')}
           amount={totalCaregiver}
           isTotal
         />

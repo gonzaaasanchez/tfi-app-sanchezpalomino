@@ -8,8 +8,10 @@ import {
   HomeTabsHeight,
   EmptyView,
   PaginatedScrollView,
+  useInjection,
+  Types,
 } from '@packages/common'
-import React, { FC, useCallback, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import {
   StyleSheet,
   View,
@@ -21,6 +23,7 @@ import { useReservesViewModel } from '../viewModels/ReservesViewModel'
 import ReservationCard from '../components/ReservationCard'
 import { StackActions, useNavigation } from '@react-navigation/native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { ReserveType } from '../../data/models/ReservationModel'
 
 const ReservesScreen: FC = (): JSX.Element => {
   const { state, setReserveType, setReserveStatus, loadReserves } =
@@ -28,7 +31,7 @@ const ReservesScreen: FC = (): JSX.Element => {
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
   const [availableHeight, setAvailableHeight] = useState<number>(0)
-
+  const baseUrl = useInjection(Types.BaseURL) as string
   const { t } = useI18n()
 
   useEffect(() => {
@@ -65,10 +68,13 @@ const ReservesScreen: FC = (): JSX.Element => {
             <ReservationCard
               key={index}
               reservation={item}
+              isUserRequest={state.selectedType === ReserveType.Owner}
+              baseUrl={baseUrl}
               onReservationSelected={() => {
                 navigation.dispatch(
                   StackActions.push('reservationDetail', {
                     reservation: item,
+                    isUserRequest: state.selectedType === ReserveType.Owner,
                   })
                 )
               }}

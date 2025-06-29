@@ -22,6 +22,10 @@ const CarerReservationActions: FC<CarerReservationActionsProps> = ({
 }) => {
   const { t } = useI18n()
 
+  if (!reservation) {
+    return null
+  }
+
   const primaryButtonTitle = t('reserveDetailScreen.acceptReserve')
   const secondaryButtonTitle =
     {

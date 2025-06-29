@@ -1,6 +1,7 @@
 import {
   Color,
   GeneralStyle,
+  getImageFullUrl,
   ImageWithPlaceholder,
   LabelStyle,
   PPMaterialIcon,
@@ -13,7 +14,9 @@ import { ReservationModel } from '../../data/models/ReservationModel'
 
 type ReservationCardProps = {
   reservation: ReservationModel
+  isUserRequest: boolean
   onReservationSelected: () => void
+  baseUrl: string
 }
 
 type IconTextProps = {
@@ -23,7 +26,9 @@ type IconTextProps = {
 
 const ReservationCard: React.FC<ReservationCardProps> = ({
   reservation,
+  isUserRequest,
   onReservationSelected,
+  baseUrl,
 }) => {
   const { t } = useI18n()
 
@@ -47,12 +52,19 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
       <View style={styles.cardContainer}>
         <View style={styles.leftContainer}>
           <ImageWithPlaceholder
-            source={reservation.placeDetailAvatar}
+            source={
+              getImageFullUrl(
+                reservation.placeDetailAvatar({ isUserRequest }),
+                baseUrl
+              )
+              }
             dimension={60}
           />
         </View>
         <View style={styles.rightContainer}>
-          <Text style={styles.userName}>{reservation.placeDetailUsername}</Text>
+          <Text style={styles.userName}>
+            {reservation.placeDetailUsername({ isUserRequest })}
+          </Text>
           <IconText
             iconName={'calendar-today'}
             text={reservation.visitsRangeDate}
@@ -63,7 +75,7 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
           />
           <IconText
             iconName={'home-filled'}
-            text={t(reservation.placeDetailText)}
+            text={t(reservation.placeDetailText({ isUserRequest, t }))}
           />
         </View>
       </View>

@@ -15,6 +15,7 @@ import {
   useInjection,
   Types,
   PaymentInfoComponent,
+  getImageFullUrl,
 } from '@packages/common'
 import { View, Text, StyleSheet } from 'react-native'
 import {
@@ -29,7 +30,10 @@ import {
 } from './ReservationActionButtons'
 
 type RootStackParamList = {
-  reservationDetail: { reservation: ReservationModel }
+  reservationDetail: {
+    reservation: ReservationModel
+    isUserRequest: boolean
+  }
 }
 
 type ReservationDetailScreenRouteProp = RouteProp<
@@ -49,6 +53,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
   const { t } = useI18n()
   const route = useRoute<ReservationDetailScreenRouteProp>()
   const reservation = route.params.reservation
+  const isUserRequest = route.params.isUserRequest
   const [petDetail, setPetDetail] = useState<PetModel>(null)
   const petDetailModalRef = useBottomSheetModalRef()
   const baseUrl = useInjection(Types.BaseURL) as string
@@ -78,15 +83,18 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
       <View style={styles.card}>
         <View style={styles.userContainer}>
           <ImageWithPlaceholder
-            source={state.currentReserve?.placeDetailAvatar}
+            source={getImageFullUrl(
+              state.currentReserve?.placeDetailAvatar({ isUserRequest }),
+              baseUrl
+            )}
             dimension={70}
           />
           <View>
             <Text style={LabelStyle.title2()}>
-              {state.currentReserve?.placeDetailUsername}
+              {state.currentReserve?.placeDetailUsername({ isUserRequest })}
             </Text>
             <Text style={LabelStyle.callout2()}>
-              {state.currentReserve?.placeDetailPhoneNumber}
+              {state.currentReserve?.placeDetailPhone({ isUserRequest })}
             </Text>
           </View>
         </View>
@@ -121,7 +129,10 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
           <DetailItem
             icon="home-filled"
             title={t('reserveDetailScreen.where')}
-            value={t(state.currentReserve?.placeDetailText)}
+            value={t(
+              state.currentReserve?.placeDetailText?.({ isUserRequest, t }) ||
+                ''
+            )}
           />
           <DetailItem
             icon="map-marker"
@@ -134,7 +145,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
           <DetailItem
             icon="calendar-today"
             title={t('reserveDetailScreen.date')}
-            value={state.currentReserve?.visitsRangeDate}
+            value={state.currentReserve?.visitsRangeDate || ''}
           />
           {state.currentReserve?.careLocation === PlaceType.OwnerHome && (
             <DetailItem
@@ -151,11 +162,11 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
   const ActionsCard = () => {
     return (
       <>
-        {state.currentReserve?.createdByUser && (
+        {isUserRequest && (
           <OwnerReservationActions cancel={cancelReserveOwner} />
         )}
 
-        {state.currentReserve?.createdForUser && (
+        {!isUserRequest && (
           <CarerReservationActions
             reservation={state.currentReserve}
             accept={acceptReserve}
@@ -167,6 +178,17 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
     )
   }
 
+  // Show loading or return null if reservation is not loaded yet
+  if (!state.currentReserve) {
+    return (
+      <PPBottomSheetContainer>
+        <View style={styles.container}>
+          <Text>{t('general.loading')}</Text>
+        </View>
+      </PPBottomSheetContainer>
+    )
+  }
+
   return (
     <PPBottomSheetContainer>
       <View style={styles.container}>
@@ -174,6 +196,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
         <PetsCard />
         <DetailsCard />
         <PaymentInfoComponent
+          isUserRequest={isUserRequest}
           totalPrice={state.currentReserve?.totalPrice}
           commission={state.currentReserve?.commission}
           totalOwner={state.currentReserve?.totalOwner}

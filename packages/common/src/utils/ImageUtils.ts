@@ -4,17 +4,16 @@
  * @param baseUrl - La URL base del servidor
  * @returns La URL completa de la imagen
  */
-export const getImageFullUrl = (imagePath: string | null | undefined, baseUrl: string): string => {
+export const getImageFullUrl = (
+  imagePath: string | null | undefined,
+  baseUrl: string
+): string => {
   if (!imagePath) {
     return ''
   }
 
-  if (
-    imagePath.startsWith('http://') ||
-    imagePath.startsWith('https://')
-  ) {
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
     return imagePath
   }
-
   return `${baseUrl}${imagePath.startsWith('/') ? '' : '/'}${imagePath}`
-} 
+}

@@ -1,4 +1,5 @@
 import { AddressModel, DateUtils, PetModel, UserModel } from '@packages/common'
+import { Options } from 'react-native/Libraries/Utilities/codegenNativeComponent'
 
 enum PlaceType {
   OwnerHome = 'pet_home',
@@ -74,61 +75,46 @@ class ReservationModel {
   / The following methods decides whether to show user | caregiver info in reservation detail screens
   */
 
-  get createdByUser(): boolean {
-    const createdByUser = this.user?.id === '6855f7a879c07ee2898525f7'
-    return createdByUser
-  }
-
-  get createdForUser(): boolean {
-    const createdForUser = this.caregiver?.id === '685b709c823da31e445fde56'
-    return createdForUser
-  }
-
-  get placeDetailText(): string {
-    const isCarerHome = this.careLocation === PlaceType.OwnerHome
+  placeDetailText({
+    isUserRequest,
+    t,
+  }: {
+    isUserRequest: boolean
+    t: (key: string, options?: Options) => string
+  }): string {
     const isSinglePet = this.pets?.length === 1
+    const isOwnerHome = this.careLocation === PlaceType.OwnerHome
 
-    const getTranslationKey = (
-      createdByUser: boolean,
-      isCarerHome: boolean,
-      isSinglePet: boolean
-    ) => {
-      if (createdByUser) {
-        if (isCarerHome) {
-          return isSinglePet
-            ? 'reserveDetailScreen.placeTypeCarerHome'
-            : 'reserveDetailScreen.placeTypeCarerHomePlural'
-        }
+    if (isUserRequest) {
+      if (isOwnerHome) {
         return isSinglePet
-          ? 'reserveDetailScreen.placeTypeCarerVisit'
-          : 'reserveDetailScreen.placeTypeCarerVisitPlural'
-      }
-
-      if (isCarerHome) {
-        return isSinglePet
-          ? 'reserveDetailScreen.placeTypeOwnerHome'
-          : 'reserveDetailScreen.placeTypeOwnerHomePlural'
+          ? t('reservesScreen.placeDetail.userRequest.ownerHome.singlePet')
+          : t('reservesScreen.placeDetail.userRequest.ownerHome.multiplePets')
       }
       return isSinglePet
-        ? 'reserveDetailScreen.placeTypeOwnerVisit'
-        : 'reserveDetailScreen.placeTypeOwnerVisitPlural'
+        ? t('reservesScreen.placeDetail.userRequest.carerHome.singlePet')
+        : t('reservesScreen.placeDetail.userRequest.carerHome.multiplePets')
     }
-
-    return getTranslationKey(this.createdByUser, isCarerHome, isSinglePet)
+    if (isOwnerHome) {
+      return isSinglePet
+        ? t('reservesScreen.placeDetail.carerRequest.ownerHome.singlePet')
+        : t('reservesScreen.placeDetail.carerRequest.ownerHome.multiplePets')
+    }
+    return isSinglePet
+      ? t('reservesScreen.placeDetail.carerRequest.carerHome.singlePet')
+      : t('reservesScreen.placeDetail.carerRequest.carerHome.multiplePets')
   }
 
-  get placeDetailAvatar(): string {
-    return this.createdByUser ? this.caregiver?.avatar : this.user?.avatar
+  placeDetailAvatar({ isUserRequest }: { isUserRequest: boolean }): string {
+    return isUserRequest ? this.caregiver?.avatar : this.user?.avatar
   }
 
-  get placeDetailUsername(): string {
-    return this.createdByUser ? this.caregiver?.fullName : this.user?.fullName
+  placeDetailUsername({ isUserRequest }: { isUserRequest: boolean }): string {
+    return isUserRequest ? this.caregiver?.fullName : this.user?.fullName
   }
 
-  get placeDetailPhoneNumber(): string {
-    return this.createdByUser
-      ? this.caregiver?.phoneNumber
-      : this.user?.phoneNumber
+  placeDetailPhone({ isUserRequest }: { isUserRequest: boolean }): string {
+    return isUserRequest ? this.caregiver?.phoneNumber : this.user?.phoneNumber
   }
 }
 

@@ -35,7 +35,7 @@ type PetsNewViewModel = {
   setCharacteristicType: (index: number, value: any) => void
   setCharacteristicValue: (
     index: number,
-    field: '_id' | 'name' | 'value',
+    field: 'id' | 'name' | 'value',
     value: string
   ) => void
   validateForm: (onValidated: () => void) => void
@@ -85,10 +85,35 @@ const usePetsNewViewModel = (initialPet?: PetModel): PetsNewViewModel => {
       state.petTypesDatasource.length > 0 &&
       state.characteristicsDatasource.length > 0
     ) {
-      configureDropdownsForEditMode(
-        state.petTypesDatasource,
-        state.characteristicsDatasource
-      )
+      // Configurar el tipo de mascota
+      const petTypeId = initialPet.petType?.id || (initialPet.petType as any)?.id
+      if (petTypeId) {
+        const selectedType = state.petTypesDatasource.find((type) => type.id === petTypeId)
+        if (selectedType) {
+          setState((previous) => ({
+            ...previous,
+            pet: { ...previous.pet, petType: selectedType },
+          }))
+        }
+      }
+
+      // Configurar las características
+      if (initialPet.characteristics && initialPet.characteristics.length > 0) {
+        const configuredCharacteristics = initialPet.characteristics.map((char) => {
+          const characteristicId = char.id || (char as any).id
+          const characteristic = state.characteristicsDatasource.find((c) => c.id === characteristicId)
+          return {
+            id: characteristicId || '',
+            name: characteristic?.name || char.name || '',
+            value: char.value || '',
+          }
+        })
+
+        setState((previous) => ({
+          ...previous,
+          pet: { ...previous.pet, characteristics: configuredCharacteristics },
+        }))
+      }
     }
   }, [initialPet, state.petTypesDatasource, state.characteristicsDatasource])
 
@@ -118,47 +143,6 @@ const usePetsNewViewModel = (initialPet?: PetModel): PetsNewViewModel => {
         title: t('general.ups'),
         subtitle: error instanceof Error ? error.message : 'Error loading data',
       })
-    }
-  }
-
-  const configureDropdownsForEditMode = (
-    petTypes: PetType[],
-    characteristics: PetCharacteristic[]
-  ): void => {
-    if (!initialPet) return
-
-    // Configurar el tipo de mascota
-    const petTypeId = initialPet.petType?.id || (initialPet.petType as any)?.id
-    if (petTypeId) {
-      const selectedType = petTypes.find((type) => type.id === petTypeId)
-      if (selectedType) {
-        setState((previous) => ({
-          ...previous,
-          pet: { ...previous.pet, petType: selectedType },
-        }))
-      }
-    }
-
-    // Configurar las características
-    if (initialPet.characteristics && initialPet.characteristics.length > 0) {
-      const configuredCharacteristics = initialPet.characteristics.map(
-        (char) => {
-          const characteristicId = char.id || (char as any).id
-          const characteristic = characteristics.find(
-            (c) => c.id === characteristicId
-          )
-          return {
-            _id: characteristicId || '',
-            name: characteristic?.name || char.name || '',
-            value: char.value || '',
-          }
-        }
-      )
-
-      setState((previous) => ({
-        ...previous,
-        pet: { ...previous.pet, characteristics: configuredCharacteristics },
-      }))
     }
   }
 
@@ -240,7 +224,7 @@ const usePetsNewViewModel = (initialPet?: PetModel): PetsNewViewModel => {
       const selectedChar = state.characteristicsDatasource.find(
         (c) => c.id === value.value
       )
-      setCharacteristicValue(index, '_id', value.value)
+      setCharacteristicValue(index, 'id', value.value)
       if (selectedChar) {
         setCharacteristicValue(index, 'name', selectedChar.name || '')
       }
@@ -249,7 +233,7 @@ const usePetsNewViewModel = (initialPet?: PetModel): PetsNewViewModel => {
 
   const setCharacteristicValue = (
     index: number,
-    field: '_id' | 'name' | 'value',
+    field: 'id' | 'name' | 'value',
     value: string
   ): void => {
     setState((previous) => {
@@ -257,7 +241,7 @@ const usePetsNewViewModel = (initialPet?: PetModel): PetsNewViewModel => {
       newCharacteristics[index] = {
         ...newCharacteristics[index],
         [field]: value,
-        ...(field === '_id' && {
+        ...(field === 'id' && {
           name:
             state.characteristicsDatasource.find((c) => c.id === value)
               ?.name || '',

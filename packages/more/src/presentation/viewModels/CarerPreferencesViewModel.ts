@@ -91,6 +91,25 @@ const useCarerPreferencesViewModel = (): CarerPreferencesViewModel => {
     }
   }, [currentUser])
 
+  // Sync selectedPetTypes when petTypesDatasource is loaded
+  useEffect(() => {
+    if (state.petTypesDatasource.length > 0 && currentUser?.carerConfig?.petTypes) {
+      const userPetTypeIds = currentUser.carerConfig.petTypes
+      const matchingPetTypes = state.petTypesDatasource.filter(
+        petType => userPetTypeIds.some(userPetType => 
+          typeof userPetType === 'string' ? userPetType === petType.id : userPetType.id === petType.id
+        )
+      )
+      
+      if (matchingPetTypes.length > 0) {
+        setState((previous) => ({
+          ...previous,
+          selectedPetTypes: matchingPetTypes,
+        }))
+      }
+    }
+  }, [state.petTypesDatasource, currentUser?.carerConfig?.petTypes])
+
   // Sync selectedAddress when addressesDatasource is loaded
   useEffect(() => {
     if (state.addressesDatasource.length > 0 && currentUser?.carerConfig?.careAddressData) {

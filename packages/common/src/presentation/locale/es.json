@@ -131,9 +131,9 @@
         "acceptSubtitle": "¿Estás seguro de querer aceptar la reserva? Te comprometés a cuidar a las mascotas del usuario.",
         "rejectSubtitle": "¿Estás seguro de querer rechazar la reserva? El usuario podrá buscar otro cuidador.",
         "cancelOwnerPendingSubtitle": "¿Estás seguro de querer cancelar la reserva? Tendrás que buscar otro cuidador para tus mascotas.",
-        "cancelOwnerAcceptedSubtitle": "¿Estás seguro de querer cancelar la reserva? El dinero se le transferirá al cuidador.",
+        "cancelOwnerAcceptedSubtitle": "¿Estás seguro de querer terminar la reserva? El dinero se le transferirá al cuidador.",
         "cancelCarerPendingSubtitle": "¿Estás seguro de querer cancelar la reserva? El usuario podrá buscar otro cuidador.",
-        "cancelCarerAcceptedSubtitle": "¿Estás seguro de querer cancelar la reserva? El dinero se devolverá al usuario.",
+        "cancelCarerAcceptedSubtitle": "¿Estás seguro de querer terminar la reserva? El dinero se devolverá al usuario.",
         "accept": "Aceptar",
         "cancel": "Cancelar"
       },

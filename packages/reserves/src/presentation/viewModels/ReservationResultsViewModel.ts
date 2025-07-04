@@ -18,7 +18,6 @@ import {
 } from '../../data/models/SearchCriteria'
 import { CreateReservationUseCase } from '../../domain/usecases/CreateReservationUseCase'
 import { SearchResultsUseCase } from '../../domain/usecases/SearchResultsUseCase'
-import { PlaceType } from '../../data/models/ReservationModel'
 import { PaginationModel } from '@packages/common'
 
 type ReservationResultsScreenProps = {

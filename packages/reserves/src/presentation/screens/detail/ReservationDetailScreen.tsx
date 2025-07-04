@@ -2,7 +2,6 @@ import React, { FC, useEffect, useState } from 'react'
 import {
   Color,
   LabelStyle,
-  ShowToast,
   useI18n,
   PetModel,
   PPBottomSheetContainer,
@@ -20,6 +19,8 @@ import {
   GenericToast,
 } from '@packages/common'
 import { View, Text, StyleSheet, ScrollView, SafeAreaView } from 'react-native'
+import { useDispatch } from 'react-redux'
+import { markStatusChanged } from '../../../domain/store/ReservesSlice'
 import {
   PlaceType,
   ReservationModel,
@@ -65,6 +66,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
   const statusModalRef = useBottomSheetModalRef()
   const confirmationModalRef = useBottomSheetModalRef()
   const baseUrl = useInjection(Types.BaseURL) as string
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (petDetail) {
@@ -88,6 +90,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
     clearStatusMessage()
     statusModalRef.current?.dismiss()
     navigation.goBack()
+    dispatch(markStatusChanged())
   }
 
   const handleConfirmationAccept = () => {
@@ -148,14 +151,16 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
     const getLocationValue = () => {
       const address = state.currentReserve?.address
       const distance = state.currentReserve?.distance?.toString() || '0'
-      
+
       const mainAddress = t('reserveDetailScreen.distanceFormat', {
         location: address?.fullAddress || '',
         distance,
       })
       const secondaryAddress = address?.secondaryAddress(t) || ''
-      
-      return secondaryAddress ? `${mainAddress}\n${secondaryAddress}` : mainAddress
+
+      return secondaryAddress
+        ? `${mainAddress}\n${secondaryAddress}`
+        : mainAddress
     }
 
     return (

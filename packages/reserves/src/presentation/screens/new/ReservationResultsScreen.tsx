@@ -21,6 +21,8 @@ import { SearchResultCard } from './components/SearchResultCard'
 import { FilterSheetContent } from './components/FilterSheetContent'
 import { ConfirmationSheetContent } from './components/ConfirmationSheetContent'
 import catSuccess from '@app/assets/lottie-json/success-cat.json'
+import { useDispatch } from 'react-redux'
+import { markStatusChanged } from '@packages/reserves/src/domain/store/ReservesSlice'
 
 const ReservationResultsScreen: FC = () => {
   const {
@@ -41,7 +43,7 @@ const ReservationResultsScreen: FC = () => {
   const filterBottomSheetRef = useBottomSheetModalRef()
   const confirmationBottomSheetRef = useBottomSheetModalRef()
   const sucessBottomSheetRef = useBottomSheetModalRef()
-
+  const dispatch = useDispatch()
   useEffect(() => {
     if (state.searchCriteria) {
       setSortField(state.searchCriteria.sortBy.field)
@@ -149,7 +151,10 @@ const ReservationResultsScreen: FC = () => {
         title={t('reserveResultsScreen.success.title')}
         subtitle={t('reserveResultsScreen.success.message')}
         lottieFile={catSuccess}
-        onPrimaryAction={() => navigation.getParent()?.goBack()}
+        onPrimaryAction={() => {
+          navigation.getParent()?.goBack()
+          dispatch(markStatusChanged())
+        }}
       />
     </PPBottomSheetContainer>
   )

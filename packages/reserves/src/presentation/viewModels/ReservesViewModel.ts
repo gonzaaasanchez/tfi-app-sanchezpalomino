@@ -6,6 +6,8 @@ import {
   LoadFunction,
 } from '@packages/common'
 import { useState, useEffect, useCallback } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { clearStatusChange } from '../../domain/store/ReservesSlice'
 import { GetReservesUseCase } from '../../domain/usecases/GetReservesUseCase'
 import { $ } from '../../domain/di/Types'
 import {
@@ -52,9 +54,28 @@ const initialState: ReservesState = {
 
 const useReservesViewModel = (): ReservesViewModel => {
   const [state, setState] = useState<ReservesState>(initialState)
+  const dispatch = useDispatch()
   const getReservesUseCase: GetReservesUseCase = useInjection(
     $.GetReservesUseCase
   )
+
+  const lastStatusChange = useSelector(
+    (state: any) => state.reserves?.lastStatusChange
+  )
+
+  useEffect(() => {
+    if (state.selectedStatus && state.selectedType) {
+      loadReserves({ reset: true })
+    }
+  }, [state.selectedStatus, state.selectedType])
+
+  useEffect(() => {
+    if (lastStatusChange) {
+      loadReserves({ reset: true }).then(() => {
+        dispatch(clearStatusChange())
+      })
+    }
+  }, [lastStatusChange, dispatch])
 
   // Create load function for pagination hook
   const loadReservesFunction: LoadFunction<ReservationModel> = useCallback(
@@ -101,13 +122,6 @@ const useReservesViewModel = (): ReservesViewModel => {
       }))
     }
   }
-
-  // Load data when filters are set
-  useEffect(() => {
-    if (state.selectedStatus && state.selectedType) {
-      loadReserves({ reset: true })
-    }
-  }, [state.selectedStatus, state.selectedType])
 
   return {
     state: {

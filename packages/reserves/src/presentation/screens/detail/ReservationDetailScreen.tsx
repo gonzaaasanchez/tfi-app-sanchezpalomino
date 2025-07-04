@@ -17,6 +17,7 @@ import {
   PaymentInfoComponent,
   getImageFullUrl,
   Loader,
+  GenericToast,
 } from '@packages/common'
 import { View, Text, StyleSheet, ScrollView, SafeAreaView } from 'react-native'
 import {
@@ -269,6 +270,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
       />
 
       {state.loading && <Loader loading={state.loading} />}
+      <GenericToast overrideOffset={10} />
     </PPBottomSheetContainer>
   )
 }

@@ -4,7 +4,7 @@ import {
   ReserveType,
 } from '../../data/models/ReservationModel'
 import ReservesRepository from '../repository/ReservesRepository'
-import { PaginatedResponse } from '@app/common'
+import { PaginatedResponse } from '@packages/common'
 
 class GetReservesUseCase {
   private reservesRepository: ReservesRepository

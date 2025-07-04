@@ -9,6 +9,9 @@ const $ = {
   SearchResultsRepository: Symbol.for('SearchResultsRepository'),
   SearchResultsUseCase: Symbol.for('SearchResultsUseCase'),
   CreateReservationUseCase: Symbol.for('CreateReservationUseCase'),
+  AcceptReservationUseCase: Symbol.for('AcceptReservationUseCase'),
+  RejectReservationUseCase: Symbol.for('RejectReservationUseCase'),
+  CancelReservationUseCase: Symbol.for('CancelReservationUseCase'),
 }
 
 export { $ }

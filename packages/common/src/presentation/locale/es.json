@@ -122,7 +122,36 @@
       "rejectReserve": "Rechazar reserva",
       "cancelReserve": "Cancelar reserva",
       "petDetails": "Más detalles:",
-      "distanceFormat": "{{location}} (a {{distance}} km)"
+      "distanceFormat": "{{location}} (a {{distance}} km)",
+      "validation": {
+        "reservationIdRequired": "El ID de la reserva es requerido"
+      },
+      "confirmation": {
+        "title": "Atención",
+        "acceptSubtitle": "¿Estás seguro de querer aceptar la reserva? Te comprometés a cuidar a las mascotas del usuario.",
+        "rejectSubtitle": "¿Estás seguro de querer rechazar la reserva? El usuario podrá buscar otro cuidador.",
+        "cancelOwnerPendingSubtitle": "¿Estás seguro de querer cancelar la reserva? Tendrás que buscar otro cuidador para tus mascotas.",
+        "cancelOwnerAcceptedSubtitle": "¿Estás seguro de querer cancelar la reserva? El dinero se le transferirá al cuidador.",
+        "cancelCarerPendingSubtitle": "¿Estás seguro de querer cancelar la reserva? El usuario podrá buscar otro cuidador.",
+        "cancelCarerAcceptedSubtitle": "¿Estás seguro de querer cancelar la reserva? El dinero se devolverá al usuario.",
+        "accept": "Aceptar",
+        "cancel": "Cancelar"
+      },
+      "error": {
+        "acceptFailed": "Error al aceptar la reserva",
+        "rejectFailed": "Error al rechazar la reserva",
+        "cancelFailed": "Error al cancelar la reserva"
+      },
+      "success": {
+        "acceptedTitle": "Reserva aceptada",
+        "acceptedSubtitle": "¡Felicitaciones! Te deseamos que tengas una excelente experiencia",
+        "rejectedTitle": "Reserva rechazada",
+        "rejectedSubtitle": "Sentimos que no puedas cuidar a tus mascotas en este momento",
+        "cancelledOwnerTitle": "Reserva cancelada",
+        "cancelledOwnerSubtitle": "Lamentamos que tengas que cancelar la reserva",
+        "cancelledCarerTitle": "Reserva cancelada",
+        "cancelledCarerSubtitle": "Lamentamos que tengas que cancelar la reserva"
+      }
     },
     "reserveNewScreen": {
       "title": "Crear nueva reserva",

@@ -16,13 +16,14 @@ import {
   Types,
   PaymentInfoComponent,
   getImageFullUrl,
+  Loader,
 } from '@packages/common'
 import { View, Text, StyleSheet, ScrollView, SafeAreaView } from 'react-native'
 import {
   PlaceType,
   ReservationModel,
 } from '../../../data/models/ReservationModel'
-import { RouteProp, useRoute } from '@react-navigation/native'
+import { RouteProp, useRoute, useNavigation } from '@react-navigation/native'
 import { useReserveDetailViewModel } from '../../viewModels/ReserveDetailViewModel'
 import {
   CarerReservationActions,
@@ -42,41 +43,62 @@ type ReservationDetailScreenRouteProp = RouteProp<
 >
 
 const ReservationDetailScreen: FC = (): JSX.Element => {
+  const route = useRoute<ReservationDetailScreenRouteProp>()
+  const navigation = useNavigation()
+  const reservation = route.params.reservation
+  const isUserRequest = route.params.isUserRequest
+
   const {
     state,
-    setCurrentReserve,
     acceptReserve,
     rejectReserve,
     cancelReserveCarer,
     cancelReserveOwner,
-  } = useReserveDetailViewModel()
+    clearConfirmation,
+    executeAction,
+    clearStatusMessage,
+  } = useReserveDetailViewModel(reservation)
   const { t } = useI18n()
-  const route = useRoute<ReservationDetailScreenRouteProp>()
-  const reservation = route.params.reservation
-  const isUserRequest = route.params.isUserRequest
   const [petDetail, setPetDetail] = useState<PetModel>(null)
   const petDetailModalRef = useBottomSheetModalRef()
+  const statusModalRef = useBottomSheetModalRef()
+  const confirmationModalRef = useBottomSheetModalRef()
   const baseUrl = useInjection(Types.BaseURL) as string
-
-  useEffect(() => {
-    setCurrentReserve(reservation)
-  }, [])
-
-  useEffect(() => {
-    if (state.error !== null) {
-      ShowToast({
-        config: 'error',
-        title: t('general.ups'),
-        subtitle: state.error,
-      })
-    }
-  }, [state.error])
 
   useEffect(() => {
     if (petDetail) {
       petDetailModalRef.current?.present()
     }
   }, [petDetail])
+
+  useEffect(() => {
+    if (state.reserveStatusChangeTitle) {
+      statusModalRef.current?.present()
+    }
+  }, [state.reserveStatusChangeTitle])
+
+  useEffect(() => {
+    if (state.confirmationDialog?.show) {
+      confirmationModalRef.current?.present()
+    }
+  }, [state.confirmationDialog?.show])
+
+  const handleStatusDismiss = () => {
+    clearStatusMessage()
+    statusModalRef.current?.dismiss()
+    navigation.goBack()
+  }
+
+  const handleConfirmationAccept = () => {
+    confirmationModalRef.current?.dismiss()
+    clearConfirmation()
+    executeAction()
+  }
+
+  const handleConfirmationCancel = () => {
+    confirmationModalRef.current?.dismiss()
+    clearConfirmation()
+  }
 
   const UserCard = () => {
     return (
@@ -132,9 +154,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
       })
       const secondaryAddress = address?.secondaryAddress(t) || ''
       
-      return secondaryAddress 
-        ? `${mainAddress}\n${secondaryAddress}`
-        : mainAddress
+      return secondaryAddress ? `${mainAddress}\n${secondaryAddress}` : mainAddress
     }
 
     return (
@@ -230,6 +250,25 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
       >
         <PetDetail pet={petDetail} baseUrl={baseUrl} />
       </PPBottomSheet.Empty>
+
+      <PPBottomSheet.Dialog
+        ref={confirmationModalRef}
+        title={state.confirmationDialog?.title}
+        subtitle={state.confirmationDialog?.subtitle}
+        onPrimaryAction={handleConfirmationAccept}
+        onSecondaryAction={handleConfirmationCancel}
+        primaryActionTitle={t('reserveDetailScreen.confirmation.accept')}
+        secondaryActionTitle={t('reserveDetailScreen.confirmation.cancel')}
+      />
+
+      <PPBottomSheet.Dialog
+        ref={statusModalRef}
+        title={state.reserveStatusChangeTitle}
+        subtitle={state.reserveStatusChangeSubtitle}
+        onPrimaryAction={handleStatusDismiss}
+      />
+
+      {state.loading && <Loader loading={state.loading} />}
     </PPBottomSheetContainer>
   )
 }

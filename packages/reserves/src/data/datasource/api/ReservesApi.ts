@@ -1,4 +1,4 @@
-import { HttpClient, PaginatedResponse } from '@app/common'
+import { HttpClient, PaginatedResponse } from '@packages/common'
 import {
   ReservationModel,
   ReserveStatus,
@@ -14,6 +14,9 @@ interface ReservesApi {
     limit?: number
   ): Promise<PaginatedResponse<ReservationModel>>
   createReservation(data: CreateReservationData): Promise<ReservationModel>
+  acceptReservation(id: string): Promise<ReservationModel>
+  rejectReservation(id: string, reason?: string): Promise<ReservationModel>
+  cancelReservation(id: string, reason?: string): Promise<ReservationModel>
 }
 
 class ReservesApiImpl implements ReservesApi {
@@ -66,6 +69,37 @@ class ReservesApiImpl implements ReservesApi {
       requestBody
     )
 
+    return response.data
+  }
+
+  async acceptReservation(id: string): Promise<ReservationModel> {
+    const response = await this.httpClient.put<ReservationModel>(
+      `/reservations/${id}/accept`
+    )
+    return response.data
+  }
+
+  async rejectReservation(
+    id: string,
+    reason?: string
+  ): Promise<ReservationModel> {
+    const requestBody = reason ? { reason } : {}
+    const response = await this.httpClient.put<ReservationModel>(
+      `/reservations/${id}/reject`,
+      requestBody
+    )
+    return response.data
+  }
+
+  async cancelReservation(
+    id: string,
+    reason?: string
+  ): Promise<ReservationModel> {
+    const requestBody = reason ? { reason } : {}
+    const response = await this.httpClient.put<ReservationModel>(
+      `/reservations/${id}/cancel`,
+      requestBody
+    )
     return response.data
   }
 }

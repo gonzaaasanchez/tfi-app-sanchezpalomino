@@ -1,59 +1,243 @@
-import { UIState } from '@packages/common'
+import { UIState, useInjection, useI18n, ShowToast } from '@packages/common'
 import { useState } from 'react'
-import { ReservationModel } from '../../data/models/ReservationModel'
+import {
+  ReservationModel,
+  ReserveStatus,
+} from '../../data/models/ReservationModel'
+import { AcceptReservationUseCase } from '../../domain/usecases/AcceptReservationUseCase'
+import { RejectReservationUseCase } from '../../domain/usecases/RejectReservationUseCase'
+import { CancelReservationUseCase } from '../../domain/usecases/CancelReservationUseCase'
+import { $ } from '../../domain/di/Types'
 
 type ReserveDetailViewModel = {
   state: ReserveDetailState
-  setCurrentReserve: (reserve: ReservationModel) => void
-  acceptReserve: () => Promise<void>
-  rejectReserve: () => Promise<void>
-  cancelReserveCarer: () => Promise<void>
-  cancelReserveOwner: () => Promise<void>
+  acceptReserve: () => void
+  rejectReserve: () => void
+  cancelReserveCarer: () => void
+  cancelReserveOwner: () => void
+  clearConfirmation: () => void
+  executeAction: () => Promise<void>
+  clearStatusMessage: () => void
 }
 
 type ReserveDetailState = {
-    currentReserve?: ReservationModel
+  currentReserve: ReservationModel
+  reserveStatusChangeTitle: string | undefined
+  reserveStatusChangeSubtitle: string | undefined
+  confirmationDialog: {
+    show: boolean
+    action: () => Promise<void>
+    title: string
+    subtitle: string
+  } | null
 } & UIState
 
-const initialState: ReserveDetailState = {
-  loading: false,
-  error: null,
-  currentReserve: null
-}
+const useReserveDetailViewModel = (
+  reservation: ReservationModel
+): ReserveDetailViewModel => {
+  const [state, setState] = useState<ReserveDetailState>({
+    loading: false,
+    error: null,
+    currentReserve: reservation,
+    reserveStatusChangeTitle: undefined,
+    reserveStatusChangeSubtitle: undefined,
+    confirmationDialog: null,
+  })
+  const { t } = useI18n()
 
-const useReserveDetailViewModel = (): ReserveDetailViewModel => {
-  const [state, setState] = useState<ReserveDetailState>(initialState)
+  const acceptReservationUseCase = useInjection<AcceptReservationUseCase>(
+    $.AcceptReservationUseCase
+  )
+  const rejectReservationUseCase = useInjection<RejectReservationUseCase>(
+    $.RejectReservationUseCase
+  )
+  const cancelReservationUseCase = useInjection<CancelReservationUseCase>(
+    $.CancelReservationUseCase
+  )
 
-  const setCurrentReserve: (reserve: ReservationModel) => void = async (reserve) => {
-    setState((previous: ReserveDetailState) => ({
-      ...previous,
-      currentReserve: reserve,
+  const acceptReserve = (): void => {
+    setState((prev) => ({
+      ...prev,
+      confirmationDialog: {
+        show: true,
+        title: t('reserveDetailScreen.confirmation.title'),
+        subtitle: t('reserveDetailScreen.confirmation.acceptSubtitle'),
+        action: async () => {
+          setState((prev) => ({ ...prev, loading: true, error: null }))
+          try {
+            await acceptReservationUseCase.execute(state.currentReserve?.id, t)
+            setState((prev) => ({
+              ...prev,
+              loading: false,
+              reserveStatusChangeTitle: t(
+                'reserveDetailScreen.success.acceptedTitle'
+              ),
+              reserveStatusChangeSubtitle: t(
+                'reserveDetailScreen.success.acceptedSubtitle'
+              ),
+            }))
+          } catch (error) {
+            setState((prev) => ({ ...prev, loading: false }))
+            ShowToast({
+              config: 'error',
+              title: t('general.ups'),
+              subtitle:
+                error instanceof Error
+                  ? error.message
+                  : t('reserveDetailScreen.error.acceptFailed'),
+            })
+          }
+        },
+      },
     }))
   }
 
-  const acceptReserve = async (): Promise<void> => {
-    console.log('acceptReserve')
+  const rejectReserve = (): void => {
+    setState((prev) => ({
+      ...prev,
+      confirmationDialog: {
+        show: true,
+        title: t('reserveDetailScreen.confirmation.title'),
+        subtitle: t('reserveDetailScreen.confirmation.rejectSubtitle'),
+        action: async () => {
+          setState((prev) => ({ ...prev, loading: true, error: null }))
+          try {
+            await rejectReservationUseCase.execute(state.currentReserve?.id, t)
+            setState((prev) => ({
+              ...prev,
+              loading: false,
+              reserveStatusChangeTitle: t(
+                'reserveDetailScreen.success.rejectedTitle'
+              ),
+              reserveStatusChangeSubtitle: t(
+                'reserveDetailScreen.success.rejectedSubtitle'
+              ),
+            }))
+          } catch (error) {
+            setState((prev) => ({ ...prev, loading: false }))
+            ShowToast({
+              config: 'error',
+              title: t('general.ups'),
+              subtitle:
+                error instanceof Error
+                  ? error.message
+                  : t('reserveDetailScreen.error.rejectFailed'),
+            })
+          }
+        },
+      },
+    }))
   }
 
-  const rejectReserve = async (): Promise<void> => {
-    console.log('rejectReserve')
+  const cancelReserveCarer = (): void => {
+    const subtitle =
+      state.currentReserve?.status === ReserveStatus.Pending
+        ? t('reserveDetailScreen.confirmation.cancelCarerPendingSubtitle')
+        : t('reserveDetailScreen.confirmation.cancelCarerAcceptedSubtitle')
+    setState((prev) => ({
+      ...prev,
+      confirmationDialog: {
+        show: true,
+        title: t('reserveDetailScreen.confirmation.title'),
+        subtitle: subtitle,
+        action: async () => {
+          setState((prev) => ({ ...prev, loading: true, error: null }))
+          try {
+            await cancelReservationUseCase.execute(state.currentReserve?.id, t)
+            setState((prev) => ({
+              ...prev,
+              loading: false,
+              reserveStatusChangeTitle: t(
+                'reserveDetailScreen.success.cancelledCarerTitle'
+              ),
+              reserveStatusChangeSubtitle: t(
+                'reserveDetailScreen.success.cancelledCarerSubtitle'
+              ),
+            }))
+          } catch (error) {
+            setState((prev) => ({ ...prev, loading: false }))
+            ShowToast({
+              config: 'error',
+              title: t('general.ups'),
+              subtitle:
+                error instanceof Error
+                  ? error.message
+                  : t('reserveDetailScreen.error.cancelFailed'),
+            })
+          }
+        },
+      },
+    }))
   }
 
-  const cancelReserveCarer = async (): Promise<void> => {
-    console.log('cancelReserveCarer')
+  const cancelReserveOwner = (): void => {
+    const subtitle =
+      state.currentReserve?.status === ReserveStatus.Pending
+        ? t('reserveDetailScreen.confirmation.cancelOwnerPendingSubtitle')
+        : t('reserveDetailScreen.confirmation.cancelOwnerAcceptedSubtitle')
+    setState((prev) => ({
+      ...prev,
+      confirmationDialog: {
+        show: true,
+        title: t('reserveDetailScreen.confirmation.title'),
+        subtitle: subtitle,
+        action: async () => {
+          setState((prev) => ({ ...prev, loading: true, error: null }))
+          try {
+            await cancelReservationUseCase.execute(state.currentReserve?.id, t)
+            setState((prev) => ({
+              ...prev,
+              loading: false,
+              reserveStatusChangeTitle: t(
+                'reserveDetailScreen.success.cancelledOwnerTitle'
+              ),
+              reserveStatusChangeSubtitle: t(
+                'reserveDetailScreen.success.cancelledOwnerSubtitle'
+              ),
+            }))
+          } catch (error) {
+            setState((prev) => ({ ...prev, loading: false }))
+            ShowToast({
+              config: 'error',
+              title: t('general.ups'),
+              subtitle:
+                error instanceof Error
+                  ? error.message
+                  : t('reserveDetailScreen.error.cancelFailed'),
+            })
+          }
+        },
+      },
+    }))
   }
 
-  const cancelReserveOwner = async (): Promise<void> => {
-    console.log('cancelReserveOwner')
+  const clearConfirmation = (): void => {
+    setState((prev) => ({ ...prev, confirmationDialog: null }))
+  }
+
+  const executeAction = async (): Promise<void> => {
+    if (state.confirmationDialog?.action) {
+      await state.confirmationDialog.action()
+    }
+  }
+
+  const clearStatusMessage = (): void => {
+    setState((prev) => ({
+      ...prev,
+      reserveStatusChangeTitle: undefined,
+      reserveStatusChangeSubtitle: undefined,
+    }))
   }
 
   return {
     state,
-    setCurrentReserve,
     acceptReserve,
     rejectReserve,
     cancelReserveCarer,
     cancelReserveOwner,
+    clearConfirmation,
+    executeAction,
+    clearStatusMessage,
   }
 }
 

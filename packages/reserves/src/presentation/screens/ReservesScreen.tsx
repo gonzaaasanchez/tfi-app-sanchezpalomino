@@ -11,13 +11,8 @@ import {
   useInjection,
   Types,
 } from '@packages/common'
-import React, { FC, useEffect, useState } from 'react'
-import {
-  StyleSheet,
-  View,
-  LayoutChangeEvent,
-  TouchableOpacity,
-} from 'react-native'
+import React, { FC, useEffect } from 'react'
+import { StyleSheet, View, TouchableOpacity } from 'react-native'
 import ReservationsHeader from '../components/ReservationsHeader'
 import { useReservesViewModel } from '../viewModels/ReservesViewModel'
 import ReservationCard from '../components/ReservationCard'
@@ -30,7 +25,6 @@ const ReservesScreen: FC = (): JSX.Element => {
     useReservesViewModel()
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
-  const [availableHeight, setAvailableHeight] = useState<number>(0)
   const baseUrl = useInjection(Types.BaseURL) as string
   const { t } = useI18n()
 
@@ -44,12 +38,6 @@ const ReservesScreen: FC = (): JSX.Element => {
     }
   }, [state.error])
 
-  const handleLayout = (event: LayoutChangeEvent) => {
-    const { height } = event.nativeEvent.layout
-    const tabbarAproxHeight = 130
-    setAvailableHeight(height - tabbarAproxHeight)
-  }
-
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
@@ -60,7 +48,6 @@ const ReservesScreen: FC = (): JSX.Element => {
           onStatusSelected={(status) => setReserveStatus(status)}
         />
         <PaginatedScrollView
-          onLayout={handleLayout}
           pagination={state.pagination}
           onLoadMore={() => loadReserves({ reset: false })}
           onRefresh={() => loadReserves({ reset: true })}

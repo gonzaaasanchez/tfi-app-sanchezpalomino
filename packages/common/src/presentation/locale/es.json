@@ -111,6 +111,7 @@
     "reserveDetailScreen": {
       "title": "Detalle de la reserva",
       "user": "Usuario",
+      "reviews": "{{average}} ({{total}} reseñas)",
       "pets": "Mascotas que se van a cuidar: ",
       "details": "Detalles de la visita:",
       "date": "Cuándo: ",
@@ -202,7 +203,7 @@
         "commission": "Comisión",
         "total": "Total"
       },
-      "reviews": "reviews",
+      "reviews": "{{average}} ({{total}} reseñas)",
       "sort": {
         "title": "Ordenar por",
         "criteria": "Criterio",

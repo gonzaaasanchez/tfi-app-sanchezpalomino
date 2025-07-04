@@ -117,6 +117,24 @@ class ReservationModel {
   placeDetailPhone({ isUserRequest }: { isUserRequest: boolean }): string {
     return isUserRequest ? this.caregiver?.phoneNumber : this.user?.phoneNumber
   }
+
+  placeDetailReviews({
+    isUserRequest,
+  }: {
+    isUserRequest: boolean
+  }): { average: string; total: string } | undefined {
+    const targetUser = isUserRequest ? this.caregiver : this.user
+    return targetUser?.reviews
+      ? {
+          average: isUserRequest
+            ? targetUser.reviews.averageRatingAsCaregiver.toString()
+            : targetUser.reviews.averageRatingAsUser.toString(),
+          total: isUserRequest
+            ? targetUser.reviews.totalReviewsAsCaregiver.toString()
+            : targetUser.reviews.totalReviewsAsUser.toString(),
+        }
+      : undefined
+  }
 }
 
 export { UserModel, PlaceType, ReserveStatus, ReserveType, ReservationModel }

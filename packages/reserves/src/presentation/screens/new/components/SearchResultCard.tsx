@@ -44,8 +44,10 @@ export const SearchResultCard: FC<{
           <View style={styles.row}>
             <PPMaterialIcon icon="star" size={16} />
             <Text style={styles.detail}>
-              {'FALTA RATE'} ({'FALTA RATE COUNT'}{' '}
-              {t('reserveResultsScreen.reviews')})
+              {t('reserveResultsScreen.reviews', {
+                average: result.caregiver.reviews?.averageRatingAsCaregiver.toString() || '0',
+                total: result.caregiver.reviews?.totalReviewsAsCaregiver.toString() || '0',
+              })}
             </Text>
           </View>
           <View style={styles.priceContainer}>

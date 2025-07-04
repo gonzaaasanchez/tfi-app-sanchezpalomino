@@ -17,6 +17,7 @@ import {
   getImageFullUrl,
   Loader,
   GenericToast,
+  PPMaterialIcon,
 } from '@packages/common'
 import { View, Text, StyleSheet, ScrollView, SafeAreaView } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -122,6 +123,19 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
             <Text style={LabelStyle.callout2()}>
               {state.currentReserve?.placeDetailPhone({ isUserRequest })}
             </Text>
+            <View style={styles.row}>
+              <PPMaterialIcon icon="star" size={16} />
+              <Text style={LabelStyle.callout2()}>
+                {t('reserveDetailScreen.reviews', {
+                  average: state.currentReserve?.placeDetailReviews({
+                    isUserRequest,
+                  })?.average,
+                  total: state.currentReserve?.placeDetailReviews({
+                    isUserRequest,
+                  })?.total,
+                })}
+              </Text>
+            </View>
           </View>
         </View>
       </View>
@@ -318,6 +332,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 5,
   },
 })
 

@@ -28,6 +28,7 @@ export class SearchResultsApiImpl implements SearchResultsApi {
       maxDistance: searchCriteria.maxDistance,
       maxPrice: searchCriteria.maxPrice,
       visitsPerDay: searchCriteria.visits,
+      reviewsFrom: searchCriteria.reviewsFrom,
     }
 
     const queryParams = new URLSearchParams({

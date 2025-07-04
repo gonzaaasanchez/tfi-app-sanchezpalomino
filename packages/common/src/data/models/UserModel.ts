@@ -15,6 +15,13 @@ export interface CarerConfig {
   careAddress?: string
 }
 
+export interface UserReviews {
+  averageRatingAsUser: number
+  totalReviewsAsUser: number
+  averageRatingAsCaregiver: number
+  totalReviewsAsCaregiver: number
+}
+
 class UserModel {
   id?: string
   firstName?: string
@@ -24,6 +31,7 @@ class UserModel {
   avatar?: string
   carerConfig?: CarerConfig
   addresses?: AddressModel[]
+  reviews?: UserReviews
 
   constructor(data: Partial<UserModel>) {
     this.id = data.id || null
@@ -34,6 +42,7 @@ class UserModel {
     this.avatar = data.avatar || null
     this.carerConfig = data.carerConfig || null
     this.addresses = data.addresses || []
+    this.reviews = data.reviews || null
   }
 
   get fullName(): string {

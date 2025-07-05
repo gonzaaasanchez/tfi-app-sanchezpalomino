@@ -71,7 +71,7 @@ const initialState: ReservesState = {
       label: 'reservesScreen.statuses.rejected',
     },
   ],
-  selectedStatus: ReserveStatus.Started,
+  selectedStatus: ReserveStatus.Finished,
   pagination: {
     items: [],
     pagination: {

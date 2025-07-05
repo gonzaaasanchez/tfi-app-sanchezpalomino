@@ -40,6 +40,7 @@ import {
   OwnerReservationActions,
 } from './ReservationActionButtons'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { ReviewBottomSheetContent } from './ReviewBottomSheetContent'
 
 type RootStackParamList = {
   reservationDetail: {
@@ -74,6 +75,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
   const petDetailModalRef = useBottomSheetModalRef()
   const statusModalRef = useBottomSheetModalRef()
   const confirmationModalRef = useBottomSheetModalRef()
+  const reviewModalRef = useBottomSheetModalRef()
   const baseUrl = useInjection(Types.BaseURL) as string
   const dispatch = useDispatch()
 
@@ -111,6 +113,16 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
   const handleConfirmationCancel = () => {
     confirmationModalRef.current?.dismiss()
     clearConfirmation()
+  }
+
+  const handleReviewButtonPress = () => {
+    reviewModalRef.current?.present()
+  }
+
+  const handleReviewSubmitted = (rating: number, comment: string) => {
+    reviewModalRef.current?.dismiss()
+    console.log('Review submitted:', { rating, comment })
+    // Aquí puedes implementar la lógica para enviar la reseña
   }
 
   const UserCard = () => {
@@ -267,7 +279,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
               <Text>{state.currentReserveReview.reviews.owner.comment}</Text>
             </View>
           ) : (
-            <NoReview reviewType="owner" onPress={() => {}} />
+            <NoReview reviewType="owner" onPress={handleReviewButtonPress} />
           )}
           <View style={styles.reviewSeparator} />
           {state.currentReserveReview?.summary.hasCarerReview == true ? (
@@ -277,7 +289,10 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
               </Text>
             </View>
           ) : (
-            <NoReview reviewType="caregiver" onPress={() => {}} />
+            <NoReview
+              reviewType="caregiver"
+              onPress={handleReviewButtonPress}
+            />
           )}
         </View>
       )
@@ -287,7 +302,9 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
       <>
         {state.currentReserve.status === ReserveStatus.Finished && (
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>{t('reserveDetailScreen.reviewsSection.title')}</Text>
+            <Text style={styles.cardTitle}>
+              {t('reserveDetailScreen.reviewsSection.title')}
+            </Text>
             <UserReview />
           </View>
         )}
@@ -377,6 +394,10 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
         subtitle={state.reserveStatusChangeSubtitle}
         onPrimaryAction={handleStatusDismiss}
       />
+
+      <PPBottomSheet.Empty ref={reviewModalRef} dismisseable={true}>
+        <ReviewBottomSheetContent onReviewSubmitted={handleReviewSubmitted} />
+      </PPBottomSheet.Empty>
 
       {state.loading && <Loader loading={state.loading} />}
       <GenericToast overrideOffset={10} />

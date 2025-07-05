@@ -133,7 +133,12 @@
         "noReviewUser": "Aún no dejaste tu reseña",
         "noReviewOwner": "El dueño aún no hizo su reseña",
         "noReviewCarer": "El cuidador aún no hizo su reseña",
-        "createReview": "Crear reseña"
+        "createReview": "Crear reseña",
+        "rating": "Calificación",
+        "ratingSelected": "{{rating}} estrellas",
+        "comment": "Comentario",
+        "commentPlaceholder": "Compartí tu experiencia...",
+        "submitReview": "Enviar reseña"
       },
       "validation": {
         "reservationIdRequired": "El ID de la reserva es requerido"

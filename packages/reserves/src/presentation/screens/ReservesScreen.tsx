@@ -10,11 +10,10 @@ import {
   PaginatedScrollView,
   useInjection,
   Types,
-  PPBottomSheetContainer,
   useBottomSheetModalRef,
   PPBottomSheet,
 } from '@packages/common'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect } from 'react'
 import { StyleSheet, View, TouchableOpacity } from 'react-native'
 import ReservationsHeader from '../components/ReservationsHeader'
 import { useReservesViewModel } from '../viewModels/ReservesViewModel'
@@ -32,8 +31,6 @@ const ReservesScreen: FC = (): JSX.Element => {
   const baseUrl = useInjection(Types.BaseURL) as string
   const filterBottomSheetRef = useBottomSheetModalRef()
   const { t } = useI18n()
-  const [selectedReserveStatus, setSelectedReserveStatus] =
-    useState<ReserveStatus>(state.selectedStatus || ReserveStatus.Finished)
 
   useEffect(() => {
     if (state.error) {
@@ -44,12 +41,6 @@ const ReservesScreen: FC = (): JSX.Element => {
       })
     }
   }, [state.error])
-
-  useEffect(() => {
-    if (state.selectedStatus) {
-      setSelectedReserveStatus(state.selectedStatus)
-    }
-  }, [state.selectedStatus])
 
   useEffect(() => {
     navigation.setOptions({
@@ -118,10 +109,9 @@ const ReservesScreen: FC = (): JSX.Element => {
       <PPBottomSheet.Empty ref={filterBottomSheetRef} dismisseable={true}>
         <FilterReservesSheetContent
           statusOptions={state.optionsStatus}
-          status={selectedReserveStatus}
-          handleSatusSelected={setSelectedReserveStatus}
-          confirm={() => {
-            setReserveStatus(selectedReserveStatus)
+          status={state.selectedStatus || ReserveStatus.Finished}
+          confirm={(selectedStatus) => {
+            setReserveStatus(selectedStatus)
             filterBottomSheetRef.current?.dismiss()
           }}
         />

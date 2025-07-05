@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Color,
   PPMaterialIcon,
@@ -16,9 +16,7 @@ type FilterResultsSheetContentProps = {
   sortOrderOptions: readonly SelectableOption<SortOrder>[]
   sortField: SortField
   sortOrder: SortOrder
-  handleSortOptionPress: (field: SortField) => void
-  handleSortOrderPress: (order: SortOrder) => void
-  confirmSortAndOrder: () => void
+  confirmSortAndOrder: (sortField: SortField, sortOrder: SortOrder) => void
 }
 
 export const FilterResultsSheetContent = ({
@@ -26,11 +24,22 @@ export const FilterResultsSheetContent = ({
   sortOrderOptions,
   sortField,
   sortOrder,
-  handleSortOptionPress,
-  handleSortOrderPress,
   confirmSortAndOrder,
 }: FilterResultsSheetContentProps) => {
   const { t } = useI18n()
+  const [selectedSortField, setSelectedSortField] =
+    useState<SortField>(sortField)
+  const [selectedSortOrder, setSelectedSortOrder] =
+    useState<SortOrder>(sortOrder)
+
+  useEffect(() => {
+    setSelectedSortField(sortField)
+  }, [sortField])
+
+  useEffect(() => {
+    setSelectedSortOrder(sortOrder)
+  }, [sortOrder])
+
   const RadioButton = ({
     isSelected,
     onPress,
@@ -49,36 +58,60 @@ export const FilterResultsSheetContent = ({
     )
   }
 
-  const SectionOptionsList = <T extends SortField | SortOrder>({
-    title,
-    options,
-    selectedValue,
-    onSelect,
-  }: {
-    title: string
-    options: readonly SelectableOption<T>[]
-    selectedValue: T
-    onSelect: (value: T) => void
-  }) => {
+  const SortFieldOptionsList = () => {
     return (
       <>
-        <Text style={styles.sortSheetTitle}>{title}</Text>
-        {options.map((option, index) => (
+        <Text style={styles.sortSheetTitle}>
+          {t('reserveResultsScreen.sort.title')}
+        </Text>
+        {sortOptions.map((option, index) => (
           <View key={option.key}>
             <TouchableOpacity
               activeOpacity={0.85}
               style={styles.sortOption}
-              onPress={() => onSelect(option.key)}
+              onPress={() => setSelectedSortField(option.key)}
             >
               <Text style={LabelStyle.body({ color: Color.black[700] })}>
                 {t(option.label)}
               </Text>
               <RadioButton
-                isSelected={selectedValue === option.key}
-                onPress={() => onSelect(option.key)}
+                isSelected={selectedSortField === option.key}
+                onPress={() => setSelectedSortField(option.key)}
               />
             </TouchableOpacity>
-            {index < options.length - 1 && <View style={styles.separator} />}
+            {index < sortOptions.length - 1 && (
+              <View style={styles.separator} />
+            )}
+          </View>
+        ))}
+      </>
+    )
+  }
+
+  const SortOrderOptionsList = () => {
+    return (
+      <>
+        <Text style={styles.sortSheetTitle}>
+          {t('reserveResultsScreen.sort.criteria')}
+        </Text>
+        {sortOrderOptions.map((option, index) => (
+          <View key={option.key}>
+            <TouchableOpacity
+              activeOpacity={0.85}
+              style={styles.sortOption}
+              onPress={() => setSelectedSortOrder(option.key)}
+            >
+              <Text style={LabelStyle.body({ color: Color.black[700] })}>
+                {t(option.label)}
+              </Text>
+              <RadioButton
+                isSelected={selectedSortOrder === option.key}
+                onPress={() => setSelectedSortOrder(option.key)}
+              />
+            </TouchableOpacity>
+            {index < sortOrderOptions.length - 1 && (
+              <View style={styles.separator} />
+            )}
           </View>
         ))}
       </>
@@ -87,23 +120,15 @@ export const FilterResultsSheetContent = ({
 
   return (
     <View>
-      <SectionOptionsList
-        title={t('reserveResultsScreen.sort.title')}
-        options={sortOptions}
-        selectedValue={sortField}
-        onSelect={handleSortOptionPress}
-      />
+      <SortFieldOptionsList />
       <View style={styles.sectionSeparator} />
-      <SectionOptionsList
-        title={t('reserveResultsScreen.sort.criteria')}
-        options={sortOrderOptions}
-        selectedValue={sortOrder}
-        onSelect={handleSortOrderPress}
-      />
+      <SortOrderOptionsList />
       <Button.Primary
         style={{ marginTop: 16 }}
         title={t('reserveResultsScreen.sort.confirm')}
-        onPress={confirmSortAndOrder}
+        onPress={() =>
+          confirmSortAndOrder(selectedSortField, selectedSortOrder)
+        }
       />
     </View>
   )

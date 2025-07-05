@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Color,
   PPMaterialIcon,
@@ -14,17 +14,20 @@ import { ReserveStatus } from '../../../../data/models/ReservationModel'
 type FilterReservesSheetContentProps = {
   statusOptions: readonly SelectableOption<ReserveStatus>[]
   status: ReserveStatus
-  handleSatusSelected: (field: ReserveStatus) => void
-  confirm: () => void
+  confirm: (selectedStatus: ReserveStatus) => void
 }
 
 export const FilterReservesSheetContent = ({
   statusOptions,
   status,
-  handleSatusSelected,
   confirm,
 }: FilterReservesSheetContentProps) => {
   const { t } = useI18n()
+  const [selectedStatus, setSelectedStatus] = useState<ReserveStatus>(status)
+
+  useEffect(() => {
+    setSelectedStatus(status)
+  }, [status])
 
   const RadioButton = ({
     isSelected,
@@ -84,13 +87,13 @@ export const FilterReservesSheetContent = ({
       <SectionOptionsList
         title={t('reservesScreen.statuses.title')}
         options={statusOptions}
-        selectedValue={status}
-        onSelect={handleSatusSelected}
+        selectedValue={selectedStatus}
+        onSelect={setSelectedStatus}
       />
       <Button.Primary
         style={{ marginTop: 16 }}
         title={'Confirmar'}
-        onPress={confirm}
+        onPress={() => confirm(selectedStatus)}
       />
     </View>
   )

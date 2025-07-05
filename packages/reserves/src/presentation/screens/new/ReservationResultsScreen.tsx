@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 import {
@@ -32,25 +32,12 @@ const ReservationResultsScreen: FC = () => {
     sendReservationRequest,
     searchResults,
   } = useReservationResultsViewModel()
-  const [sortField, setSortField] = useState<SortField>(
-    state.searchCriteria?.sortBy?.field || SortField.PRICE
-  )
-  const [sortOrder, setSortOrder] = useState<SortOrder>(
-    state.searchCriteria?.sortBy?.order || SortOrder.DESC
-  )
   const { t } = useI18n()
   const navigation = useNavigation()
   const filterBottomSheetRef = useBottomSheetModalRef()
   const confirmationBottomSheetRef = useBottomSheetModalRef()
   const sucessBottomSheetRef = useBottomSheetModalRef()
   const dispatch = useDispatch()
-
-  useEffect(() => {
-    if (state.searchCriteria) {
-      setSortField(state.searchCriteria.sortBy.field)
-      setSortOrder(state.searchCriteria.sortBy.order)
-    }
-  }, [state.searchCriteria])
 
   useEffect(() => {
     if (state.userToRequest) {
@@ -84,11 +71,6 @@ const ReservationResultsScreen: FC = () => {
     }
   }, [state.error])
 
-  const confirmSortAndOrder = () => {
-    setSortAndOrder(sortField, sortOrder)
-    filterBottomSheetRef.current?.dismiss()
-  }
-
   return (
     <PPBottomSheetContainer>
       <SafeAreaView style={styles.container} edges={[]}>
@@ -121,11 +103,12 @@ const ReservationResultsScreen: FC = () => {
         <FilterResultsSheetContent
           sortOptions={state.sortOptions}
           sortOrderOptions={state.sortOrderOptions}
-          sortField={sortField}
-          sortOrder={sortOrder}
-          handleSortOptionPress={setSortField}
-          handleSortOrderPress={setSortOrder}
-          confirmSortAndOrder={confirmSortAndOrder}
+          sortField={state.searchCriteria?.sortBy?.field || SortField.PRICE}
+          sortOrder={state.searchCriteria?.sortBy?.order || SortOrder.DESC}
+          confirmSortAndOrder={(sortField, sortOrder) => {
+            setSortAndOrder(sortField, sortOrder)
+            filterBottomSheetRef.current?.dismiss()
+          }}
         />
       </PPBottomSheet.Empty>
       <PPBottomSheet.Empty

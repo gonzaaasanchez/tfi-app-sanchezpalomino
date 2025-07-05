@@ -89,6 +89,7 @@ import {
 } from './src/hooks/usePagination'
 import { PaginatedScrollView } from './src/components/PaginatedScrollView'
 import { PaymentInfoComponent } from './src/components/PaymentInfoComponent'
+import { SelectableOption } from './src/data/models/SelectableOption'
 
 export {
   Resolver,
@@ -166,4 +167,5 @@ export {
   LoadFunction,
   PaginatedScrollView,
   PaymentInfoComponent,
+  SelectableOption,
 }

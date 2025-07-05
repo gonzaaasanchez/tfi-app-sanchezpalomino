@@ -6,6 +6,7 @@ import {
   DateUtils,
   usePagination,
   LoadFunction,
+  SelectableOption,
 } from '@packages/common'
 import { useState, useEffect, useCallback } from 'react'
 import { $ } from '../../domain/di/Types'
@@ -26,20 +27,10 @@ type ReservationResultsScreenProps = {
   }
 }
 
-export type SortOptionDatasource = {
-  field: SortField
-  label: string
-}
-
-export type OrderOptionDatasource = {
-  field: SortOrder
-  label: string
-}
-
 type ReservationResultsState = {
   searchCriteria: SearchCriteria
-  sortOptions: readonly SortOptionDatasource[]
-  sortOrderOptions: readonly OrderOptionDatasource[]
+  sortOptions: readonly SelectableOption<SortField>[]
+  sortOrderOptions: readonly SelectableOption<SortOrder>[]
   userToRequest: SearchResultModel | null
   requestSent: boolean
   pagination: {
@@ -57,25 +48,25 @@ const initialState: ReservationResultsState = {
   userToRequest: null,
   sortOptions: [
     {
-      field: SortField.PRICE,
+      key: SortField.PRICE,
       label: 'reserveResultsScreen.sort.totalPrice',
     },
     {
-      field: SortField.DISTANCE,
+      key: SortField.DISTANCE,
       label: 'reserveResultsScreen.sort.distance',
     },
     {
-      field: SortField.REVIEWS,
+      key: SortField.REVIEWS,
       label: 'reserveResultsScreen.sort.reviews',
     },
   ] as const,
   sortOrderOptions: [
     {
-      field: SortOrder.ASC,
+      key: SortOrder.ASC,
       label: 'reserveResultsScreen.sort.asc',
     },
     {
-      field: SortOrder.DESC,
+      key: SortOrder.DESC,
       label: 'reserveResultsScreen.sort.desc',
     },
   ] as const,
@@ -199,7 +190,8 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
           petIds: state.searchCriteria.selectedPets.map((pet) => pet.id),
           visitsPerDay: state.searchCriteria.visits,
           userAddressId: state.searchCriteria.selectedAddress?._id,
-          caregiverAddressId: state.userToRequest.caregiver.carerConfig?.careAddress,
+          caregiverAddressId:
+            state.userToRequest.caregiver.carerConfig?.careAddress,
           distance: state.searchCriteria.maxDistance,
         },
         t

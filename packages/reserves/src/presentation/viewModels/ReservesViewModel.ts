@@ -4,6 +4,7 @@ import {
   usePagination,
   PaginationModel,
   LoadFunction,
+  SelectableOption,
 } from '@packages/common'
 import { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
@@ -24,7 +25,9 @@ type ReservesViewModel = {
 }
 
 type ReservesState = {
+  optionsType: SelectableOption<ReserveType>[]
   selectedType: ReserveType
+  optionsStatus: SelectableOption<ReserveStatus>[]
   selectedStatus: ReserveStatus
   pagination: {
     items: ReservationModel[]
@@ -37,8 +40,38 @@ type ReservesState = {
 const initialState: ReservesState = {
   loading: false,
   error: null,
+  optionsType: [
+    { key: ReserveType.Owner, label: 'reservesScreen.types.sent' },
+    { key: ReserveType.Caregiver, label: 'reservesScreen.types.received' },
+  ],
   selectedType: ReserveType.Owner,
-  selectedStatus: ReserveStatus.Confirmed,
+  optionsStatus: [
+    {
+      key: ReserveStatus.Pending,
+      label: 'reservesScreen.statuses.pending',
+    },
+    {
+      key: ReserveStatus.Confirmed,
+      label: 'reservesScreen.statuses.accepted',
+    },
+    {
+      key: ReserveStatus.Started,
+      label: 'reservesScreen.statuses.inProgress',
+    },
+    {
+      key: ReserveStatus.Finished,
+      label: 'reservesScreen.statuses.finished',
+    },
+    {
+      key: ReserveStatus.CancelledCarer && ReserveStatus.CancelledOwner,
+      label: 'reservesScreen.statuses.cancelled',
+    },
+    {
+      key: ReserveStatus.Rejected,
+      label: 'reservesScreen.statuses.rejected',
+    },
+  ],
+  selectedStatus: ReserveStatus.Started,
   pagination: {
     items: [],
     pagination: {

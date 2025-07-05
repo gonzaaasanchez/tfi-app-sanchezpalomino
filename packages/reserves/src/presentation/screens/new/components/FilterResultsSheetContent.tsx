@@ -5,18 +5,15 @@ import {
   LabelStyle,
   useI18n,
   Button,
+  SelectableOption,
 } from '@packages/common'
 import { TouchableOpacity, View, StyleSheet } from 'react-native'
 import { Text } from 'react-native'
-import {
-  SortOptionDatasource,
-  OrderOptionDatasource,
-} from '../../../viewModels/ReservationResultsViewModel'
 import { SortField, SortOrder } from '../../../../data/models/SearchCriteria'
 
-type FilterSheetContentProps = {
-  sortOptions: readonly SortOptionDatasource[]
-  sortOrderOptions: readonly OrderOptionDatasource[]
+type FilterResultsSheetContentProps = {
+  sortOptions: readonly SelectableOption<SortField>[]
+  sortOrderOptions: readonly SelectableOption<SortOrder>[]
   sortField: SortField
   sortOrder: SortOrder
   handleSortOptionPress: (field: SortField) => void
@@ -24,7 +21,7 @@ type FilterSheetContentProps = {
   confirmSortAndOrder: () => void
 }
 
-export const FilterSheetContent = ({
+export const FilterResultsSheetContent = ({
   sortOptions,
   sortOrderOptions,
   sortField,
@@ -32,7 +29,7 @@ export const FilterSheetContent = ({
   handleSortOptionPress,
   handleSortOrderPress,
   confirmSortAndOrder,
-}: FilterSheetContentProps) => {
+}: FilterResultsSheetContentProps) => {
   const { t } = useI18n()
   const RadioButton = ({
     isSelected,
@@ -59,7 +56,7 @@ export const FilterSheetContent = ({
     onSelect,
   }: {
     title: string
-    options: readonly { readonly field: T; readonly label: string }[]
+    options: readonly SelectableOption<T>[]
     selectedValue: T
     onSelect: (value: T) => void
   }) => {
@@ -67,18 +64,18 @@ export const FilterSheetContent = ({
       <>
         <Text style={styles.sortSheetTitle}>{title}</Text>
         {options.map((option, index) => (
-          <View key={option.field}>
+          <View key={option.key}>
             <TouchableOpacity
               activeOpacity={0.85}
               style={styles.sortOption}
-              onPress={() => onSelect(option.field)}
+              onPress={() => onSelect(option.key)}
             >
               <Text style={LabelStyle.body({ color: Color.black[700] })}>
                 {t(option.label)}
               </Text>
               <RadioButton
-                isSelected={selectedValue === option.field}
-                onPress={() => onSelect(option.field)}
+                isSelected={selectedValue === option.key}
+                onPress={() => onSelect(option.key)}
               />
             </TouchableOpacity>
             {index < options.length - 1 && <View style={styles.separator} />}

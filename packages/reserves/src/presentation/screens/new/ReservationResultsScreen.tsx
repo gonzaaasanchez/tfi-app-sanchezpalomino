@@ -18,7 +18,7 @@ import { useReservationResultsViewModel } from '../../viewModels/ReservationResu
 import { useNavigation } from '@react-navigation/native'
 import { SortField, SortOrder } from '../../../data/models/SearchCriteria'
 import { SearchResultCard } from './components/SearchResultCard'
-import { FilterSheetContent } from './components/FilterSheetContent'
+import { FilterResultsSheetContent } from './components/FilterResultsSheetContent'
 import { ConfirmationSheetContent } from './components/ConfirmationSheetContent'
 import catSuccess from '@app/assets/lottie-json/success-cat.json'
 import { useDispatch } from 'react-redux'
@@ -44,6 +44,7 @@ const ReservationResultsScreen: FC = () => {
   const confirmationBottomSheetRef = useBottomSheetModalRef()
   const sucessBottomSheetRef = useBottomSheetModalRef()
   const dispatch = useDispatch()
+
   useEffect(() => {
     if (state.searchCriteria) {
       setSortField(state.searchCriteria.sortBy.field)
@@ -117,7 +118,7 @@ const ReservationResultsScreen: FC = () => {
         <GenericToast overrideOffset={10} />
       </SafeAreaView>
       <PPBottomSheet.Empty ref={filterBottomSheetRef} dismisseable={true}>
-        <FilterSheetContent
+        <FilterResultsSheetContent
           sortOptions={state.sortOptions}
           sortOrderOptions={state.sortOrderOptions}
           sortField={sortField}

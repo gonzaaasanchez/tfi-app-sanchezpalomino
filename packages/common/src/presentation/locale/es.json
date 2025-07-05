@@ -77,9 +77,13 @@
         "received": "Recibidas"
       },
       "statuses": {
+        "title": "Filtrar por estado",
+        "pending": "Pendientes",
         "accepted": "Confirmadas",
+        "inProgress": "En curso",
+        "cancelled": "Canceladas",
         "rejected": "Rechazadas",
-        "pending": "Pendientes"
+        "finished": "Finalizadas"
       },
       "card": {
         "pet": "Mascota",

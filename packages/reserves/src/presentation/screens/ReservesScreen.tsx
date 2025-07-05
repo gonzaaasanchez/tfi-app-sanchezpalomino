@@ -10,15 +10,19 @@ import {
   PaginatedScrollView,
   useInjection,
   Types,
+  PPBottomSheetContainer,
+  useBottomSheetModalRef,
+  PPBottomSheet,
 } from '@packages/common'
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { StyleSheet, View, TouchableOpacity } from 'react-native'
 import ReservationsHeader from '../components/ReservationsHeader'
 import { useReservesViewModel } from '../viewModels/ReservesViewModel'
 import ReservationCard from '../components/ReservationCard'
 import { StackActions, useNavigation } from '@react-navigation/native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { ReserveType } from '../../data/models/ReservationModel'
+import { ReserveStatus, ReserveType } from '../../data/models/ReservationModel'
+import { FilterReservesSheetContent } from './new/components/FilterReservesSheetContent'
 
 const ReservesScreen: FC = (): JSX.Element => {
   const { state, setReserveType, setReserveStatus, loadReserves } =
@@ -26,7 +30,10 @@ const ReservesScreen: FC = (): JSX.Element => {
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
   const baseUrl = useInjection(Types.BaseURL) as string
+  const filterBottomSheetRef = useBottomSheetModalRef()
   const { t } = useI18n()
+  const [selectedReserveStatus, setSelectedReserveStatus] =
+    useState<ReserveStatus>(state.selectedStatus || ReserveStatus.Finished)
 
   useEffect(() => {
     if (state.error) {
@@ -38,14 +45,29 @@ const ReservesScreen: FC = (): JSX.Element => {
     }
   }, [state.error])
 
+  useEffect(() => {
+    if (state.selectedStatus) {
+      setSelectedReserveStatus(state.selectedStatus)
+    }
+  }, [state.selectedStatus])
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={filterBottomSheetRef.current?.present}>
+          <PPMaterialIcon icon="filter-alt" size={24} color={'white'} />
+        </TouchableOpacity>
+      ),
+    })
+  }, [navigation])
+
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
         <ReservationsHeader
-          defaultSelectedStatus={state.selectedStatus}
+          types={state.optionsType}
           defaultSelectedType={state.selectedType}
           onTypeSelected={(type) => setReserveType(type)}
-          onStatusSelected={(status) => setReserveStatus(status)}
         />
         <PaginatedScrollView
           pagination={state.pagination}
@@ -92,6 +114,18 @@ const ReservesScreen: FC = (): JSX.Element => {
           <PPMaterialIcon icon="add" size={30} color={'white'} />
         </TouchableOpacity>
       )}
+
+      <PPBottomSheet.Empty ref={filterBottomSheetRef} dismisseable={true}>
+        <FilterReservesSheetContent
+          statusOptions={state.optionsStatus}
+          status={selectedReserveStatus}
+          handleSatusSelected={setSelectedReserveStatus}
+          confirm={() => {
+            setReserveStatus(selectedReserveStatus)
+            filterBottomSheetRef.current?.dismiss()
+          }}
+        />
+      </PPBottomSheet.Empty>
 
       {(state.loading || state.pagination.loading) && <Loader loading={true} />}
     </View>

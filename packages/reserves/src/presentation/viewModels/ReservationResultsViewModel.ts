@@ -166,7 +166,6 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
       sortBy: { field, order },
     }
     setState((prev) => ({ ...prev, searchCriteria: updatedCriteria }))
-    searchResults({ reset: true })
   }
 
   const setUserToRequest = (user: SearchResultModel) => {

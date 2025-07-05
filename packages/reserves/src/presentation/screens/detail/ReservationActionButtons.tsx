@@ -7,13 +7,14 @@ import {
 } from '../../../data/models/ReservationModel'
 
 type CarerReservationActionsProps = {
-  reservation?: ReservationModel
+  reservation: ReservationModel
   accept: () => void
   reject: () => void
   cancel: () => void
 }
 
 type OwnerReservationActionsProps = {
+  reservation: ReservationModel
   cancel: () => void
 }
 
@@ -84,16 +85,27 @@ const CarerReservationActions: FC<CarerReservationActionsProps> = ({
 }
 
 const OwnerReservationActions: FC<OwnerReservationActionsProps> = ({
+  reservation,
   cancel,
 }) => {
   const { t } = useI18n()
 
+  const primaryButtonNedded = (): boolean => {
+    return (
+      reservation?.status === ReserveStatus.Pending ||
+      reservation?.status === ReserveStatus.Confirmed ||
+      reservation?.status === ReserveStatus.Started
+    )
+  }
+
   return (
     <View>
-      <Button.Secondary
-        title={t('reserveDetailScreen.cancelReserve')}
-        onPress={cancel}
-      />
+      {primaryButtonNedded() && (
+        <Button.Secondary
+          title={t('reserveDetailScreen.cancelReserve')}
+          onPress={cancel}
+        />
+      )}
     </View>
   )
 }

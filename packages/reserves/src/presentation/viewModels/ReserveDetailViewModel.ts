@@ -1,5 +1,5 @@
 import { UIState, useInjection, useI18n, ShowToast } from '@packages/common'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   ReservationModel,
   ReserveStatus,
@@ -7,7 +7,9 @@ import {
 import { AcceptReservationUseCase } from '../../domain/usecases/AcceptReservationUseCase'
 import { RejectReservationUseCase } from '../../domain/usecases/RejectReservationUseCase'
 import { CancelReservationUseCase } from '../../domain/usecases/CancelReservationUseCase'
+import { GetReservationReviewsUseCase } from '../../domain/usecases/GetReservationReviewsUseCase'
 import { $ } from '../../domain/di/Types'
+import { ReservationReviewModel } from '../../data/models/ReviewModel'
 
 type ReserveDetailViewModel = {
   state: ReserveDetailState
@@ -18,10 +20,12 @@ type ReserveDetailViewModel = {
   clearConfirmation: () => void
   executeAction: () => Promise<void>
   clearStatusMessage: () => void
+  loadReservationReviews: () => Promise<void>
 }
 
 type ReserveDetailState = {
   currentReserve: ReservationModel
+  currentReserveReview: ReservationReviewModel | null
   reserveStatusChangeTitle: string | undefined
   reserveStatusChangeSubtitle: string | undefined
   confirmationDialog: {
@@ -39,6 +43,7 @@ const useReserveDetailViewModel = (
     loading: false,
     error: null,
     currentReserve: reservation,
+    currentReserveReview: null,
     reserveStatusChangeTitle: undefined,
     reserveStatusChangeSubtitle: undefined,
     confirmationDialog: null,
@@ -54,6 +59,14 @@ const useReserveDetailViewModel = (
   const cancelReservationUseCase = useInjection<CancelReservationUseCase>(
     $.CancelReservationUseCase
   )
+  const getReservationReviewsUseCase =
+    useInjection<GetReservationReviewsUseCase>($.GetReservationReviewsUseCase)
+
+  useEffect(() => {
+    if (state.currentReserve.status === ReserveStatus.Finished) {
+      loadReservationReviews()
+    }
+  }, [state.currentReserve])
 
   const acceptReserve = (): void => {
     setState((prev) => ({
@@ -229,6 +242,30 @@ const useReserveDetailViewModel = (
     }))
   }
 
+  const loadReservationReviews = async (): Promise<void> => {
+    setState((prev) => ({ ...prev, loading: true, error: null }))
+    try {
+      const reviews = await getReservationReviewsUseCase.execute(
+        state.currentReserve.id
+      )
+      setState((prev) => ({
+        ...prev,
+        loading: false,
+        currentReserveReview: reviews,
+      }))
+    } catch (error) {
+      setState((prev) => ({ ...prev, loading: false }))
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle:
+          error instanceof Error
+            ? error.message
+            : t('reserveDetailScreen.error.loadReviewsFailed'),
+      })
+    }
+  }
+
   return {
     state,
     acceptReserve,
@@ -238,6 +275,7 @@ const useReserveDetailViewModel = (
     clearConfirmation,
     executeAction,
     clearStatusMessage,
+    loadReservationReviews,
   }
 }
 

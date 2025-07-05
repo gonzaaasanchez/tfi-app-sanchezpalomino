@@ -6,6 +6,7 @@ import {
   ReserveStatus,
   ReserveType,
 } from '../models/ReservationModel'
+import { ReservationReviewModel } from '../models/ReviewModel'
 import { PaginatedResponse } from '@packages/common'
 
 class ReservesRepositoryImpl implements ReservesRepository {
@@ -46,6 +47,10 @@ class ReservesRepositoryImpl implements ReservesRepository {
     reason?: string
   ): Promise<ReservationModel> {
     return this.api.cancelReservation(id, reason)
+  }
+
+  async getReservationReviews(id: string): Promise<ReservationReviewModel> {
+    return this.api.getReservationReviews(id)
   }
 }
 

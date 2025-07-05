@@ -19,12 +19,19 @@ import {
   GenericToast,
   PPMaterialIcon,
 } from '@packages/common'
-import { View, Text, StyleSheet, ScrollView, SafeAreaView } from 'react-native'
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native'
 import { useDispatch } from 'react-redux'
 import { markStatusChanged } from '../../../domain/store/ReservesSlice'
 import {
   PlaceType,
   ReservationModel,
+  ReserveStatus,
 } from '../../../data/models/ReservationModel'
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native'
 import { useReserveDetailViewModel } from '../../viewModels/ReserveDetailViewModel'
@@ -32,6 +39,7 @@ import {
   CarerReservationActions,
   OwnerReservationActions,
 } from './ReservationActionButtons'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 type RootStackParamList = {
   reservationDetail: {
@@ -211,20 +219,103 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
     )
   }
 
-  const ActionsCard = () => {
+  const ReviewsCard = () => {
+    const NoReview = ({
+      reviewType,
+      onPress,
+    }: {
+      reviewType: 'owner' | 'caregiver'
+      onPress: () => void
+    }) => {
+      return (
+        <>
+          <Text style={LabelStyle.callout2({ textAlign: 'center' })}>
+            {isUserRequest
+              ? t('reserveDetailScreen.reviewsSection.noReviewUser')
+              : reviewType === 'owner'
+                ? t('reserveDetailScreen.reviewsSection.noReviewOwner')
+                : t('reserveDetailScreen.reviewsSection.noReviewCarer')}
+          </Text>
+          {isUserRequest && reviewType === 'owner' && (
+            <ReviewButton onPress={onPress} />
+          )}
+          {!isUserRequest && reviewType === 'caregiver' && (
+            <ReviewButton onPress={onPress} />
+          )}
+        </>
+      )
+    }
+
+    const ReviewButton = ({ onPress }: { onPress: () => void }) => {
+      return (
+        <TouchableOpacity
+          style={{ alignSelf: 'center', paddingTop: 10 }}
+          onPress={onPress}
+        >
+          <Text style={styles.reviewButton}>
+            {t('reserveDetailScreen.reviewsSection.createReview')}
+          </Text>
+        </TouchableOpacity>
+      )
+    }
+
+    const UserReview = () => {
+      return (
+        <View style={{ marginVertical: 10 }}>
+          {state.currentReserveReview?.summary.hasOwnerReview == true ? (
+            <View>
+              <Text>{state.currentReserveReview.reviews.owner.comment}</Text>
+            </View>
+          ) : (
+            <NoReview reviewType="owner" onPress={() => {}} />
+          )}
+          <View style={styles.reviewSeparator} />
+          {state.currentReserveReview?.summary.hasCarerReview == true ? (
+            <View>
+              <Text>
+                {state.currentReserveReview.reviews.caregiver.comment}
+              </Text>
+            </View>
+          ) : (
+            <NoReview reviewType="caregiver" onPress={() => {}} />
+          )}
+        </View>
+      )
+    }
+
     return (
       <>
-        {isUserRequest && (
-          <OwnerReservationActions cancel={cancelReserveOwner} />
+        {state.currentReserve.status === ReserveStatus.Finished && (
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>{t('reserveDetailScreen.reviewsSection.title')}</Text>
+            <UserReview />
+          </View>
         )}
+      </>
+    )
+  }
 
-        {!isUserRequest && (
-          <CarerReservationActions
-            reservation={state.currentReserve}
-            accept={acceptReserve}
-            reject={rejectReserve}
-            cancel={cancelReserveCarer}
-          />
+  const ActionsCard = () => {
+    const isFinished = state.currentReserve.status === ReserveStatus.Finished
+    return (
+      <>
+        {!isFinished && (
+          <View style={styles.actionsContainer}>
+            {isUserRequest && (
+              <OwnerReservationActions
+                reservation={state.currentReserve}
+                cancel={cancelReserveOwner}
+              />
+            )}
+            {!isUserRequest && (
+              <CarerReservationActions
+                reservation={state.currentReserve}
+                accept={acceptReserve}
+                reject={rejectReserve}
+                cancel={cancelReserveCarer}
+              />
+            )}
+          </View>
         )}
       </>
     )
@@ -241,7 +332,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
 
   return (
     <PPBottomSheetContainer>
-      <SafeAreaView style={styles.mainContainer}>
+      <SafeAreaView style={styles.mainContainer} edges={[]}>
         <ScrollView
           style={styles.scrollContainer}
           contentContainerStyle={styles.scrollContent}
@@ -250,6 +341,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
           <UserCard />
           <PetsCard />
           <DetailsCard />
+          <ReviewsCard />
           <PaymentInfoComponent
             isUserRequest={isUserRequest}
             totalPrice={state.currentReserve?.totalPrice}
@@ -259,9 +351,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
             needsShadow={true}
           />
         </ScrollView>
-        <View style={styles.actionsContainer}>
-          <ActionsCard />
-        </View>
+        <ActionsCard />
       </SafeAreaView>
       <PPBottomSheet.Empty
         ref={petDetailModalRef}
@@ -304,6 +394,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 20,
+    paddingBottom: 40,
   },
   container: {
     flex: 1,
@@ -332,6 +423,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+  },
+  reviewSeparator: {
+    height: 1,
+    backgroundColor: Color.black[300],
+    marginVertical: 20,
+    marginHorizontal: 10,
+  },
+  reviewButton: {
+    ...LabelStyle.body2({ color: Color.brand1[700] }),
+    borderBottomWidth: 1,
+    borderBottomColor: Color.brand1[700],
   },
   row: {
     flexDirection: 'row',

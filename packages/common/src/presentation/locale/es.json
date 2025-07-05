@@ -112,7 +112,7 @@
       "title": "Detalle de la reserva",
       "user": "Usuario",
       "reviews": "{{average}} ({{total}} reseñas)",
-      "pets": "Mascotas que se van a cuidar: ",
+      "pets": "Mascotas cuidadas: ",
       "details": "Detalles de la visita:",
       "date": "Cuándo: ",
       "placeType": "Dónde: ",
@@ -124,6 +124,13 @@
       "cancelReserve": "Cancelar reserva",
       "petDetails": "Más detalles:",
       "distanceFormat": "{{location}} (a {{distance}} km)",
+      "reviewsSection": {
+        "title": "Reseñas",
+        "noReviewUser": "Aún no dejaste tu reseña",
+        "noReviewOwner": "El dueño aún no hizo su reseña",
+        "noReviewCarer": "El cuidador aún no hizo su reseña",
+        "createReview": "Crear reseña"
+      },
       "validation": {
         "reservationIdRequired": "El ID de la reserva es requerido"
       },
@@ -141,7 +148,8 @@
       "error": {
         "acceptFailed": "Error al aceptar la reserva",
         "rejectFailed": "Error al rechazar la reserva",
-        "cancelFailed": "Error al cancelar la reserva"
+        "cancelFailed": "Error al cancelar la reserva",
+        "loadReviewsFailed": "No se pudo cargar las reseñas"
       },
       "success": {
         "acceptedTitle": "Reserva aceptada",

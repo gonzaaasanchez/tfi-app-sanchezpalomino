@@ -14,14 +14,18 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native'
 
 type ReviewBottomSheetContentProps = {
   onReviewSubmitted: (rating: number, comment: string) => void
+  isKeyboardVisible?: boolean
 }
 
 const ReviewBottomSheetContent: FC<ReviewBottomSheetContentProps> = ({
   onReviewSubmitted,
+  isKeyboardVisible = false,
 }) => {
   const { t } = useI18n()
   const [rating, setRating] = useState(0)
@@ -41,70 +45,84 @@ const ReviewBottomSheetContent: FC<ReviewBottomSheetContentProps> = ({
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>
-        {t('reserveDetailScreen.reviewsSection.createReview')}
-      </Text>
-
-      <View style={styles.ratingContainer}>
-        <Text style={styles.ratingLabel}>
-          {t('reserveDetailScreen.reviewsSection.rating')}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View
+        style={[
+          styles.container,
+          isKeyboardVisible && styles.containerWithKeyboard,
+        ]}
+      >
+        <Text style={styles.title}>
+          {t('reserveDetailScreen.reviewsSection.createReview')}
         </Text>
-        <View style={styles.starsContainer}>
-          {stars.map((star) => (
-            <TouchableOpacity
-              key={star}
-              onPress={() => handleStarPress(star)}
-              style={styles.starButton}
-            >
-              <PPMaterialIcon
-                icon={rating >= star ? 'star' : 'star-border'}
-                size={32}
-                color={rating >= star ? Color.brand1[600] : Color.brand1[400]}
-              />
-            </TouchableOpacity>
-          ))}
-        </View>
-        {rating > 0 && (
-          <Text style={styles.ratingText}>
-            {t('reserveDetailScreen.reviewsSection.ratingSelected', {
-              rating: rating.toString(),
-            })}
+
+        <View style={styles.ratingContainer}>
+          <Text style={styles.ratingLabel}>
+            {t('reserveDetailScreen.reviewsSection.rating')}
           </Text>
-        )}
-      </View>
-
-      <View style={styles.commentContainer}>
-        <Text style={styles.commentLabel}>
-          {t('reserveDetailScreen.reviewsSection.comment')}
-        </Text>
-        <TextInput
-          style={styles.commentInput}
-          placeholder={t(
-            'reserveDetailScreen.reviewsSection.commentPlaceholder'
+          <View style={styles.starsContainer}>
+            {stars.map((star) => (
+              <TouchableOpacity
+                key={star}
+                onPress={() => handleStarPress(star)}
+                style={styles.starButton}
+              >
+                <PPMaterialIcon
+                  icon={rating >= star ? 'star' : 'star-border'}
+                  size={32}
+                  color={rating >= star ? Color.brand1[600] : Color.brand1[400]}
+                />
+              </TouchableOpacity>
+            ))}
+          </View>
+          {rating > 0 && (
+            <Text style={styles.ratingText}>
+              {t('reserveDetailScreen.reviewsSection.ratingSelected', {
+                rating: rating.toString(),
+              })}
+            </Text>
           )}
-          value={comment}
-          onChangeText={setComment}
-          multiline
-          numberOfLines={5}
-          textAlignVertical="top"
-        />
-      </View>
+        </View>
 
-      <View style={styles.actionsContainer}>
-        <Button.Primary
-          title={t('reserveDetailScreen.reviewsSection.submitReview')}
-          onPress={handleSubmit}
-          state={rating === 0 || comment.length === 0 ? ButtonState.DISABLE : ButtonState.ENABLE}
-        />
+        <View style={styles.commentContainer}>
+          <Text style={styles.commentLabel}>
+            {t('reserveDetailScreen.reviewsSection.comment')}
+          </Text>
+          <TextInput
+            style={styles.commentInput}
+            placeholder={t(
+              'reserveDetailScreen.reviewsSection.commentPlaceholder'
+            )}
+            value={comment}
+            onChangeText={setComment}
+            multiline
+            numberOfLines={5}
+            textAlignVertical="top"
+          />
+        </View>
+
+        <View style={styles.actionsContainer}>
+          <Button.Primary
+            title={t('reserveDetailScreen.reviewsSection.submitReview')}
+            onPress={handleSubmit}
+            state={
+              rating === 0 || comment.length === 0
+                ? ButtonState.DISABLE
+                : ButtonState.ENABLE
+            }
+          />
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     gap: 20,
+  },
+  containerWithKeyboard: {
+    paddingBottom: 240,
   },
   title: {
     ...LabelStyle.title1({ textAlign: 'center' }),

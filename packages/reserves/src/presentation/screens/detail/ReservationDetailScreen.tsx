@@ -26,6 +26,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Keyboard,
 } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { markStatusChanged } from '../../../domain/store/ReservesSlice'
@@ -74,6 +75,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
   } = useReserveDetailViewModel(reservation)
   const { t } = useI18n()
   const [petDetail, setPetDetail] = useState<PetModel>(null)
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
   const petDetailModalRef = useBottomSheetModalRef()
   const statusModalRef = useBottomSheetModalRef()
   const confirmationModalRef = useBottomSheetModalRef()
@@ -104,6 +106,26 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
       reviewModalRef.current?.dismiss()
     }
   }, [state.reviewSent])
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setIsKeyboardVisible(true)
+      }
+    )
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setIsKeyboardVisible(false)
+      }
+    )
+
+    return () => {
+      keyboardDidShowListener?.remove()
+      keyboardDidHideListener?.remove()
+    }
+  }, [])
 
   const handleStatusDismiss = () => {
     clearStatusMessage()
@@ -453,7 +475,10 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
       />
 
       <PPBottomSheet.Empty ref={reviewModalRef} dismisseable={true}>
-        <ReviewBottomSheetContent onReviewSubmitted={saveReview} />
+        <ReviewBottomSheetContent
+          onReviewSubmitted={saveReview}
+          isKeyboardVisible={isKeyboardVisible}
+        />
       </PPBottomSheet.Empty>
 
       {state.loading && <Loader loading={state.loading} />}

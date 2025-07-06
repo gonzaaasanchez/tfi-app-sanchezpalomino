@@ -18,7 +18,7 @@ const FeedItem: FC<FeedItemProps> = ({ item }) => {
           {fullName}
         </Text>
         <Text style={LabelStyle.link2({ color: Color.black[500] })}>
-          {DateUtils.MMDDYYYY(item.date)}
+          {DateUtils.DDMMYYYY(item.date)}
         </Text>
       </View>
       <Text style={styles.title}>{item.title}</Text>

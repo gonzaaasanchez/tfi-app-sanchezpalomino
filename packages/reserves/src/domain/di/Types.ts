@@ -13,6 +13,7 @@ const $ = {
   RejectReservationUseCase: Symbol.for('RejectReservationUseCase'),
   CancelReservationUseCase: Symbol.for('CancelReservationUseCase'),
   GetReservationReviewsUseCase: Symbol.for('GetReservationReviewsUseCase'),
+  SaveReviewUseCase: Symbol.for('SaveReviewUseCase'),
 }
 
 export { $ }

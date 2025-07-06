@@ -18,6 +18,7 @@ import {
   Loader,
   GenericToast,
   PPMaterialIcon,
+  DateUtils,
 } from '@packages/common'
 import {
   View,
@@ -68,6 +69,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
     cancelReserveOwner,
     clearConfirmation,
     executeAction,
+    saveReview,
     clearStatusMessage,
   } = useReserveDetailViewModel(reservation)
   const { t } = useI18n()
@@ -97,6 +99,12 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
     }
   }, [state.confirmationDialog?.show])
 
+  useEffect(() => {
+    if (state.reviewSent) {
+      reviewModalRef.current?.dismiss()
+    }
+  }, [state.reviewSent])
+
   const handleStatusDismiss = () => {
     clearStatusMessage()
     statusModalRef.current?.dismiss()
@@ -117,12 +125,6 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
 
   const handleReviewButtonPress = () => {
     reviewModalRef.current?.present()
-  }
-
-  const handleReviewSubmitted = (rating: number, comment: string) => {
-    reviewModalRef.current?.dismiss()
-    console.log('Review submitted:', { rating, comment })
-    // Aquí puedes implementar la lógica para enviar la reseña
   }
 
   const UserCard = () => {
@@ -232,6 +234,51 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
   }
 
   const ReviewsCard = () => {
+    //
+    const Comment = ({
+      reviewType,
+      name,
+      date,
+      rating,
+      message,
+    }: {
+      reviewType: 'owner' | 'caregiver'
+      name: string
+      date: string
+      rating: number
+      message: string
+    }) => {
+      const stars = [1, 2, 3, 4, 5]
+
+      return (
+        <View>
+          <Text style={{ paddingBottom: 8, ...LabelStyle.body2() }}>
+            {(() => {
+              const typeLabel =
+                reviewType === 'owner'
+                  ? t('reserveDetailScreen.reviewsSection.ownerLabel')
+                  : t('reserveDetailScreen.reviewsSection.caregiverLabel')
+              const formattedDate = DateUtils.DDMMYYYY(date)
+              return `${name} (${typeLabel}) el ${formattedDate}:`
+            })()}
+          </Text>
+          <View style={{ flexDirection: 'row', paddingBottom: 2 }}>
+            {stars.map((star) => (
+              <PPMaterialIcon
+                key={star}
+                icon={rating >= star ? 'star' : 'star-border'}
+                size={12}
+                color={rating >= star ? Color.brand1[600] : Color.brand1[400]}
+              />
+            ))}
+          </View>
+          <Text style={{ ...LabelStyle.callout2({ color: Color.black[500] }) }}>
+            {message}
+          </Text>
+        </View>
+      )
+    }
+
     const NoReview = ({
       reviewType,
       onPress,
@@ -242,10 +289,12 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
       return (
         <>
           <Text style={LabelStyle.callout2({ textAlign: 'center' })}>
-            {isUserRequest
-              ? t('reserveDetailScreen.reviewsSection.noReviewUser')
-              : reviewType === 'owner'
-                ? t('reserveDetailScreen.reviewsSection.noReviewOwner')
+            {reviewType === 'owner'
+              ? isUserRequest
+                ? t('reserveDetailScreen.reviewsSection.noReviewUser')
+                : t('reserveDetailScreen.reviewsSection.noReviewOwner')
+              : !isUserRequest
+                ? t('reserveDetailScreen.reviewsSection.noReviewUser')
                 : t('reserveDetailScreen.reviewsSection.noReviewCarer')}
           </Text>
           {isUserRequest && reviewType === 'owner' && (
@@ -271,23 +320,31 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
       )
     }
 
-    const UserReview = () => {
+    const MainContent = () => {
       return (
         <View style={{ marginVertical: 10 }}>
           {state.currentReserveReview?.summary.hasOwnerReview == true ? (
-            <View>
-              <Text>{state.currentReserveReview.reviews.owner.comment}</Text>
-            </View>
+            <Comment
+              reviewType="owner"
+              name={state.currentReserveReview.reviews.owner.reviewer.firstName}
+              date={state.currentReserveReview.reviews.owner.createdAt}
+              message={state.currentReserveReview.reviews.owner.comment}
+              rating={state.currentReserveReview.reviews.owner.rating}
+            />
           ) : (
             <NoReview reviewType="owner" onPress={handleReviewButtonPress} />
           )}
           <View style={styles.reviewSeparator} />
-          {state.currentReserveReview?.summary.hasCarerReview == true ? (
-            <View>
-              <Text>
-                {state.currentReserveReview.reviews.caregiver.comment}
-              </Text>
-            </View>
+          {state.currentReserveReview?.summary.hasCaregiverReview == true ? (
+            <Comment
+              reviewType="caregiver"
+              name={
+                state.currentReserveReview.reviews.caregiver.reviewer.firstName
+              }
+              date={state.currentReserveReview.reviews.caregiver.createdAt}
+              message={state.currentReserveReview.reviews.caregiver.comment}
+              rating={state.currentReserveReview.reviews.caregiver.rating}
+            />
           ) : (
             <NoReview
               reviewType="caregiver"
@@ -305,7 +362,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
             <Text style={styles.cardTitle}>
               {t('reserveDetailScreen.reviewsSection.title')}
             </Text>
-            <UserReview />
+            <MainContent />
           </View>
         )}
       </>
@@ -396,7 +453,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
       />
 
       <PPBottomSheet.Empty ref={reviewModalRef} dismisseable={true}>
-        <ReviewBottomSheetContent onReviewSubmitted={handleReviewSubmitted} />
+        <ReviewBottomSheetContent onReviewSubmitted={saveReview} />
       </PPBottomSheet.Empty>
 
       {state.loading && <Loader loading={state.loading} />}

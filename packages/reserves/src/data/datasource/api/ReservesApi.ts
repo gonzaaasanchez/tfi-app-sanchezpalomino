@@ -4,7 +4,7 @@ import {
   ReserveStatus,
   ReserveType,
 } from '../../models/ReservationModel'
-import { ReservationReviewModel } from '../../models/ReviewModel'
+import { ReservationReviewModel, ReviewModel } from '../../models/ReviewModel'
 import { CreateReservationData } from '../../models/local/Types'
 
 interface ReservesApi {
@@ -19,6 +19,11 @@ interface ReservesApi {
   rejectReservation(id: string, reason?: string): Promise<ReservationModel>
   cancelReservation(id: string, reason?: string): Promise<ReservationModel>
   getReservationReviews(id: string): Promise<ReservationReviewModel>
+  saveReview(
+    reservationId: string,
+    rating: number,
+    comment: string
+  ): Promise<ReviewModel>
 }
 
 class ReservesApiImpl implements ReservesApi {
@@ -108,6 +113,22 @@ class ReservesApiImpl implements ReservesApi {
   async getReservationReviews(id: string): Promise<ReservationReviewModel> {
     const response = await this.httpClient.get<ReservationReviewModel>(
       `/reservations/${id}/reviews`
+    )
+    return response.data
+  }
+
+  async saveReview(
+    reservationId: string,
+    rating: number,
+    comment: string
+  ): Promise<ReviewModel> {
+    const requestBody = {
+      rating,
+      comment,
+    }
+    const response = await this.httpClient.post<ReviewModel>(
+      `/reservations/${reservationId}/reviews`,
+      requestBody
     )
     return response.data
   }

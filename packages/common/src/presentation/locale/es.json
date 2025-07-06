@@ -138,7 +138,10 @@
         "ratingSelected": "{{rating}} estrellas",
         "comment": "Comentario",
         "commentPlaceholder": "Compartí tu experiencia...",
-        "submitReview": "Enviar reseña"
+        "submitReview": "Enviar reseña",
+        "ownerLabel": "dueño",
+        "caregiverLabel": "cuidador",
+        "reviewHeader": "{{name}} ({{type}}) el {{formattedDate}}:"
       },
       "validation": {
         "reservationIdRequired": "El ID de la reserva es requerido"
@@ -158,7 +161,8 @@
         "acceptFailed": "Error al aceptar la reserva",
         "rejectFailed": "Error al rechazar la reserva",
         "cancelFailed": "Error al cancelar la reserva",
-        "loadReviewsFailed": "No se pudo cargar las reseñas"
+        "loadReviewsFailed": "No se pudo cargar las reseñas",
+        "saveReviewFailed": "Error al guardar la reseña"
       },
       "success": {
         "acceptedTitle": "Reserva aceptada",
@@ -168,7 +172,9 @@
         "cancelledOwnerTitle": "Reserva cancelada",
         "cancelledOwnerSubtitle": "Lamentamos que tengas que cancelar la reserva",
         "cancelledCarerTitle": "Reserva cancelada",
-        "cancelledCarerSubtitle": "Lamentamos que tengas que cancelar la reserva"
+        "cancelledCarerSubtitle": "Lamentamos que tengas que cancelar la reserva",
+        "reviewSavedTitle": "¡Reseña guardada!",
+        "reviewSavedSubtitle": "Tu reseña se guardó correctamente"
       }
     },
     "reserveNewScreen": {
@@ -263,7 +269,7 @@
         "total": "Total"
       },
       "caregiverPayment": {
-        "title": "Vas a cobrar",
+        "title": "Vas a recibir",
         "fees": "Honorarios",
         "commission": "Comisión",
         "total": "Total"

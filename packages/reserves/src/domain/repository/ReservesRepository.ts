@@ -4,7 +4,10 @@ import {
   ReserveStatus,
   ReserveType,
 } from '../../data/models/ReservationModel'
-import { ReservationReviewModel } from '../../data/models/ReviewModel'
+import {
+  ReservationReviewModel,
+  ReviewModel,
+} from '../../data/models/ReviewModel'
 import { PaginatedResponse } from '@packages/common'
 
 interface ReservesRepository {
@@ -19,6 +22,11 @@ interface ReservesRepository {
   rejectReservation(id: string, reason?: string): Promise<ReservationModel>
   cancelReservation(id: string, reason?: string): Promise<ReservationModel>
   getReservationReviews(id: string): Promise<ReservationReviewModel>
+  saveReview(
+    reservationId: string,
+    rating: number,
+    comment: string
+  ): Promise<ReviewModel>
 }
 
 export default ReservesRepository

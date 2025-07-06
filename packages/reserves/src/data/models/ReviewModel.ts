@@ -9,7 +9,7 @@ export class ReservationReviewModel {
     },
     public summary: {
       hasOwnerReview: boolean
-      hasCarerReview: boolean
+      hasCaregiverReview: boolean
     }
   ) {}
 }
@@ -17,7 +17,7 @@ export class ReservationReviewModel {
 export type ReviewModel = {
   id: string
   reviewer: UserModel
-  reviewerUser: UserModel
+  reviewedUser: UserModel
   rating: number
   comment: string
   createdAt: string

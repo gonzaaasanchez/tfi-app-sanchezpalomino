@@ -19,6 +19,7 @@ import { AcceptReservationUseCase } from '../usecases/AcceptReservationUseCase'
 import { RejectReservationUseCase } from '../usecases/RejectReservationUseCase'
 import { CancelReservationUseCase } from '../usecases/CancelReservationUseCase'
 import { GetReservationReviewsUseCase } from '../usecases/GetReservationReviewsUseCase'
+import { SaveReviewUseCase } from '../usecases/SaveReviewUseCase'
 
 const ReservesRegister = (resolver: Resolver): void => {
   resolver.registerSingleton<ReservesApi>(
@@ -65,6 +66,10 @@ const ReservesRegister = (resolver: Resolver): void => {
     $.GetReservationReviewsUseCase,
     () =>
       new GetReservationReviewsUseCase(resolver.resolve($.ReservesRepository))
+  )
+  resolver.registerFactory<SaveReviewUseCase>(
+    $.SaveReviewUseCase,
+    () => new SaveReviewUseCase(resolver.resolve($.ReservesRepository))
   )
 }
 

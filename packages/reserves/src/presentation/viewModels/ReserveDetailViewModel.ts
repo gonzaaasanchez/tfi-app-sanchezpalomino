@@ -8,8 +8,12 @@ import { AcceptReservationUseCase } from '../../domain/usecases/AcceptReservatio
 import { RejectReservationUseCase } from '../../domain/usecases/RejectReservationUseCase'
 import { CancelReservationUseCase } from '../../domain/usecases/CancelReservationUseCase'
 import { GetReservationReviewsUseCase } from '../../domain/usecases/GetReservationReviewsUseCase'
+import { SaveReviewUseCase } from '../../domain/usecases/SaveReviewUseCase'
 import { $ } from '../../domain/di/Types'
-import { ReservationReviewModel } from '../../data/models/ReviewModel'
+import {
+  ReservationReviewModel,
+  ReviewModel,
+} from '../../data/models/ReviewModel'
 
 type ReserveDetailViewModel = {
   state: ReserveDetailState
@@ -21,6 +25,7 @@ type ReserveDetailViewModel = {
   executeAction: () => Promise<void>
   clearStatusMessage: () => void
   loadReservationReviews: () => Promise<void>
+  saveReview: (rating: number, comment: string) => Promise<void>
 }
 
 type ReserveDetailState = {
@@ -28,6 +33,7 @@ type ReserveDetailState = {
   currentReserveReview: ReservationReviewModel | null
   reserveStatusChangeTitle: string | undefined
   reserveStatusChangeSubtitle: string | undefined
+  reviewSent: boolean
   confirmationDialog: {
     show: boolean
     action: () => Promise<void>
@@ -46,6 +52,7 @@ const useReserveDetailViewModel = (
     currentReserveReview: null,
     reserveStatusChangeTitle: undefined,
     reserveStatusChangeSubtitle: undefined,
+    reviewSent: false,
     confirmationDialog: null,
   })
   const { t } = useI18n()
@@ -61,6 +68,7 @@ const useReserveDetailViewModel = (
   )
   const getReservationReviewsUseCase =
     useInjection<GetReservationReviewsUseCase>($.GetReservationReviewsUseCase)
+  const saveReviewUseCase = useInjection<SaveReviewUseCase>($.SaveReviewUseCase)
 
   useEffect(() => {
     if (state.currentReserve.status === ReserveStatus.Finished) {
@@ -266,6 +274,30 @@ const useReserveDetailViewModel = (
     }
   }
 
+  const saveReview = async (rating: number, comment: string): Promise<void> => {
+    setState((prev) => ({ ...prev, loading: true, error: null }))
+    try {
+      await saveReviewUseCase.execute(state.currentReserve.id, rating, comment)
+      setState((prev) => ({ ...prev, loading: false, reviewSent: true }))
+      ShowToast({
+        config: 'success',
+        title: t('reserveDetailScreen.success.reviewSavedTitle'),
+        subtitle: t('reserveDetailScreen.success.reviewSavedSubtitle'),
+      })
+      await loadReservationReviews()
+    } catch (error) {
+      setState((prev) => ({ ...prev, loading: false }))
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle:
+          error instanceof Error
+            ? error.message
+            : t('reserveDetailScreen.error.saveReviewFailed'),
+      })
+    }
+  }
+
   return {
     state,
     acceptReserve,
@@ -276,6 +308,7 @@ const useReserveDetailViewModel = (
     executeAction,
     clearStatusMessage,
     loadReservationReviews,
+    saveReview,
   }
 }
 

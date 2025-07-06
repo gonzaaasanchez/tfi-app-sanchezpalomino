@@ -200,7 +200,7 @@ const ReservationNewScreen: FC = (): JSX.Element => {
                 <PPMaterialIcon
                   icon="star-border"
                   size={28}
-                  color={Color.brand1[600]}
+                  color={Color.brand1[400]}
                 />
               )}
             </TouchableOpacity>

@@ -21,6 +21,25 @@ enum ReserveStatus {
   CancelledCarer = 'cancelled_carer',
 }
 
+export const ReserveLabelFromStatus = (status: ReserveStatus) => {
+  switch (status) {
+    case ReserveStatus.Pending:
+      return 'reservesScreen.statuses.pending'
+    case ReserveStatus.Confirmed:
+      return 'reservesScreen.statuses.accepted'
+    case ReserveStatus.Started:
+      return 'reservesScreen.statuses.inProgress'
+    case ReserveStatus.Finished:
+      return 'reservesScreen.statuses.finished'
+    case ReserveStatus.CancelledOwner:
+      return 'reservesScreen.statuses.cancelled'
+    case ReserveStatus.CancelledCarer:
+      return 'reservesScreen.statuses.cancelled'
+    case ReserveStatus.Rejected:
+      return 'reservesScreen.statuses.rejected'
+  }
+}
+
 class ReservationModel {
   id?: string
   user?: UserModel

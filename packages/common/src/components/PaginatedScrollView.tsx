@@ -26,6 +26,7 @@ type PaginatedScrollViewProps<T> = ScrollViewProps & {
   onRefresh?: () => void
   threshold?: number
   emptyComponent?: React.ReactElement
+  ListHeaderComponent?: React.ReactElement
 }
 
 export const PaginatedScrollView = <T,>({
@@ -36,6 +37,7 @@ export const PaginatedScrollView = <T,>({
   threshold = 20,
   emptyComponent,
   onRefresh,
+  ListHeaderComponent,
   ...scrollViewProps
 }: PaginatedScrollViewProps<T>) => {
   const handleScroll = (event: any) => {
@@ -75,6 +77,7 @@ export const PaginatedScrollView = <T,>({
             styles.emptyContainer,
         ]}
       >
+        {ListHeaderComponent}
         {pagination.items.length > 0 &&
           pagination.items.map((item, index) => renderItem(item, index))}
         {pagination.items.length === 0 && !pagination.loading && emptyComponent}

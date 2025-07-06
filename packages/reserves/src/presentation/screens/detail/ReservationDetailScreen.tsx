@@ -170,7 +170,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
             <View style={styles.row}>
               <PPMaterialIcon icon="star" size={16} />
               <Text style={LabelStyle.callout2()}>
-                {t('reserveDetailScreen.reviews', {
+                { t('reserveDetailScreen.reviews', {
                   average: state.currentReserve?.placeDetailReviews({
                     isUserRequest,
                   })?.average,

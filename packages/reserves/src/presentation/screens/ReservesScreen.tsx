@@ -58,7 +58,8 @@ const ReservesScreen: FC = (): JSX.Element => {
         <ReservationsHeader
           types={state.optionsType}
           defaultSelectedType={state.selectedType}
-          onTypeSelected={(type) => setReserveType(type)}
+          onTypeSelected={setReserveType}
+          currentStatus={state.selectedStatus}
         />
         <PaginatedScrollView
           pagination={state.pagination}

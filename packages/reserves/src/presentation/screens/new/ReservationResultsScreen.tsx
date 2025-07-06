@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { StyleSheet, TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity, View, Text } from 'react-native'
 import {
   Color,
   Loader,
@@ -13,6 +13,7 @@ import {
   GenericToast,
   EmptyView,
   PaginatedScrollView,
+  LabelStyle,
 } from '@packages/common'
 import { useReservationResultsViewModel } from '../../viewModels/ReservationResultsViewModel'
 import { useNavigation } from '@react-navigation/native'
@@ -74,6 +75,11 @@ const ReservationResultsScreen: FC = () => {
   return (
     <PPBottomSheetContainer>
       <SafeAreaView style={styles.container} edges={[]}>
+        <Text style={styles.resultsCount}>
+          {t('reserveResultsScreen.totalDescripcion', {
+            total: state.pagination.pagination.total.toString(),
+          })}
+        </Text>
         <PaginatedScrollView
           pagination={state.pagination}
           onLoadMore={() => searchResults({ reset: false })}
@@ -152,6 +158,13 @@ const styles = StyleSheet.create({
   content: {
     flexGrow: 1,
     padding: 20,
+  },
+  resultsCount: {
+    ...LabelStyle.callout2({
+      color: Color.black[600],
+      textAlign: 'center',
+    }),
+    paddingVertical: 5,
   },
 })
 

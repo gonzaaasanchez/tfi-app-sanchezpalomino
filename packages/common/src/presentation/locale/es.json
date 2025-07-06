@@ -72,18 +72,19 @@
     "reservesScreen": {
       "noData": "No tenemos reservas para mostrarte",
       "title": "Reservas",
+      "currentStatus": "Estás viendo reservas con estado ",
       "types": {
         "sent": "Enviadas",
         "received": "Recibidas"
       },
       "statuses": {
         "title": "Filtrar por estado",
-        "pending": "Pendientes",
-        "accepted": "Confirmadas",
+        "pending": "Pendiente",
+        "accepted": "Confirmada",
         "inProgress": "En curso",
-        "cancelled": "Canceladas",
-        "rejected": "Rechazadas",
-        "finished": "Finalizadas"
+        "cancelled": "Cancelada",
+        "rejected": "Rechazada",
+        "finished": "Finalizada"
       },
       "card": {
         "pet": "Mascota",
@@ -221,6 +222,7 @@
     },
     "reserveResultsScreen": {
       "title": "Resultados",
+      "totalDescripcion": "{{total}} cuidadores en total",
       "price": {
         "caretakerFee": "Honorarios cuidador",
         "commission": "Comisión",

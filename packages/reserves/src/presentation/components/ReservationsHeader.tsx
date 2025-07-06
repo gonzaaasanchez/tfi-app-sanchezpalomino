@@ -1,18 +1,21 @@
 import { Color, LabelStyle, SelectableOption, useI18n } from '@packages/common'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { ReserveType } from '../../data/models/ReservationModel'
+import { ReserveStatus, ReserveType } from '../../data/models/ReservationModel'
+import { ReserveLabelFromStatus } from '../../data/models/ReservationModel'
 
 type ReservationsHeaderProps = {
   types: SelectableOption<ReserveType>[]
   onTypeSelected: (ReserveType) => void
   defaultSelectedType: ReserveType
+  currentStatus: ReserveStatus
 }
 
 const ReservationsHeader: React.FC<ReservationsHeaderProps> = ({
   types,
   onTypeSelected,
   defaultSelectedType,
+  currentStatus,
 }) => {
   const { t } = useI18n()
 
@@ -51,6 +54,25 @@ const ReservationsHeader: React.FC<ReservationsHeaderProps> = ({
   return (
     <View style={styles.container}>
       <TypesSegmentedControl />
+      <View style={styles.statusContainer}>
+        <Text
+          style={LabelStyle.callout2({
+            color: Color.brand1[600],
+            textAlign: 'center',
+          })}
+        >
+          {t('reservesScreen.currentStatus')}
+        </Text>
+        <Text
+          style={LabelStyle.callout2({
+            color: Color.brand1[800],
+            fontWeight: 500,
+            textAlign: 'center',
+          })}
+        >
+          {t(ReserveLabelFromStatus(currentStatus))}
+        </Text>
+      </View>
     </View>
   )
 }
@@ -79,6 +101,12 @@ const styles = StyleSheet.create({
   selectedButton: {
     backgroundColor: Color.brand1[700],
     borderRadius: 24,
+  },
+  statusContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 12,
   },
 })
 

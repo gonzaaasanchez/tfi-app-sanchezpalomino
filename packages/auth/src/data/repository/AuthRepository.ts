@@ -16,9 +16,10 @@ class AuthRepositoryImpl implements AuthRepository {
   async createUser(
     email: string,
     password: string,
-    name: string
+    firstName: string,
+    lastName: string
   ): Promise<SessionModel> {
-    return this.api.createUser(email, password, name)
+    return this.api.createUser(email, password, firstName, lastName)
   }
 
   async forgotPassword(email: string): Promise<void> {

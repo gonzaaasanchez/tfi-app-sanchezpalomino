@@ -5,7 +5,8 @@ interface AuthApi {
   createUser(
     email: string,
     password: string,
-    name: string
+    firstName: string,
+    lastName: string
   ): Promise<SessionModel>
   forgotPassword(email: string): Promise<void>
 }
@@ -32,13 +33,18 @@ class AuthApiImpl implements AuthApi {
   async createUser(
     email: string,
     password: string,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    name: string
+    firstName: string,
+    lastName: string
   ): Promise<SessionModel> {
-    const response = await this.httpClient.post<SessionModel>('/register', {
-      email,
-      password,
-    })
+    const response = await this.httpClient.post<SessionModel>(
+      '/auth/register',
+      {
+        email,
+        password,
+        firstName,
+        lastName,
+      }
+    )
     return response.data
   }
 

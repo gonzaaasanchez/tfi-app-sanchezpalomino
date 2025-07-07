@@ -1,24 +1,15 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect } from 'react'
 import {
   View,
   TextInput,
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
-  Alert,
 } from 'react-native'
 import { ParamList } from '../AuthStack'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useRegisterViewModel } from '../viewModels/RegisterViewModel'
-import {
-  Button,
-  Color,
-  Loader,
-  PPBottomSheet,
-  PPBottomSheetContainer,
-  useBottomSheetModalRef,
-  useI18n,
-} from '@app/common'
+import { Button, Color, Loader, ShowToast, useI18n } from '@app/common'
 
 type Props = NativeStackScreenProps<ParamList, 'registerScreen'>
 
@@ -29,13 +20,11 @@ const RegisterScreen = ({ route }: Props): JSX.Element => {
     setEmail,
     setPassword,
     setConfirmPassword,
-    setName,
+    setFirstName,
+    setLastName,
   } = useRegisterViewModel()
   const { email } = route.params
   const { t } = useI18n()
-  const bottomSheetModalRef = useBottomSheetModalRef()
-  const [alertTitle, setAlertTitle] = useState('')
-  const [alertSubtitle, setAlertSubtitle] = useState('')
 
   useLayoutEffect(() => {
     setEmail(email)
@@ -43,107 +32,129 @@ const RegisterScreen = ({ route }: Props): JSX.Element => {
 
   const handleRegister: () => Promise<void> = async () => {
     if (await createUser()) {
-      Alert.alert(
-        t('registerScreen.success.title'),
-        t('registerScreen.success.message')
-      )
+      ShowToast({
+        config: 'success',
+        title: t('registerScreen.success.title'),
+        subtitle: t('registerScreen.success.message'),
+      })
     }
-  }
-
-  const showAlert = (title: string, subtitle: string) => {
-    setAlertTitle(title)
-    setAlertSubtitle(subtitle)
-    bottomSheetModalRef.current?.present()
   }
 
   useEffect(() => {
     if (state.error === 'register-missing-fields') {
-      showAlert(t('general.ups'), t('registerScreen.error.missingFields'))
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: t('registerScreen.error.missingFields'),
+      })
+      return
+    } else if (state.error === 'register-invalid-password') {
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: t('registerScreen.error.invalidPassword'),
+      })
       return
     } else if (state.error === 'register-password-not-match') {
-      showAlert(t('general.ups'), t('registerScreen.error.passwordNotMatch'))
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: t('registerScreen.error.passwordNotMatch'),
+      })
       return
     } else if (state.error === 'register-invalid-email') {
-      showAlert(t('general.ups'), t('registerScreen.error.emailMessage'))
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: t('registerScreen.error.emailMessage'),
+      })
       return
     } else if (state.error !== null) {
-      showAlert(t('general.ups'), state.error)
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: state.error,
+      })
       return
     }
   }, [state.error])
 
   return (
-    <PPBottomSheetContainer>
-      <View style={styles.fullScreenContainer}>
-        {state.loading && <Loader loading={state.loading} />}
-        <KeyboardAvoidingView
-          style={styles.keyboardContainer}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        >
-          <View style={styles.inner} accessible={false}>
-            <TextInput
-              style={styles.input}
-              placeholder={t('registerScreen.name')}
-              placeholderTextColor={Color.black[400]}
-              value={state.name}
-              onChangeText={setName}
-              autoCapitalize="words"
-              autoCorrect={false}
-              testID="registerScreen.name"
-            />
+    <View style={styles.fullScreenContainer}>
+      {state.loading && <Loader loading={state.loading} />}
+      <KeyboardAvoidingView
+        style={styles.keyboardContainer}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <View style={styles.inner} accessible={false}>
+          <TextInput
+            style={styles.input}
+            placeholder={t('registerScreen.firstName')}
+            placeholderTextColor={Color.black[400]}
+            value={state.firstName}
+            onChangeText={setFirstName}
+            autoCapitalize="words"
+            autoCorrect={false}
+            testID="registerScreen.firstName"
+          />
 
-            <TextInput
-              style={styles.input}
-              placeholder={t('registerScreen.email')}
-              placeholderTextColor={Color.black[400]}
-              keyboardType="email-address"
-              value={state.email}
-              onChangeText={setEmail}
-              autoCapitalize="none"
-              autoCorrect={false}
-              textContentType="emailAddress"
-              testID="registerScreen.email"
-            />
+          <TextInput
+            style={styles.input}
+            placeholder={t('registerScreen.lastName')}
+            placeholderTextColor={Color.black[400]}
+            value={state.lastName}
+            onChangeText={setLastName}
+            autoCapitalize="words"
+            autoCorrect={false}
+            testID="registerScreen.lastName"
+          />
 
-            <TextInput
-              style={styles.input}
-              placeholder={t('registerScreen.password')}
-              placeholderTextColor={Color.black[400]}
-              secureTextEntry
-              value={state.password}
-              onChangeText={setPassword}
-              autoCapitalize="none"
-              autoCorrect={false}
-              textContentType={'oneTimeCode'}
-              testID="registerScreen.password"
-            />
+          <TextInput
+            style={styles.input}
+            placeholder={t('registerScreen.email')}
+            placeholderTextColor={Color.black[400]}
+            keyboardType="email-address"
+            value={state.email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            autoCorrect={false}
+            textContentType="emailAddress"
+            testID="registerScreen.email"
+          />
 
-            <TextInput
-              style={styles.input}
-              placeholder={t('registerScreen.confirmPassword')}
-              placeholderTextColor={Color.black[400]}
-              secureTextEntry
-              value={state.confirmPassword}
-              onChangeText={setConfirmPassword}
-              autoCapitalize="none"
-              autoCorrect={false}
-              textContentType={'oneTimeCode'}
-              testID="registerScreen.confirmPassword"
-            />
+          <TextInput
+            style={styles.input}
+            placeholder={t('registerScreen.password')}
+            placeholderTextColor={Color.black[400]}
+            secureTextEntry
+            value={state.password}
+            onChangeText={setPassword}
+            autoCapitalize="none"
+            autoCorrect={false}
+            textContentType={'oneTimeCode'}
+            testID="registerScreen.password"
+          />
 
-            <Button.Primary
-              title={t('registerScreen.register')}
-              onPress={handleRegister}
-            />
-          </View>
-        </KeyboardAvoidingView>
-      </View>
-      <PPBottomSheet.Dialog
-        ref={bottomSheetModalRef}
-        title={alertTitle}
-        subtitle={alertSubtitle}
-      />
-    </PPBottomSheetContainer>
+          <TextInput
+            style={styles.input}
+            placeholder={t('registerScreen.confirmPassword')}
+            placeholderTextColor={Color.black[400]}
+            secureTextEntry
+            value={state.confirmPassword}
+            onChangeText={setConfirmPassword}
+            autoCapitalize="none"
+            autoCorrect={false}
+            textContentType={'oneTimeCode'}
+            testID="registerScreen.confirmPassword"
+          />
+
+          <Button.Primary
+            title={t('registerScreen.register')}
+            onPress={handleRegister}
+          />
+        </View>
+      </KeyboardAvoidingView>
+    </View>
   )
 }
 

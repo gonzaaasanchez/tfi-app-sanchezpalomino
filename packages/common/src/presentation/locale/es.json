@@ -32,7 +32,8 @@
     },
     "registerScreen": {
       "title": "Registrarme",
-      "name": "Nombre",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
       "email": "Email",
       "password": "Contraseña",
       "confirmPassword": "Confirmar contraseña",
@@ -40,11 +41,12 @@
       "error": {
         "missingFields": "Por favor, completá todos los datos.",
         "passwordNotMatch": "Por favor, asegurate que las contraseñas coincidan.",
+        "invalidPassword": "La contraseña tiene que tener más de 8 caracteres, una mayúscula y una minúscula.",
         "emailMessage": "Por favor, ingresá una dirección de email válida."
       },
       "success": {
         "title": "Cuenta creada con éxito",
-        "message": "¡Felictaciones! Tu cuenta se creó correctamente"
+        "message": "¡Felicitaciones! Tu cuenta se creó correctamente"
       }
     },
     "forgotPasswordScreen": {

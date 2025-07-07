@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react'
+import React, { FC, useEffect } from 'react'
 import {
   View,
   Text,
@@ -7,7 +7,6 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
-  Alert,
   Image,
 } from 'react-native'
 import { StackActions, useNavigation } from '@react-navigation/native'
@@ -19,10 +18,8 @@ import {
   Color,
   LabelStyle,
   Loader,
-  PPBottomSheet,
   PPBottomSheetContainer,
   ShowToast,
-  useBottomSheetModalRef,
   useI18n,
 } from '@app/common'
 
@@ -32,29 +29,32 @@ const LoginScreen: FC<Props> = () => {
   const { state, login, setEmail, setPassword } = useLoginViewModel()
   const navigation = useNavigation()
   const { t } = useI18n()
-  const bottomSheetModalRef = useBottomSheetModalRef()
-  const [alertTitle, setAlertTitle] = useState('')
-  const [alertSubtitle, setAlertSubtitle] = useState('')
 
   const handleLogin: () => void = () => {
     login()
   }
 
-  const showAlert = (title: string, subtitle: string) => {
-    setAlertTitle(title)
-    setAlertSubtitle(subtitle)
-    bottomSheetModalRef.current?.present()
-  }
-
   useEffect(() => {
     if (state.error === 'login-invalid-email') {
-      showAlert(t('general.ups'), t('loginScreen.error.emailMessage'))
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: t('loginScreen.error.emailMessage'),
+      })
       return
     } else if (state.error === 'login-invalid-password') {
-      showAlert(t('general.ups'), t('loginScreen.error.passwordMessage'))
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: t('loginScreen.error.passwordMessage'),
+      })
       return
     } else if (state.error === 'login-missing-fields') {
-      showAlert(t('general.ups'), t('loginScreen.error.generalMessage'))
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: t('loginScreen.error.generalMessage'),
+      })
       return
     } else if (state.error !== null) {
       ShowToast({
@@ -138,11 +138,6 @@ const LoginScreen: FC<Props> = () => {
           </View>
         </KeyboardAvoidingView>
       </View>
-      <PPBottomSheet.Dialog
-        ref={bottomSheetModalRef}
-        title={alertTitle}
-        subtitle={alertSubtitle}
-      />
     </PPBottomSheetContainer>
   )
 }

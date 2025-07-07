@@ -11,14 +11,16 @@ type RegisterViewModel = {
   setEmail: (email: string) => void
   setPassword: (password: string) => void
   setConfirmPassword: (password: string) => void
-  setName: (name: string) => void
+  setFirstName: (firstName: string) => void
+  setLastName: (lastName: string) => void
 }
 
 type RegisterState = {
   email: string
   password: string
   confirmPassword: string
-  name: string
+  firstName: string
+  lastName: string
 } & UIState
 
 const initialState: RegisterState = {
@@ -27,7 +29,8 @@ const initialState: RegisterState = {
   email: '',
   password: '',
   confirmPassword: '',
-  name: '',
+  firstName: '',
+  lastName: '',
 }
 
 const useRegisterViewModel = (): RegisterViewModel => {
@@ -40,7 +43,8 @@ const useRegisterViewModel = (): RegisterViewModel => {
     try {
       const session = await useCase.execute(
         state.email,
-        state.name,
+        state.firstName,
+        state.lastName,
         state.password,
         state.confirmPassword
       )
@@ -69,8 +73,12 @@ const useRegisterViewModel = (): RegisterViewModel => {
     setState((previous) => ({ ...previous, confirmPassword: password }))
   }
 
-  const setName: (name: string) => void = async (name) => {
-    setState((previous) => ({ ...previous, name: name }))
+  const setFirstName: (firstName: string) => void = async (firstName) => {
+    setState((previous) => ({ ...previous, firstName: firstName }))
+  }
+
+  const setLastName: (lastName: string) => void = async (lastName) => {
+    setState((previous) => ({ ...previous, lastName: lastName }))
   }
 
   return {
@@ -79,7 +87,8 @@ const useRegisterViewModel = (): RegisterViewModel => {
     setEmail,
     setPassword,
     setConfirmPassword,
-    setName,
+    setFirstName,
+    setLastName,
   }
 }
 

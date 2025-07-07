@@ -10,20 +10,29 @@ class RegisterUseCase {
 
   async execute(
     email: string,
-    name: string,
+    firstName: string,
+    lastName: string,
     password: string,
     confirmPassword: string
   ): Promise<SessionModel> {
-    if (!name || !email || !password || !confirmPassword) {
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
       throw new Error('register-missing-fields')
     }
     if (!StringValidator.isValidEmail(email)) {
       throw new Error('register-invalid-email')
     }
+    if (!StringValidator.isValidPassword(password)) {
+      throw new Error('register-invalid-password')
+    }
     if (password !== confirmPassword) {
       throw new Error('register-password-not-match')
     }
-    return await this.authRepository.createUser(email, password, name)
+    return await this.authRepository.createUser(
+      email,
+      password,
+      firstName,
+      lastName
+    )
   }
 }
 

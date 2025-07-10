@@ -12,18 +12,20 @@ enum ReserveType {
 }
 
 enum ReserveStatus {
-  Pending = 'pending',
+  WaitingAcceptance = 'waiting_acceptance',
   Confirmed = 'confirmed',
   Rejected = 'rejected',
   Started = 'started',
   Finished = 'finished',
   CancelledOwner = 'cancelled_owner',
   CancelledCarer = 'cancelled_carer',
+  PaymentPending = 'payment_pending',
+  PaymentRejected = 'payment_rejected',
 }
 
 export const ReserveLabelFromStatus = (status: ReserveStatus) => {
   switch (status) {
-    case ReserveStatus.Pending:
+    case ReserveStatus.WaitingAcceptance:
       return 'reservesScreen.statuses.pending'
     case ReserveStatus.Confirmed:
       return 'reservesScreen.statuses.accepted'

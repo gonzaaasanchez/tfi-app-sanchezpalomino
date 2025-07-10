@@ -47,7 +47,7 @@ const initialState: ReservesState = {
   selectedType: ReserveType.Owner,
   optionsStatus: [
     {
-      key: ReserveStatus.Pending,
+      key: ReserveStatus.WaitingAcceptance,
       label: 'reservesScreen.statuses.pending',
     },
     {

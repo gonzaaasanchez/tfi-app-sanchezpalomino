@@ -119,7 +119,7 @@ const ReservationResultsScreen: FC = () => {
       </PPBottomSheet.Empty>
       <PPBottomSheet.Empty
         ref={confirmationBottomSheetRef}
-        dismisseable={true}
+        dismisseable={false}
         onDismiss={() => setUserToRequest(null)}
       >
         <ConfirmationSheetContent

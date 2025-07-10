@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import {
   Color,
@@ -6,10 +6,12 @@ import {
   useI18n,
   Button,
   PaymentInfoComponent,
+  ShowToast,
 } from '@packages/common'
 import { SearchResultModel } from '../../../../data/models/SearchResultModel'
 import { SearchCriteria } from '../../../../data/models/SearchCriteria'
 import { PlaceType } from '../../../../data/models/ReservationModel'
+import { useStripePayment } from '../../../hooks/useStripePayment'
 
 type ConfirmationSheetContentProps = {
   resultItem: SearchResultModel
@@ -29,6 +31,49 @@ export const ConfirmationSheetContent = ({
   if (!resultItem) return null
 
   const { caregiver, totalPrice, commission, totalOwner } = resultItem
+
+  // Stripe payment hook
+  const {
+    loading: paymentLoading,
+    initializeStripe,
+    processPayment,
+  } = useStripePayment({
+    onPaymentSuccess: () => {
+      ShowToast({
+        config: 'success',
+        title: t('payment.success.title'),
+        subtitle: t('payment.success.message'),
+      })
+      onConfirm()
+    },
+    onPaymentError: (error) => {
+      ShowToast({
+        config: 'error',
+        title: t('payment.error.title'),
+        subtitle: error,
+      })
+    },
+  })
+
+  // Initialize Stripe when component mounts
+  useEffect(() => {
+    initializeStripe()
+  }, [initializeStripe])
+
+  const handleConfirmWithPayment = async () => {
+    try {
+      // 1. Primero crear la reserva
+      onConfirm()
+      
+      // 2. Procesar el pago (el backend maneja el reservationId)
+      await processPayment({
+        amount: totalOwner * 100,
+        currency: 'ars',
+      })
+    } catch (error) {
+      console.error('Payment failed:', error)
+    }
+  }
 
   const ConfirmationInfoRow = ({
     title,
@@ -89,11 +134,18 @@ export const ConfirmationSheetContent = ({
 
       <View style={styles.buttonContainer}>
         <Button.Primary
-          title={t('reserveResultsScreen.confirmation.confirm')}
-          onPress={onConfirm}
+          title={
+            paymentLoading
+              ? t('payment.processing')
+              : t('reserveResultsScreen.confirmation.confirm')
+          }
+          onPress={handleConfirmWithPayment}
+          disabled={paymentLoading}
         />
-        <TouchableOpacity onPress={onBack}>
-          <Text style={styles.backButton}>
+        <TouchableOpacity onPress={onBack} disabled={paymentLoading}>
+          <Text
+            style={[styles.backButton, paymentLoading && styles.disabledText]}
+          >
             {t('reserveResultsScreen.confirmation.back')}
           </Text>
         </TouchableOpacity>
@@ -120,5 +172,8 @@ const styles = StyleSheet.create({
     ...LabelStyle.body({ color: Color.black[500], textAlign: 'center' }),
     marginTop: 20,
     marginBottom: 15,
+  },
+  disabledText: {
+    opacity: 0.5,
   },
 })

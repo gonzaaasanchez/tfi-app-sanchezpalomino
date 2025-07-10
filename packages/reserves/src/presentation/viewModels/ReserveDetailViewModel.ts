@@ -152,7 +152,7 @@ const useReserveDetailViewModel = (
 
   const cancelReserveCarer = (): void => {
     const subtitle =
-      state.currentReserve?.status === ReserveStatus.Pending
+      state.currentReserve?.status === ReserveStatus.WaitingAcceptance
         ? t('reserveDetailScreen.confirmation.cancelCarerPendingSubtitle')
         : t('reserveDetailScreen.confirmation.cancelCarerAcceptedSubtitle')
     setState((prev) => ({
@@ -193,7 +193,7 @@ const useReserveDetailViewModel = (
 
   const cancelReserveOwner = (): void => {
     const subtitle =
-      state.currentReserve?.status === ReserveStatus.Pending
+      state.currentReserve?.status === ReserveStatus.WaitingAcceptance
         ? t('reserveDetailScreen.confirmation.cancelOwnerPendingSubtitle')
         : t('reserveDetailScreen.confirmation.cancelOwnerAcceptedSubtitle')
     setState((prev) => ({

@@ -454,6 +454,20 @@
       "apartment": "Departamento: ",
       "edit": "Editar",
       "delete": "Eliminar"
+    },
+    "payment": {
+      "success": {
+        "title": "¡Pago exitoso!",
+        "message": "Tu pago se procesó correctamente"
+      },
+      "error": {
+        "title": "Error en el pago",
+        "message": "Hubo un problema con el pago",
+        "initialization": "Error inicializando Stripe",
+        "creatingIntent": "Error creando el intent de pago",
+        "general": "Error en el pago"
+      },
+      "processing": "Cargando pago..."
     }
   }
 }

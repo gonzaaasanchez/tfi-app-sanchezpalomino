@@ -20,6 +20,7 @@ import {
 import { CreateReservationUseCase } from '../../domain/usecases/CreateReservationUseCase'
 import { SearchResultsUseCase } from '../../domain/usecases/SearchResultsUseCase'
 import { PaginationModel } from '@packages/common'
+import { ReservationModel } from '../../data/models/ReservationModel'
 
 type ReservationResultsScreenProps = {
   reservationResults: {

@@ -33,18 +33,18 @@ const CarerReservationActions: FC<CarerReservationActionsProps> = ({
   const primaryButtonTitle = t('reserveDetailScreen.acceptReserve')
   const secondaryButtonTitle =
     {
-      [ReserveStatus.Pending]: t('reserveDetailScreen.rejectReserve'),
+      [ReserveStatus.WaitingAcceptance]: t('reserveDetailScreen.rejectReserve'),
       [ReserveStatus.Started]: t('reserveDetailScreen.cancelReserve'),
       [ReserveStatus.Confirmed]: t('reserveDetailScreen.cancelReserve'),
     }[reservation.status] || ''
 
   const primaryButtonNedded = (): boolean => {
-    return reservation.status === ReserveStatus.Pending
+    return reservation.status === ReserveStatus.WaitingAcceptance
   }
 
   const secondaryButtonNedded = (): boolean => {
     return (
-      reservation?.status === ReserveStatus.Pending ||
+      reservation?.status === ReserveStatus.WaitingAcceptance ||
       reservation?.status === ReserveStatus.Confirmed ||
       reservation?.status === ReserveStatus.Started
     )
@@ -56,7 +56,7 @@ const CarerReservationActions: FC<CarerReservationActionsProps> = ({
 
   const secondaryButtonTapped = (): void => {
     switch (reservation?.status) {
-      case ReserveStatus.Pending:
+      case ReserveStatus.WaitingAcceptance:
         reject()
         break
       case ReserveStatus.Confirmed:
@@ -92,7 +92,7 @@ const OwnerReservationActions: FC<OwnerReservationActionsProps> = ({
 
   const primaryButtonNedded = (): boolean => {
     return (
-      reservation?.status === ReserveStatus.Pending ||
+      reservation?.status === ReserveStatus.WaitingAcceptance ||
       reservation?.status === ReserveStatus.Confirmed ||
       reservation?.status === ReserveStatus.Started
     )

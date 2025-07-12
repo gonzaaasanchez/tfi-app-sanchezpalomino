@@ -14,6 +14,9 @@ const $ = {
   CancelReservationUseCase: Symbol.for('CancelReservationUseCase'),
   GetReservationReviewsUseCase: Symbol.for('GetReservationReviewsUseCase'),
   SaveReviewUseCase: Symbol.for('SaveReviewUseCase'),
+  PaymentApi: Symbol.for('PaymentApi'),
+  PaymentRepository: Symbol.for('PaymentRepository'),
+  CreatePaymentIntentUseCase: Symbol.for('CreatePaymentIntentUseCase'),
 }
 
 export { $ }

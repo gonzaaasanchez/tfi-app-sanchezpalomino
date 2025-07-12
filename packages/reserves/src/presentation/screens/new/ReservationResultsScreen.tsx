@@ -23,7 +23,7 @@ import { FilterResultsSheetContent } from './components/FilterResultsSheetConten
 import { ConfirmationSheetContent } from './components/ConfirmationSheetContent'
 import catSuccess from '@app/assets/lottie-json/success-cat.json'
 import { useDispatch } from 'react-redux'
-import { markStatusChanged } from '@packages/reserves/src/domain/store/ReservesSlice'
+import { markStatusChanged } from '../../../domain/store/ReservesSlice'
 
 const ReservationResultsScreen: FC = () => {
   const {
@@ -63,7 +63,8 @@ const ReservationResultsScreen: FC = () => {
   }, [navigation])
 
   useEffect(() => {
-    if (state.error !== null) {
+    if (state.error) {
+      console.log('state.error', state.error)
       ShowToast({
         config: 'error',
         title: t('general.ups'),
@@ -120,7 +121,6 @@ const ReservationResultsScreen: FC = () => {
       <PPBottomSheet.Empty
         ref={confirmationBottomSheetRef}
         dismisseable={false}
-        onDismiss={() => setUserToRequest(null)}
       >
         <ConfirmationSheetContent
           resultItem={state.userToRequest}

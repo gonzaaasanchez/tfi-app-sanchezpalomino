@@ -34,6 +34,5 @@ Payment is automatically integrated into the reservation confirmation flow:
 ## Testing
 
 For testing use Stripe's test cards:
-- **Visa**: 4242424242424242
-- **Mastercard**: 5555555555554444
+- **Visa**: 4000 0003 2000 0021
 - **Any future date and 3-digit CVC** 

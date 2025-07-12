@@ -1,12 +1,12 @@
 import {
   UIState,
   useInjection,
-  ShowToast,
   useI18n,
   DateUtils,
   usePagination,
   LoadFunction,
   SelectableOption,
+  parseSpanishNumber,
 } from '@packages/common'
 import { useState, useEffect, useCallback } from 'react'
 import { $ } from '../../domain/di/Types'
@@ -20,7 +20,8 @@ import {
 import { CreateReservationUseCase } from '../../domain/usecases/CreateReservationUseCase'
 import { SearchResultsUseCase } from '../../domain/usecases/SearchResultsUseCase'
 import { PaginationModel } from '@packages/common'
-import { ReservationModel } from '../../data/models/ReservationModel'
+import { useStripePayment } from '../hooks/useStripePayment'
+import { STRIPE_CONFIG } from '../../config/stripe'
 
 type ReservationResultsScreenProps = {
   reservationResults: {
@@ -101,7 +102,31 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
   const { searchCriteria } = route.params
   const { t } = useI18n()
 
-  // Create load function for pagination hook
+  const {
+    loading: stripeLoading,
+    initializeStripe,
+    processPayment,
+  } = useStripePayment({
+    onPaymentSuccess: () => {
+      setState((previous) => ({
+        ...previous,
+        loading: false,
+        requestSent: true,
+      }))
+    },
+    onPaymentError: (error) => {
+      setState((previous) => ({
+        ...previous,
+        loading: false,
+        error: error,
+      }))
+    },
+  })
+
+  useEffect(() => {
+    initializeStripe()
+  }, [initializeStripe])
+
   const loadSearchResults: LoadFunction<SearchResultModel> = useCallback(
     async (page: number, limit: number) => {
       if (!state.searchCriteria) {
@@ -152,12 +177,11 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
     try {
       await pagination.loadItems(reset)
     } catch (error) {
-      ShowToast({
-        config: 'error',
-        title: t('general.ups'),
-        subtitle:
+      setState((previous) => ({
+        ...previous,
+        error:
           error instanceof Error ? error.message : 'Error al buscar resultados',
-      })
+      }))
     }
   }
 
@@ -181,48 +205,47 @@ const useReservationResultsViewModel = (): ReservationResultsViewModel => {
     }))
 
     try {
-      await createReservationUseCase.execute(
-        {
-          startDate: DateUtils.YYYYMMDD(state.searchCriteria.fromDate),
-          endDate: DateUtils.YYYYMMDD(state.searchCriteria.toDate),
-          careLocation: state.searchCriteria.placeType,
-          caregiverId: state.userToRequest.caregiver.id,
-          petIds: state.searchCriteria.selectedPets.map((pet) => pet.id),
-          visitsPerDay: state.searchCriteria.visits,
-          userAddressId: state.searchCriteria.selectedAddress?._id,
-          caregiverAddressId:
-            state.userToRequest.caregiver.carerConfig?.careAddress,
-          distance: state.searchCriteria.maxDistance,
-        },
-        t
-      )
+      const reserveData = {
+        startDate: DateUtils.YYYYMMDD(state.searchCriteria.fromDate),
+        endDate: DateUtils.YYYYMMDD(state.searchCriteria.toDate),
+        careLocation: state.searchCriteria.placeType,
+        caregiverId: state.userToRequest.caregiver.id,
+        petIds: state.searchCriteria.selectedPets.map((pet) => pet.id),
+        visitsPerDay: state.searchCriteria.visits,
+        userAddressId: state.searchCriteria.selectedAddress?._id,
+        caregiverAddressId:
+          state.userToRequest.caregiver.carerConfig?.careAddress,
+        distance: state.searchCriteria.maxDistance,
+      }
+      const reservation = await createReservationUseCase.execute(reserveData, t)
+      if (!reservation.id || !reservation.totalOwner) {
+        throw new Error('Error al obtener los datos de la reserva')
+      }
 
-      setState((previous) => ({
-        ...previous,
-        loading: false,
-        error: null,
-        requestSent: true,
-      }))
+      // Parse the amount string (format: "3.557,36" -> 3557.36)
+      const amountInPesos = parseSpanishNumber(reservation.totalOwner)
+
+      await processPayment({
+        amount: amountInPesos,
+        currency: STRIPE_CONFIG.currency,
+        reservationId: reservation.id,
+      })
     } catch (error) {
       setState((previous) => ({
         ...previous,
         loading: false,
         error:
-          error instanceof Error ? error.message : 'Error al enviar solicitud',
+          error instanceof Error
+            ? error.message
+            : 'Error al obtener los datos de la reserva',
       }))
-      ShowToast({
-        config: 'error',
-        title: t('general.ups'),
-        subtitle:
-          error instanceof Error ? error.message : 'Error al enviar solicitud',
-      })
     }
   }
 
   return {
     state: {
       ...state,
-      loading: state.loading,
+      loading: state.loading || stripeLoading,
       pagination: {
         items: pagination.state.items,
         pagination: pagination.state.pagination,

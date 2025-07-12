@@ -4,8 +4,7 @@ import * as Linking from 'expo-linking'
 export const STRIPE_CONFIG = {
   publishableKey:
     'pk_test_51Rj9DjQ7iFCMGf3YxEzUK0BZccCWVdmRuF7Viug6847Hjxp22Lg2AfDLeJ5mvCfDl6JbTbikmRPmfL7VEugO4tVY00ZV80RjDU',
-  backendUrl: 'https://your-backend-url.com/api',
-  currency: 'ars', 
+  currency: 'ars',
   merchantDisplayName: 'PawPals',
 }
 
@@ -14,5 +13,6 @@ export const getUrlScheme = () => {
   if (typeof Constants !== 'undefined' && Constants.appOwnership === 'expo') {
     return Linking.createURL('/--/')
   }
-  return Linking.createURL('')
+  // For development and production builds, use the app's URL scheme
+  return 'com.pawpals.pawpalsapp://'
 }

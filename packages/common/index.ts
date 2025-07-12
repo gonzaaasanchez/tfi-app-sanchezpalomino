@@ -41,6 +41,7 @@ import {
 import { Button, ButtonState } from './src/components/Button'
 import { StringValidator } from './src/utils/StringUtils'
 import { DateUtils } from './src/utils/DateUtils'
+import { parseSpanishNumber, formatSpanishCurrency, isValidNumber } from './src/utils/NumberUtils'
 import {
   getMimeType,
   getFileName,
@@ -129,6 +130,9 @@ export {
   ButtonState,
   StringValidator,
   DateUtils,
+  parseSpanishNumber,
+  formatSpanishCurrency,
+  isValidNumber,
   getMimeType,
   getFileName,
   createFileInfo,

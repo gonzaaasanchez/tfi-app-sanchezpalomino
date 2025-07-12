@@ -1,7 +1,9 @@
 import { useState, useCallback } from 'react'
 import { initStripe, usePaymentSheet } from '@stripe/stripe-react-native'
 import { STRIPE_CONFIG, getUrlScheme } from '../../config/stripe'
-import { useI18n } from '@packages/common'
+import { useI18n, useInjection } from '@packages/common'
+import { $ } from '../../domain/di/Types'
+import { CreatePaymentIntentUseCase } from '../../domain/usecases/CreatePaymentIntentUseCase'
 
 interface UseStripePaymentProps {
   onPaymentSuccess: () => void
@@ -11,6 +13,7 @@ interface UseStripePaymentProps {
 interface PaymentData {
   amount: number
   currency: string
+  reservationId: string
 }
 
 export const useStripePayment = ({
@@ -20,6 +23,9 @@ export const useStripePayment = ({
   const { t } = useI18n()
   const [loading, setLoading] = useState(false)
   const { initPaymentSheet, presentPaymentSheet } = usePaymentSheet()
+  const createPaymentIntentUseCase: CreatePaymentIntentUseCase = useInjection(
+    $.CreatePaymentIntentUseCase
+  )
 
   const initializeStripe = useCallback(async () => {
     try {
@@ -38,25 +44,17 @@ export const useStripePayment = ({
       setLoading(true)
 
       try {
-        const response = await fetch(
-          `${STRIPE_CONFIG.backendUrl}/create-payment-intent`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              amount: paymentData.amount,
-              currency: paymentData.currency,
-            }),
-          }
+        const paymentIntent = await createPaymentIntentUseCase.execute(
+          paymentData.amount,
+          paymentData.currency,
+          paymentData.reservationId
         )
 
-        if (!response.ok) {
-          throw new Error(t('payment.error.creatingIntent'))
-        }
+        const { clientSecret } = paymentIntent
 
-        const { clientSecret } = await response.json()
+        if (!clientSecret) {
+          throw new Error('No client secret received from backend')
+        }
 
         const { error: initError } = await initPaymentSheet({
           paymentIntentClientSecret: clientSecret,
@@ -73,18 +71,26 @@ export const useStripePayment = ({
           throw new Error(presentError.message)
         }
 
-        // 4. Payment successful - backend handles status via webhooks
+        // Payment successful - backend handles status via webhooks
         onPaymentSuccess()
       } catch (error) {
-        console.error('Payment error:', error)
-        onPaymentError(
-          error instanceof Error ? error.message : t('payment.error.general')
-        )
+        if (error instanceof Error) {
+          onPaymentError(error.message)
+        } else {
+          onPaymentError(t('payment.error.general'))
+        }
       } finally {
         setLoading(false)
       }
     },
-    [onPaymentSuccess, onPaymentError, initPaymentSheet, presentPaymentSheet, t]
+    [
+      onPaymentSuccess,
+      onPaymentError,
+      initPaymentSheet,
+      presentPaymentSheet,
+      createPaymentIntentUseCase,
+      t,
+    ]
   )
 
   return {

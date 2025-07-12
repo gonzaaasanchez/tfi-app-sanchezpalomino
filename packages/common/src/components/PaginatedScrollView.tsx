@@ -64,7 +64,7 @@ export const PaginatedScrollView = <T,>({
         refreshControl={
           onRefresh ? (
             <RefreshControl
-              refreshing={pagination.loading && pagination.items.length === 0}
+              refreshing={pagination.loading}
               onRefresh={onRefresh}
               tintColor={Color.brand1[100]}
             />

@@ -20,6 +20,10 @@ import { RejectReservationUseCase } from '../usecases/RejectReservationUseCase'
 import { CancelReservationUseCase } from '../usecases/CancelReservationUseCase'
 import { GetReservationReviewsUseCase } from '../usecases/GetReservationReviewsUseCase'
 import { SaveReviewUseCase } from '../usecases/SaveReviewUseCase'
+import { PaymentApi, PaymentApiImpl } from '../../data/datasource/api/PaymentApi'
+import PaymentRepository from '../repository/PaymentRepository'
+import PaymentRepositoryImpl from '../../data/repository/PaymentRepository'
+import { CreatePaymentIntentUseCase } from '../usecases/CreatePaymentIntentUseCase'
 
 const ReservesRegister = (resolver: Resolver): void => {
   resolver.registerSingleton<ReservesApi>(
@@ -70,6 +74,18 @@ const ReservesRegister = (resolver: Resolver): void => {
   resolver.registerFactory<SaveReviewUseCase>(
     $.SaveReviewUseCase,
     () => new SaveReviewUseCase(resolver.resolve($.ReservesRepository))
+  )
+  resolver.registerSingleton<PaymentApi>(
+    $.PaymentApi,
+    new PaymentApiImpl(resolver.resolve($.HttpClient))
+  )
+  resolver.registerSingleton<PaymentRepository>(
+    $.PaymentRepository,
+    new PaymentRepositoryImpl(resolver.resolve($.PaymentApi))
+  )
+  resolver.registerFactory<CreatePaymentIntentUseCase>(
+    $.CreatePaymentIntentUseCase,
+    () => new CreatePaymentIntentUseCase(resolver.resolve($.PaymentRepository))
   )
 }
 

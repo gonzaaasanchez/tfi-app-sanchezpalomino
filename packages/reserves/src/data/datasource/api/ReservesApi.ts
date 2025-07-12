@@ -71,12 +71,11 @@ class ReservesApiImpl implements ReservesApi {
       userAddressId: data.userAddressId,
       caregiverAddressId: data.caregiverAddressId,
     }
-    const response = await this.httpClient.post<ReservationModel>(
-      '/reservations',
-      requestBody
-    )
+    const response = await this.httpClient.post<{
+      reservation: ReservationModel
+    }>('/reservations', requestBody)
 
-    return response.data
+    return response.data.reservation
   }
 
   async acceptReservation(id: string): Promise<ReservationModel> {

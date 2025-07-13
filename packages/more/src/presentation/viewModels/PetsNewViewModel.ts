@@ -332,16 +332,6 @@ const usePetsNewViewModel = (initialPet?: PetModel): PetsNewViewModel => {
         loading: false,
       }))
 
-      ShowToast({
-        config: 'success',
-        title: state.isEditMode
-          ? t('petsNewScreen.success.updateTitle')
-          : t('petsNewScreen.success.title'),
-        subtitle: state.isEditMode
-          ? t('petsNewScreen.success.updateSubtitle')
-          : t('petsNewScreen.success.subtitle'),
-      })
-
       navigation.goBack()
       dispatch(markPetChange())
     } catch (error) {

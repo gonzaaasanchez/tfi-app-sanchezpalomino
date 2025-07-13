@@ -13,7 +13,11 @@ import { useSelector, useDispatch } from 'react-redux'
 import { GetMyPetsUseCase } from '../../domain/usecases/GetMyPetsUseCase'
 import { DeletePetUseCase } from '../../domain/usecases/DeletePetUseCase'
 import { $ } from '../../domain/di/Types'
-import { MoreAppState, clearPetChange, markPetChange } from '../../domain/store/MoreSlice'
+import {
+  MoreAppState,
+  clearPetChange,
+  markPetChange,
+} from '../../domain/store/MoreSlice'
 
 type PetsState = {
   petUpdated: boolean
@@ -51,7 +55,9 @@ const usePetsViewModel = (): PetsViewModel => {
   const deletePetUseCase = useInjection<DeletePetUseCase>($.DeletePetUseCase)
 
   // Listen to more slice changes
-  const lastPetChange = useSelector((state: MoreAppState) => state.more.lastPetChange)
+  const lastPetChange = useSelector(
+    (state: MoreAppState) => state.more.lastPetChange
+  )
 
   // Create load function for pagination hook
   const loadPetsFunction: LoadFunction<PetModel> = useCallback(
@@ -103,14 +109,8 @@ const usePetsViewModel = (): PetsViewModel => {
         petUpdated: true,
         loading: false,
       }))
-      
+
       dispatch(markPetChange())
-      
-      ShowToast({
-        config: 'success',
-        title: t('petsNewScreen.success.deleteTitle'),
-        subtitle: t('petsNewScreen.success.deleteSubtitle'),
-      })
     } catch (error) {
       setState((previous) => ({
         ...previous,

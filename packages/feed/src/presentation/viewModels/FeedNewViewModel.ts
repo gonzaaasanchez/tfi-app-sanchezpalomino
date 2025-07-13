@@ -145,13 +145,6 @@ const useFeedNewViewModel = (): FeedNewViewModel => {
         ...previous,
         loading: false,
       }))
-
-      ShowToast({
-        config: 'success',
-        title: t('feedNewScreen.success.title'),
-        subtitle: t('feedNewScreen.success.subtitle'),
-      })
-
       navigation.goBack()
       dispatch(markPostCreated())
     } catch (error) {

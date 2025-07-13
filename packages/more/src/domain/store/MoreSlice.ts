@@ -2,10 +2,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 type MoreState = {
   lastPetChange: number | null
+  lastAddressChange: number | null
 }
 
 const initialState: MoreState = {
   lastPetChange: null,
+  lastAddressChange: null,
 }
 
 const moreSlice = createSlice({
@@ -18,6 +20,12 @@ const moreSlice = createSlice({
     clearPetChange: (state) => {
       state.lastPetChange = null
     },
+    markAddressChange: (state) => {
+      state.lastAddressChange = Date.now()
+    },
+    clearAddressChange: (state) => {
+      state.lastAddressChange = null
+    },
   },
 })
 
@@ -29,6 +37,14 @@ type MoreAppState = {
   more: ReturnType<typeof moreSlice.reducer>
 }
 
-const { markPetChange, clearPetChange } = moreSlice.actions
+const { markPetChange, clearPetChange, markAddressChange, clearAddressChange } =
+  moreSlice.actions
 
-export { moreReducer, markPetChange, clearPetChange, MoreAppState } 
+export {
+  moreReducer,
+  markPetChange,
+  clearPetChange,
+  markAddressChange,
+  clearAddressChange,
+  MoreAppState,
+}

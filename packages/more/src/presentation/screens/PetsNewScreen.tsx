@@ -59,14 +59,7 @@ const PetsNewScreen: FC = (): JSX.Element => {
   } = usePetsNewViewModel(initialPet)
 
   const confirmationModalRef = useBottomSheetModalRef()
-  const successModalRef = useBottomSheetModalRef()
   const imagePickerModalRef = useBottomSheetModalRef()
-
-  useEffect(() => {
-    if (state.petSaved) {
-      successModalRef.current?.present()
-    }
-  }, [state.petSaved])
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -83,11 +76,11 @@ const PetsNewScreen: FC = (): JSX.Element => {
 
   const Avatar = () => {
     let avatarSource = state.avatarFile
-    
+
     if (!avatarSource && state.isEditMode && state.pet.avatar) {
       avatarSource = getImageFullUrl(state.pet.avatar, baseUrl)
     }
-    
+
     return (
       <View style={styles.avatarContainer}>
         <ImageWithPlaceholder source={avatarSource} dimension={140} />
@@ -273,21 +266,6 @@ const PetsNewScreen: FC = (): JSX.Element => {
           savePet()
         }}
         onSecondaryAction={() => confirmationModalRef.current?.dismiss()}
-      />
-      <PPBottomSheet.Dialog
-        ref={successModalRef}
-        title={
-          state.isEditMode
-            ? t('petsNewScreen.success.updateTitle')
-            : t('petsNewScreen.success.title')
-        }
-        subtitle={
-          state.isEditMode
-            ? t('petsNewScreen.success.updateSubtitle')
-            : t('petsNewScreen.success.subtitle')
-        }
-        lottieFile={catSuccess}
-        onPrimaryAction={() => navigation.goBack()}
       />
       {state.loading && <Loader loading={state.loading} />}
       <GenericToast overrideOffset={10} />

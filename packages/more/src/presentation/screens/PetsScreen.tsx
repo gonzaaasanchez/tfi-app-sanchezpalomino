@@ -74,11 +74,10 @@ const PetsScreen: FC = (): JSX.Element => {
   }, [petToDelete])
 
   useEffect(() => {
-    if (state.petDeleted) {
+    if (state.petUpdated) {
       petDetailModalRef.current?.dismiss()
-      loadPets({ reset: true })
     }
-  }, [state.petDeleted])
+  }, [state.petUpdated])
 
   const handleDeletePet = () => {
     deleteConfirmationModalRef.current?.dismiss()

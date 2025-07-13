@@ -11,16 +11,18 @@ import {
   useImagePicker,
 } from '@packages/common'
 import { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { GetPetTypesUseCase } from '../../domain/usecases/GetPetTypesUseCase'
 import { GetPetCharacteristicsUseCase } from '../../domain/usecases/GetPetCharacteristicsUseCase'
 import { SavePetUseCase } from '../../domain/usecases/SavePetUseCase'
 import { $ } from '../../domain/di/Types'
+import { markPetChange } from '../../domain/store/MoreSlice'
+import { useNavigation } from '@react-navigation/native'
 
 type PetsNewState = {
   pet: PetModel
   petTypesDatasource: PetType[]
   characteristicsDatasource: PetCharacteristic[]
-  petSaved: boolean
   avatarFile: string | null
   isEditMode: boolean
 } & UIState
@@ -49,7 +51,6 @@ const initialState: PetsNewState = {
   characteristicsDatasource: [],
   loading: false,
   error: null,
-  petSaved: false,
   avatarFile: null,
   isEditMode: false,
 }
@@ -61,6 +62,8 @@ const usePetsNewViewModel = (initialPet?: PetModel): PetsNewViewModel => {
     isEditMode: !!initialPet?.id,
   })
   const { t } = useI18n()
+  const dispatch = useDispatch()
+  const navigation = useNavigation()
 
   const getPetTypesUseCase = useInjection<GetPetTypesUseCase>(
     $.GetPetTypesUseCase
@@ -86,9 +89,12 @@ const usePetsNewViewModel = (initialPet?: PetModel): PetsNewViewModel => {
       state.characteristicsDatasource.length > 0
     ) {
       // Configurar el tipo de mascota
-      const petTypeId = initialPet.petType?.id || (initialPet.petType as any)?.id
+      const petTypeId =
+        initialPet.petType?.id || (initialPet.petType as any)?.id
       if (petTypeId) {
-        const selectedType = state.petTypesDatasource.find((type) => type.id === petTypeId)
+        const selectedType = state.petTypesDatasource.find(
+          (type) => type.id === petTypeId
+        )
         if (selectedType) {
           setState((previous) => ({
             ...previous,
@@ -99,15 +105,19 @@ const usePetsNewViewModel = (initialPet?: PetModel): PetsNewViewModel => {
 
       // Configurar las características
       if (initialPet.characteristics && initialPet.characteristics.length > 0) {
-        const configuredCharacteristics = initialPet.characteristics.map((char) => {
-          const characteristicId = char.id || (char as any).id
-          const characteristic = state.characteristicsDatasource.find((c) => c.id === characteristicId)
-          return {
-            id: characteristicId || '',
-            name: characteristic?.name || char.name || '',
-            value: char.value || '',
+        const configuredCharacteristics = initialPet.characteristics.map(
+          (char) => {
+            const characteristicId = char.id || (char as any).id
+            const characteristic = state.characteristicsDatasource.find(
+              (c) => c.id === characteristicId
+            )
+            return {
+              id: characteristicId || '',
+              name: characteristic?.name || char.name || '',
+              value: char.value || '',
+            }
           }
-        })
+        )
 
         setState((previous) => ({
           ...previous,
@@ -243,8 +253,8 @@ const usePetsNewViewModel = (initialPet?: PetModel): PetsNewViewModel => {
         [field]: value,
         ...(field === 'id' && {
           name:
-            state.characteristicsDatasource.find((c) => c.id === value)
-              ?.name || '',
+            state.characteristicsDatasource.find((c) => c.id === value)?.name ||
+            '',
         }),
       }
       return {
@@ -320,8 +330,20 @@ const usePetsNewViewModel = (initialPet?: PetModel): PetsNewViewModel => {
       setState((previous) => ({
         ...previous,
         loading: false,
-        petSaved: true,
       }))
+
+      ShowToast({
+        config: 'success',
+        title: state.isEditMode
+          ? t('petsNewScreen.success.updateTitle')
+          : t('petsNewScreen.success.title'),
+        subtitle: state.isEditMode
+          ? t('petsNewScreen.success.updateSubtitle')
+          : t('petsNewScreen.success.subtitle'),
+      })
+
+      navigation.goBack()
+      dispatch(markPetChange())
     } catch (error) {
       setState((previous) => ({
         ...previous,

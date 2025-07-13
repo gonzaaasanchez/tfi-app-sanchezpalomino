@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 
 type ReservesState = {
   lastStatusChange: number | null
@@ -31,4 +31,9 @@ type ReservesAppState = {
 
 const { markStatusChanged, clearStatusChange } = reservesSlice.actions
 
-export { reservesReducer, markStatusChanged, clearStatusChange, ReservesAppState } 
+export {
+  reservesReducer,
+  markStatusChanged,
+  clearStatusChange,
+  ReservesAppState,
+}

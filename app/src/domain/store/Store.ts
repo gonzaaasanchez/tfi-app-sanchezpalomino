@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { appReducer, appMiddleware } from '@app/common'
 import { reservesReducer } from '@packages/reserves'
+import { feedReducer } from '@packages/feed'
 
 /**
  * Creates the store for the app.
@@ -17,6 +18,7 @@ const createStore = (): ReturnType<typeof configureStore> =>
     reducer: {
       ...appReducer,
       ...reservesReducer,
+      ...feedReducer,
     },
     /**
      * Custom middleware for the app

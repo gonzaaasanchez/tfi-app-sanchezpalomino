@@ -72,6 +72,24 @@
       "title": "Feed Screen",
       "noData": "No hay publicaciones para mostrar.\n¡Sé el primero en crear una publicación!"
     },
+    "feedNewScreen": {
+      "title": "Crear post",
+      "addImage": "Agregar imagen",
+      "titleLabel": "Título",
+      "titlePlaceholder": "Ingresá un título para tu post",
+      "commentLabel": "Comentario",
+      "commentPlaceholder": "Ingresá una descripción para tu post",
+      "createPost": "Crear post",
+      "success": {
+        "title": "¡Éxito!",
+        "subtitle": "Post creado exitosamente"
+      },
+      "validation": {
+        "titleRequired": "El título es requerido",
+        "descriptionRequired": "La descripción es requerida",
+        "imageRequired": "La imagen es requerida"
+      }
+    },
     "reservesScreen": {
       "noData": "No tenemos reservas para mostrarte",
       "title": "Reservas",

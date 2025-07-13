@@ -4,17 +4,15 @@ import {
   usePagination,
   PaginationModel,
   LoadFunction,
+  ShowToast,
+  useI18n,
 } from '@packages/common'
 import { useState, useEffect, useCallback } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { GetFeedUseCase } from '../../domain/usecases/GetFeedUseCase'
 import { $ } from '../../domain/di/Types'
 import { FeedModel } from '@packages/common'
-
-type FeedViewModel = {
-  state: FeedState
-  loadFeed: ({ reset }: { reset: boolean }) => Promise<void>
-  refreshFeed: () => Promise<void>
-}
+import { FeedAppState, clearPostCreated } from '../../domain/store/FeedSlice'
 
 type FeedState = {
   pagination: {
@@ -24,6 +22,12 @@ type FeedState = {
     loadingMore: boolean
   }
 } & UIState
+
+type FeedViewModel = {
+  state: FeedState
+  loadFeed: ({ reset }: { reset: boolean }) => Promise<void>
+  refreshFeed: () => Promise<void>
+}
 
 const initialState: FeedState = {
   loading: false,
@@ -44,6 +48,13 @@ const initialState: FeedState = {
 const useFeedViewModel = (): FeedViewModel => {
   const [state, setState] = useState<FeedState>(initialState)
   const getFeedUseCase: GetFeedUseCase = useInjection($.GetFeedUseCase)
+  const dispatch = useDispatch()
+  const { t } = useI18n()
+
+  // Listen to feed slice changes
+  const lastPostCreated = useSelector(
+    (state: FeedAppState) => state.feed.lastPostCreated
+  )
 
   // Create load function for pagination hook
   const loadFeedFunction: LoadFunction<FeedModel> = useCallback(
@@ -72,7 +83,8 @@ const useFeedViewModel = (): FeedViewModel => {
     } catch (error) {
       setState((previous) => ({
         ...previous,
-        error: error instanceof Error ? error.message : 'Error al cargar el feed',
+        error:
+          error instanceof Error ? error.message : 'Error al cargar el feed',
       }))
     } finally {
       setState((previous) => ({
@@ -86,10 +98,22 @@ const useFeedViewModel = (): FeedViewModel => {
     await loadFeed({ reset: true })
   }
 
-  // Load feed on mount
   useEffect(() => {
     loadFeed({ reset: true })
   }, [])
+
+  useEffect(() => {
+    if (lastPostCreated) {
+      ShowToast({
+        config: 'success',
+        title: t('general.success'),
+        subtitle: 'Post creado exitosamente',
+      })
+      refreshFeed().then(() => {
+        dispatch(clearPostCreated())
+      })
+    }
+  }, [lastPostCreated, dispatch])
 
   return {
     state: {

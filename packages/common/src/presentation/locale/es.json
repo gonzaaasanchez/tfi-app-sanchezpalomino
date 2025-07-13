@@ -69,7 +69,8 @@
       "more": "Menú"
     },
     "feedScreen": {
-      "title": "Feed Screen"
+      "title": "Feed Screen",
+      "noData": "No hay publicaciones para mostrar.\n¡Sé el primero en crear una publicación!"
     },
     "reservesScreen": {
       "noData": "No tenemos reservas para mostrarte",

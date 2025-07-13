@@ -1,24 +1,35 @@
-import { Color, DateUtils, FeedModel, GeneralStyle, LabelStyle } from '@packages/common'
+import {
+  Color,
+  DateUtils,
+  FeedModel,
+  GeneralStyle,
+  getImageFullUrl,
+  LabelStyle,
+} from '@packages/common'
 import { View, Image, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import { FC } from 'react'
 
 type FeedItemProps = {
   item: FeedModel
+  baseUrl: string
 }
 
-const FeedItem: FC<FeedItemProps> = ({ item }) => {
-  const fullName = `${item.user.firstname} ${item.user.lastname}`
+const FeedItem: FC<FeedItemProps> = ({ item, baseUrl }) => {
+  const fullName = `${item.author.firstName} ${item.author.lastName}`
 
   return (
     <View style={styles.card}>
-      <Image source={{ uri: item.imageUrl }} style={styles.image} />
+      <Image
+        source={{ uri: getImageFullUrl(item.image, baseUrl) }}
+        style={styles.image}
+      />
       <View style={styles.nameContainer}>
         <Text style={LabelStyle.callout2({ color: Color.black[500] })}>
           {fullName}
         </Text>
         <Text style={LabelStyle.link2({ color: Color.black[500] })}>
-          {DateUtils.DDMMYYYY(item.date)}
+          {DateUtils.DDMMYYYY(item.updatedAt)}
         </Text>
       </View>
       <Text style={styles.title}>{item.title}</Text>
@@ -29,13 +40,13 @@ const FeedItem: FC<FeedItemProps> = ({ item }) => {
           <MaterialIcons
             name="thumb-up"
             size={16}
-            color={item.userLiked ? Color.brand1[600] : Color.black[300]}
+            color={item.hasLiked ? Color.brand1[600] : Color.black[300]}
           />
-          <Text style={styles.actionText}>{item.likes}</Text>
+          <Text style={styles.actionText}>{item.likesCount}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.actionButton} activeOpacity={0.7}>
           <MaterialIcons name="comment" size={16} color={Color.black[300]} />
-          <Text style={styles.actionText}>{item.comments}</Text>
+          <Text style={styles.actionText}>{item.commentsCount}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -48,7 +59,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    aspectRatio: 1.3,
+    aspectRatio: 1,
     borderRadius: 10,
   },
   nameContainer: {
@@ -71,7 +82,7 @@ const styles = StyleSheet.create({
   divider: {
     borderTopWidth: 1,
     borderTopColor: Color.black[100],
-    marginTop: 7,
+    marginTop: 10,
     marginHorizontal: 12,
   },
   actionsContainer: {

@@ -1,16 +1,16 @@
+import { UserModel } from './UserModel'
+
 type FeedModel = {
   id: string
   title: string
   description: string
-  date: string
-  imageUrl: string
-  likes: number
-  comments: number
-  userLiked: boolean
-  user: {
-    firstname: string
-    lastname: string
-  }
+  image: string
+  commentsCount: number
+  likesCount: number
+  hasLiked: boolean
+  author: UserModel
+  createdAt: string
+  updatedAt: string
 }
 
 export { FeedModel }

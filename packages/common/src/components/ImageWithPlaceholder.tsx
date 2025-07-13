@@ -22,7 +22,7 @@ const ImageWithPlaceholder: FC<ImageWithPlaceholderProps> = ({
   }
 
   const imageStyle = {
-    ...styles.avatarImage,
+    ...styles.image,
     borderRadius: dimension / 2,
   }
 
@@ -42,7 +42,6 @@ const ImageWithPlaceholder: FC<ImageWithPlaceholderProps> = ({
     return <View style={containerStyle}>{renderPlaceholder()}</View>
   }
 
-  // Mostrar imagen (con placeholder de fondo mientras carga)
   return (
     <View style={containerStyle}>
       <View style={styles.placeholderContainer}>{renderPlaceholder()}</View>
@@ -64,7 +63,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Color.brand1[300],
   },
-  avatarImage: {
+  image: {
     width: '100%',
     height: '100%',
     position: 'absolute',

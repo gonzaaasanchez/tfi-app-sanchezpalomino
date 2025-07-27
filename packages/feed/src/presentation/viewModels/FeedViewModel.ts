@@ -13,10 +13,7 @@ import { GetFeedUseCase } from '../../domain/usecases/GetFeedUseCase'
 import { LikePostUseCase } from '../../domain/usecases/LikePostUseCase'
 import { $ } from '../../domain/di/Types'
 import { FeedModel } from '@packages/common'
-import {
-  FeedAppState,
-  clearPostCreated,
-} from '../../domain/store/FeedSlice'
+import { FeedAppState, clearPostCreated } from '../../domain/store/FeedSlice'
 
 type FeedState = {
   pagination: {
@@ -52,6 +49,9 @@ const initialState: FeedState = {
 
 const useFeedViewModel = (): FeedViewModel => {
   const [state, setState] = useState<FeedState>(initialState)
+  const [serverLikes, setServerLikes] = useState<
+    Map<string, { hasLiked: boolean; likesCount: number }>
+  >(new Map())
   const getFeedUseCase: GetFeedUseCase = useInjection($.GetFeedUseCase)
   const likePostUseCase: LikePostUseCase = useInjection($.LikePostUseCase)
   const dispatch = useDispatch()
@@ -101,6 +101,8 @@ const useFeedViewModel = (): FeedViewModel => {
   }
 
   const refreshFeed = async (): Promise<void> => {
+    // Clear optimistic state when refreshing
+    setServerLikes(new Map())
     await loadFeed({ reset: true })
   }
 
@@ -121,12 +123,58 @@ const useFeedViewModel = (): FeedViewModel => {
     }
   }, [lastPostCreated, dispatch])
 
+  // Function to get the final state of a post with server data
+  const getPostWithServerLikes = useCallback(
+    (post: FeedModel): FeedModel => {
+      const serverLikeData = serverLikes.get(post.id)
+
+      if (serverLikeData) {
+        return {
+          ...post,
+          hasLiked: serverLikeData.hasLiked,
+          likesCount: serverLikeData.likesCount,
+        }
+      }
+
+      return post
+    },
+    [serverLikes]
+  )
+
   const likePost = async (post: FeedModel): Promise<void> => {
     try {
+      // Calculate new optimistic state
+      const newHasLiked = !post.hasLiked
+      const newLikesCount = newHasLiked
+        ? post.likesCount + 1
+        : Math.max(post.likesCount - 1, 0)
+
+      // Update optimistic state immediately
+      setServerLikes(
+        (prev) =>
+          new Map(
+            prev.set(post.id, {
+              hasLiked: newHasLiked,
+              likesCount: newLikesCount,
+            })
+          )
+      )
+
+      // Call the service
       await likePostUseCase.execute(post.id, post.hasLiked)
-      await loadFeed({ reset: true })
+
+      // The service doesn't return the updated post, so we keep the optimistic state
+      // that we calculated correctly
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Error al dar like al post'
+      // If it fails, revert the optimistic state
+      setServerLikes((prev) => {
+        const newMap = new Map(prev)
+        newMap.delete(post.id)
+        return newMap
+      })
+
+      const errorMessage =
+        error instanceof Error ? error.message : 'Error al dar like al post'
       ShowToast({
         config: 'error',
         title: t('general.ups'),
@@ -139,7 +187,7 @@ const useFeedViewModel = (): FeedViewModel => {
     state: {
       ...state,
       pagination: {
-        items: pagination.state.items,
+        items: pagination.state.items.map(getPostWithServerLikes),
         pagination: pagination.state.pagination,
         loading: pagination.state.loading,
         loadingMore: pagination.state.loadingMore,

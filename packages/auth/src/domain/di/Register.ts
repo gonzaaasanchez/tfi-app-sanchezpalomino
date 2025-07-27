@@ -6,6 +6,7 @@ import AuthRepository from '../repository/AuthRepository'
 import { AuthRepositoryImpl } from '../../data/repository/AuthRepository'
 import { ForgotPasswordUseCase } from '../usecases/ForgotPasswordUseCase'
 import { RegisterUseCase } from '../usecases/RegisterUseCase'
+import { ResetPasswordUseCase } from '../usecases/ResetPasswordUseCase'
 
 const AuthRegister = (resolver: Resolver): void => {
   resolver.registerSingleton<AuthApi>(
@@ -27,6 +28,10 @@ const AuthRegister = (resolver: Resolver): void => {
   resolver.registerFactory<ForgotPasswordUseCase>(
     $.ForgotPasswordUseCase,
     () => new ForgotPasswordUseCase(resolver.resolve($.AuthRepository))
+  )
+  resolver.registerFactory<ResetPasswordUseCase>(
+    $.ResetPasswordUseCase,
+    () => new ResetPasswordUseCase(resolver.resolve($.AuthRepository))
   )
 }
 

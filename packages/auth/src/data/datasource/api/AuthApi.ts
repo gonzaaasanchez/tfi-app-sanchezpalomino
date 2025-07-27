@@ -9,6 +9,7 @@ interface AuthApi {
     lastName: string
   ): Promise<SessionModel>
   forgotPassword(email: string): Promise<void>
+  resetPassword(email: string, code: string, newPassword: string): Promise<void>
 }
 
 class AuthApiImpl implements AuthApi {
@@ -48,10 +49,24 @@ class AuthApiImpl implements AuthApi {
     return response.data
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async forgotPassword(email: string): Promise<void> {
-    await this.delay(2000)
-    return Promise.resolve()
+    const response = await this.httpClient.post<void>('/auth/forgot-password', {
+      email,
+    })
+    return response.data
+  }
+
+  async resetPassword(
+    email: string,
+    code: string,
+    newPassword: string
+  ): Promise<void> {
+    const response = await this.httpClient.post<void>('/auth/reset-password', {
+      email,
+      code,
+      newPassword,
+    })
+    return response.data
   }
 }
 

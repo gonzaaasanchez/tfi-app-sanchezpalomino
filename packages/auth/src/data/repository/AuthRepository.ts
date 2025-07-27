@@ -25,6 +25,14 @@ class AuthRepositoryImpl implements AuthRepository {
   async forgotPassword(email: string): Promise<void> {
     return this.api.forgotPassword(email)
   }
+
+  async resetPassword(
+    email: string,
+    code: string,
+    newPassword: string
+  ): Promise<void> {
+    return this.api.resetPassword(email, code, newPassword)
+  }
 }
 
 export { AuthRepositoryImpl }

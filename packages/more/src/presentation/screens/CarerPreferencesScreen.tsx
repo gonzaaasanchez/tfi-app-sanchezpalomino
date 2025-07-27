@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import {
   StyleSheet,
   View,
@@ -46,6 +46,22 @@ const ConfigSection: React.FC<ConfigSectionProps> = React.memo(
     fieldValue,
     fieldDisabled,
   }) => {
+    // Use local state for the input value to prevent focus loss
+    const [localValue, setLocalValue] = useState(fieldValue)
+
+    // Sync local state with prop value when it changes externally
+    useEffect(() => {
+      setLocalValue(fieldValue)
+    }, [fieldValue])
+
+    const handleChangeText = (text: string) => {
+      setLocalValue(text)
+    }
+
+    const handleBlur = () => {
+      fieldOnChangeText(localValue)
+    }
+
     return (
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
@@ -55,8 +71,9 @@ const ConfigSection: React.FC<ConfigSectionProps> = React.memo(
         <FormField
           placeholder={fieldPlaceholder}
           rightComponent={fieldRightComponent}
-          value={fieldValue}
-          onChangeText={fieldOnChangeText}
+          value={localValue}
+          onChangeText={handleChangeText}
+          onBlur={handleBlur}
           secureTextEntry={false}
           disabled={fieldDisabled}
         />

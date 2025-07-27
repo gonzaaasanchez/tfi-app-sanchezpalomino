@@ -63,6 +63,15 @@ const ReservesScreen: FC = (): JSX.Element => {
         />
         <PaginatedScrollView
           pagination={state.pagination}
+          contentContainerStyle={{
+            ...styles.scrollContainer,
+            paddingBottom:
+              HomeTabsHeight +
+              insets.bottom +
+              20 +
+              Number(GeneralStyle.addFloatingButton.height) +
+              10,
+          }}
           onLoadMore={() => loadReserves({ reset: false })}
           onRefresh={() => loadReserves({ reset: true })}
           renderItem={(item, index) => (
@@ -132,8 +141,6 @@ const styles = StyleSheet.create({
     marginBottom: Number(GeneralStyle.addFloatingButton.height) + 20,
   },
   scrollContainer: {
-    padding: 20,
-    paddingBottom: 80 + 30, //tabbar aprox height + padding
     gap: 10,
   },
 })

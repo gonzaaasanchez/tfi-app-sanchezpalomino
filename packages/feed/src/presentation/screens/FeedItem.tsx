@@ -13,9 +13,11 @@ import { FC } from 'react'
 type FeedItemProps = {
   item: FeedModel
   baseUrl: string
+  onLike: () => void
+  onComment: () => void
 }
 
-const FeedItem: FC<FeedItemProps> = ({ item, baseUrl }) => {
+const FeedItem: FC<FeedItemProps> = ({ item, baseUrl, onLike, onComment }) => {
   const fullName = `${item.author.firstName} ${item.author.lastName}`
 
   return (
@@ -36,7 +38,11 @@ const FeedItem: FC<FeedItemProps> = ({ item, baseUrl }) => {
       <Text style={styles.description}>{item.description}</Text>
       <View style={styles.divider} />
       <View style={styles.actionsContainer}>
-        <TouchableOpacity style={styles.actionButton} activeOpacity={0.7}>
+        <TouchableOpacity
+          style={styles.actionButton}
+          activeOpacity={0.7}
+          onPress={onLike}
+        >
           <MaterialIcons
             name="thumb-up"
             size={16}
@@ -44,7 +50,11 @@ const FeedItem: FC<FeedItemProps> = ({ item, baseUrl }) => {
           />
           <Text style={styles.actionText}>{item.likesCount}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton} activeOpacity={0.7}>
+        <TouchableOpacity
+          style={styles.actionButton}
+          activeOpacity={0.7}
+          onPress={onComment}
+        >
           <MaterialIcons name="comment" size={16} color={Color.black[300]} />
           <Text style={styles.actionText}>{item.commentsCount}</Text>
         </TouchableOpacity>

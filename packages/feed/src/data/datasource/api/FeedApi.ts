@@ -6,7 +6,13 @@ type CreatePostData = {
   image: string
 }
 
-class FeedApi {
+interface FeedApi {
+  getFeed(page?: number, limit?: number): Promise<PaginatedResponse<FeedModel>>
+  createPost(data: CreatePostData): Promise<FeedModel>
+  likePost(postId: string, shouldDelete: boolean): Promise<FeedModel>
+}
+
+class FeedApiImpl implements FeedApi {
   private httpClient: HttpClient
 
   constructor(httpClient: HttpClient) {
@@ -47,6 +53,20 @@ class FeedApi {
     const response = await this.httpClient.post<FeedModel>('/posts', formData)
     return response.data
   }
+
+  async likePost(postId: string, shouldDelete: boolean): Promise<FeedModel> {
+    if (shouldDelete) {
+      const response = await this.httpClient.delete<FeedModel>(
+        `/likes/posts/${postId}/like`
+      )
+      return response.data
+    } else {
+      const response = await this.httpClient.post<FeedModel>(
+        `/likes/posts/${postId}/like`
+      )
+      return response.data
+    }
+  }
 }
 
-export { FeedApi, CreatePostData }
+export { FeedApi, FeedApiImpl, CreatePostData }

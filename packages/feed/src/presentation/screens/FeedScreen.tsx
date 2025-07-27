@@ -19,7 +19,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { StackActions, useNavigation } from '@react-navigation/native'
 
 const FeedScreen: FC = (): JSX.Element => {
-  const { state, loadFeed } = useFeedViewModel()
+  const { state, loadFeed, likePost } = useFeedViewModel()
   const { t } = useI18n()
   const navigation = useNavigation()
   const insets = useSafeAreaInsets()
@@ -41,7 +41,15 @@ const FeedScreen: FC = (): JSX.Element => {
         onLoadMore={() => loadFeed({ reset: false })}
         onRefresh={() => loadFeed({ reset: true })}
         renderItem={(item, index) => (
-          <FeedItem key={index} item={item} baseUrl={baseUrl} />
+          <FeedItem
+            key={index}
+            item={item}
+            baseUrl={baseUrl}
+            onLike={() => likePost(item)}
+            onComment={() => {
+              console.log('comment')
+            }}
+          />
         )}
         emptyComponent={
           <View style={styles.emptyViewContainer}>

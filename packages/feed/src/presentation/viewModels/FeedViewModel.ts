@@ -10,9 +10,13 @@ import {
 import { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { GetFeedUseCase } from '../../domain/usecases/GetFeedUseCase'
+import { LikePostUseCase } from '../../domain/usecases/LikePostUseCase'
 import { $ } from '../../domain/di/Types'
 import { FeedModel } from '@packages/common'
-import { FeedAppState, clearPostCreated } from '../../domain/store/FeedSlice'
+import {
+  FeedAppState,
+  clearPostCreated,
+} from '../../domain/store/FeedSlice'
 
 type FeedState = {
   pagination: {
@@ -27,6 +31,7 @@ type FeedViewModel = {
   state: FeedState
   loadFeed: ({ reset }: { reset: boolean }) => Promise<void>
   refreshFeed: () => Promise<void>
+  likePost: (post: FeedModel) => Promise<void>
 }
 
 const initialState: FeedState = {
@@ -48,6 +53,7 @@ const initialState: FeedState = {
 const useFeedViewModel = (): FeedViewModel => {
   const [state, setState] = useState<FeedState>(initialState)
   const getFeedUseCase: GetFeedUseCase = useInjection($.GetFeedUseCase)
+  const likePostUseCase: LikePostUseCase = useInjection($.LikePostUseCase)
   const dispatch = useDispatch()
   const { t } = useI18n()
 
@@ -115,6 +121,20 @@ const useFeedViewModel = (): FeedViewModel => {
     }
   }, [lastPostCreated, dispatch])
 
+  const likePost = async (post: FeedModel): Promise<void> => {
+    try {
+      await likePostUseCase.execute(post.id, post.hasLiked)
+      await loadFeed({ reset: true })
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error al dar like al post'
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: errorMessage,
+      })
+    }
+  }
+
   return {
     state: {
       ...state,
@@ -127,6 +147,7 @@ const useFeedViewModel = (): FeedViewModel => {
     },
     loadFeed,
     refreshFeed,
+    likePost,
   }
 }
 

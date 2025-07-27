@@ -4,6 +4,7 @@ import { FeedScreen } from './screens/FeedScreen'
 import { GeneralStyle, useI18n } from '@packages/common'
 import { useNavigation } from '@react-navigation/native'
 import { FeedNewScreen } from './screens/FeedNewScreen'
+import { FeedCommentsScreen } from './screens/FeedCommentsScreen'
 import { TouchableOpacity } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 
@@ -28,6 +29,19 @@ const FeedStack: FC = (): JSX.Element => {
         component={FeedNewScreen}
         options={({ navigation }) => ({
           headerTitle: t('feedNewScreen.title'),
+          presentation: 'fullScreenModal',
+          headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <MaterialIcons name="close" size={24} color="white" />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="feedComments"
+        component={FeedCommentsScreen}
+        options={({ navigation }) => ({
+          headerTitle: t('feedCommentsScreen.title'),
           presentation: 'fullScreenModal',
           headerRight: () => (
             <TouchableOpacity onPress={() => navigation.goBack()}>

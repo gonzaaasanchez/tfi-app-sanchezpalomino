@@ -86,6 +86,13 @@
         "imageRequired": "La imagen es requerida"
       }
     },
+    "feedCommentsScreen": {
+      "title": "Comentarios",
+      "noData": "No hay comentarios para mostrar.\n¡Sé el primero en comentar!",
+      "emptyTitle": "No hay comentarios",
+      "emptySubtitle": "¡Sé el primero en comentar!",
+      "placeholder": "Escribir un comentario..."
+    },
     "reservesScreen": {
       "noData": "No tenemos reservas para mostrarte",
       "title": "Reservas",

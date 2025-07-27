@@ -46,8 +46,8 @@ const FeedScreen: FC = (): JSX.Element => {
             item={item}
             baseUrl={baseUrl}
             onLike={() => likePost(item)}
-            onComment={() => {
-              console.log('comment')
+            onComment={(postId) => {
+              navigation.dispatch(StackActions.push('feedComments', { postId }))
             }}
           />
         )}

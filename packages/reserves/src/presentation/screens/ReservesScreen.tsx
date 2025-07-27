@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.mainBackground,
   },
   emptyViewContainer: {
-    marginBottom: Number(GeneralStyle.addFloatingButton.height) + 20,
+    marginTop: Number(GeneralStyle.addFloatingButton.height) + 20,
   },
   scrollContainer: {
     gap: 10,

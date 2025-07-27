@@ -14,7 +14,7 @@ type FeedItemProps = {
   item: FeedModel
   baseUrl: string
   onLike: () => void
-  onComment: () => void
+  onComment: (postId: string) => void
 }
 
 const FeedItem: FC<FeedItemProps> = ({ item, baseUrl, onLike, onComment }) => {
@@ -53,7 +53,7 @@ const FeedItem: FC<FeedItemProps> = ({ item, baseUrl, onLike, onComment }) => {
         <TouchableOpacity
           style={styles.actionButton}
           activeOpacity={0.7}
-          onPress={onComment}
+          onPress={() => onComment(item.id)}
         >
           <MaterialIcons name="comment" size={16} color={Color.black[300]} />
           <Text style={styles.actionText}>{item.commentsCount}</Text>

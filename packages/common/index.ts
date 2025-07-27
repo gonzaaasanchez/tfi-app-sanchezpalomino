@@ -23,6 +23,7 @@ import {
   PetCharacteristic,
 } from './src/data/models/PetModel'
 import { FeedModel } from './src/data/models/FeedModel'
+import { CommentModel } from './src/data/models/CommentModel'
 import {
   PaginationModel,
   PaginatedResponse,
@@ -117,6 +118,7 @@ export {
   PetType,
   PetCharacteristic,
   FeedModel,
+  CommentModel,
   PaginationModel,
   PaginatedResponse,
   Types,

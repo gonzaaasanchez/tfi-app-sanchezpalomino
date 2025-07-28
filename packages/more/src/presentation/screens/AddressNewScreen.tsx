@@ -40,7 +40,6 @@ const AddressNewScreen: FC = (): JSX.Element => {
     setName,
     populateWithAddress,
   } = useAddressNewViewModel()
-  const successModalRef = useBottomSheetModalRef()
 
   useEffect(() => {
     if (params?.address) {
@@ -55,12 +54,6 @@ const AddressNewScreen: FC = (): JSX.Element => {
         : t('addressNewScreen.title'),
     })
   }, [state.isEditMode, navigation, t])
-
-  useEffect(() => {
-    if (state.addressSaved) {
-      successModalRef.current?.present()
-    }
-  }, [state.addressSaved])
 
   const handleAddressSelection = (address: AddressModel) => {
     setAddress(address)
@@ -119,14 +112,7 @@ const AddressNewScreen: FC = (): JSX.Element => {
             style={styles.saveButton}
           />
         </View>
-        <PPBottomSheet.Dialog
-          ref={successModalRef}
-          title={t('addressNewScreen.success.title')}
-          subtitle={t('addressNewScreen.success.message')}
-          lottieFile={catSuccess}
-          onPrimaryAction={() => navigation.goBack()}
-          dismisseable={false}
-        />
+
         {state.loading && <Loader loading={state.loading} />}
         <GenericToast overrideOffset={10} />
       </SafeAreaView>

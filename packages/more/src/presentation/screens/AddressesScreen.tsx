@@ -63,7 +63,6 @@ const AddressesScreen: FC = (): JSX.Element => {
   useEffect(() => {
     if (state.addressDeleted) {
       addressDetailModalRef.current?.dismiss()
-      onRefresh()
     }
   }, [state.addressDeleted])
 

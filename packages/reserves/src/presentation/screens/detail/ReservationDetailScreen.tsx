@@ -428,7 +428,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
 
   return (
     <PPBottomSheetContainer>
-      <SafeAreaView style={styles.mainContainer} edges={[]}>
+      <SafeAreaView style={styles.mainContainer} edges={['bottom']}>
         <ScrollView
           style={styles.scrollContainer}
           contentContainerStyle={styles.scrollContent}

@@ -6,9 +6,15 @@ import {
   ShowToast,
 } from '@packages/common'
 import { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { GetAddressesUseCase } from '../../domain/usecases/GetAddressesUseCase'
 import { DeleteAddressUseCase } from '../../domain/usecases/DeleteAddressUseCase'
 import { $ } from '../../domain/di/Types'
+import {
+  MoreAppState,
+  clearAddressChange,
+  markAddressChange,
+} from '../../domain/store/MoreSlice'
 
 type AddressesViewModel = {
   state: AddressesState
@@ -30,12 +36,18 @@ const initialState: AddressesState = {
 
 const useAddressesViewModel = (): AddressesViewModel => {
   const { t } = useI18n()
+  const dispatch = useDispatch()
   const [state, setState] = useState<AddressesState>(initialState)
   const getAddressesUseCase: GetAddressesUseCase = useInjection(
     $.GetAddressesUseCase
   )
   const deleteAddressUseCase: DeleteAddressUseCase = useInjection(
     $.DeleteAddressUseCase
+  )
+
+  // Listen to more slice changes
+  const lastAddressChange = useSelector(
+    (state: MoreAppState) => state.more.lastAddressChange
   )
 
   const loadAddresses = async (): Promise<void> => {
@@ -84,28 +96,28 @@ const useAddressesViewModel = (): AddressesViewModel => {
         addressDeleted: true,
       }))
 
-      ShowToast({
-        config: 'success',
-        title: t('addressesScreen.success.deleteTitle'),
-        subtitle: t('addressesScreen.success.deleteSubtitle'),
-      })
+      dispatch(markAddressChange())
     } catch (error) {
       setState((previous) => ({
         ...previous,
         loading: false,
         error: t('addressesScreen.error.deleteAddress'),
       }))
-      ShowToast({
-        config: 'error',
-        title: t('general.ups'),
-        subtitle: t('addressesScreen.error.deleteAddress'),
-      })
     }
   }
 
   useEffect(() => {
     loadAddresses()
   }, [])
+
+  // Refresh addresses when any address change occurs
+  useEffect(() => {
+    if (lastAddressChange) {
+      loadAddresses().then(() => {
+        dispatch(clearAddressChange())
+      })
+    }
+  }, [lastAddressChange, dispatch])
 
   return {
     state,

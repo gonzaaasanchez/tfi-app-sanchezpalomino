@@ -52,14 +52,33 @@
     "forgotPasswordScreen": {
       "title": "Olvidé mi contraseña",
       "email": "Email",
-      "instructions": "Ingresá el email con el que te registraste y te enviaremos un link para recuperar tu contraseña",
-      "button": "Enviar el link",
+      "instructions": "Ingresá el email con el que te registraste y te enviaremos el código para cambiar tu contraseña",
+      "sendCode": "Enviar código",
+      "codeInstructions": "Ingresá el código que te enviamos por email",
+      "codeSentTo": "Código enviado a {{email}}",
+      "code": "Código",
+      "newPasswordInstructions": "Ingresá tu nueva contraseña",
+      "newPassword": "Nueva contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "verifyCode": "Verificar código",
+      "resetPassword": "Cambiar contraseña",
+      "back": "Atrás",
+      "codeSent": {
+        "title": "Código enviado",
+        "message": "El código se envió a {{email}}. Revisá tu correo."
+      },
       "error": {
-        "message": "Por favor, ingresá tu email."
+        "message": "Por favor, ingresá tu email.",
+        "missingFields": "Por favor, completá todos los campos requeridos.",
+        "passwordsNotMatch": "Las contraseñas no coinciden. Por favor, verificá que sean iguales.",
+        "invalidCode": "El código ingresado no es válido. Por favor, verificá el código enviado a tu email.",
+        "invalidEmail": "Por favor, ingresá una dirección de email válida.",
+        "resetFailed": "No se pudo cambiar la contraseña. Por favor, intentá nuevamente.",
+        "codeSendFailed": "No se pudo enviar el código. Por favor, intentá nuevamente."
       },
       "success": {
-        "title": "Restablecimiento de contraseña",
-        "message": "Las instrucciones se enviaron a {{email}}. Por favor, revisá tu correo."
+        "title": "Contraseña cambiada",
+        "message": "Tu contraseña se cambió correctamente. Ya podés iniciar sesión."
       }
     },
     "tabbar": {
@@ -69,7 +88,29 @@
       "more": "Menú"
     },
     "feedScreen": {
-      "title": "Feed Screen"
+      "title": "Feed Screen",
+      "noData": "No hay publicaciones para mostrar.\n¡Sé el primero en crear una publicación!"
+    },
+    "feedNewScreen": {
+      "title": "Crear post",
+      "addImage": "Agregar imagen",
+      "titleLabel": "Título",
+      "titlePlaceholder": "Ingresá un título para tu post",
+      "commentLabel": "Comentario",
+      "commentPlaceholder": "Ingresá una descripción para tu post",
+      "createPost": "Crear post",
+      "validation": {
+        "titleRequired": "El título es requerido",
+        "descriptionRequired": "La descripción es requerida",
+        "imageRequired": "La imagen es requerida"
+      }
+    },
+    "feedCommentsScreen": {
+      "title": "Comentarios",
+      "noData": "No hay comentarios para mostrar.\n¡Sé el primero en comentar!",
+      "emptyTitle": "No hay comentarios",
+      "emptySubtitle": "¡Sé el primero en comentar!",
+      "placeholder": "Escribir un comentario..."
     },
     "reservesScreen": {
       "noData": "No tenemos reservas para mostrarte",
@@ -346,10 +387,6 @@
         "deleteSubtitle": "¿Estás seguro de que querés eliminar esta dirección? Esta acción no se puede deshacer.",
         "delete": "Eliminar",
         "cancel": "Cancelar"
-      },
-      "success": {
-        "deleteTitle": "¡Dirección eliminada!",
-        "deleteSubtitle": "La dirección se eliminó correctamente"
       }
     },
     "addressNewScreen": {
@@ -365,10 +402,6 @@
       "apartmentPlaceholder": "Ej: A",
       "saveAddress": "Guardar dirección",
       "updateAddress": "Actualizar dirección",
-      "success": {
-        "title": "¡Perfecto!",
-        "message": "La dirección se guardó correctamente"
-      },
       "validation": {
         "addressRequired": "La dirección es requerida",
         "nameRequired": "El nombre es requerido"
@@ -432,14 +465,6 @@
         "update": "Actualizar",
         "delete": "Eliminar",
         "cancel": "Cancelar"
-      },
-      "success": {
-        "title": "¡Mascota agregada!",
-        "updateTitle": "¡Mascota actualizada!",
-        "deleteTitle": "¡Mascota eliminada!",
-        "subtitle": "Ahora podés empezar a buscar cuidadores",
-        "updateSubtitle": "Los cambios se guardaron correctamente",
-        "deleteSubtitle": "La mascota se eliminó correctamente"
       },
       "validation": {
         "nameRequired": "Agregá el nombre de tu mascota",

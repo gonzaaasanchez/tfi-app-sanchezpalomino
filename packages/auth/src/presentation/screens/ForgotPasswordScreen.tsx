@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import {
   View,
   Text,
@@ -6,7 +6,6 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
-  Alert,
 } from 'react-native'
 import { ParamList } from '../AuthStack'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -28,7 +27,18 @@ import { AnimationObject } from 'lottie-react-native'
 type Props = NativeStackScreenProps<ParamList, 'forgotPasswordScreen'>
 
 const ForgotPasswordScreen = ({ route }: Props): JSX.Element => {
-  const { state, forgotPassword, setEmail } = useForgotPasswordViewModel()
+  const {
+    state,
+    forgotPassword,
+    resetPassword,
+    setEmail,
+    setCode,
+    setNewPassword,
+    setConfirmPassword,
+    goToCodeStep,
+    goToPasswordStep,
+    goBackToEmailStep,
+  } = useForgotPasswordViewModel()
   const { email } = route.params
   const { t } = useI18n()
   const bottomSheetModalRef = useBottomSheetModalRef()
@@ -52,26 +62,154 @@ const ForgotPasswordScreen = ({ route }: Props): JSX.Element => {
   }
 
   useEffect(() => {
-    if (state.error === 'forgot-password-missing-fields') {
-      showAlert(t('general.ups'), t('forgotPasswordScreen.error.message'))
-      return
-    } else if (state.error !== null) {
+    if (state.error) {
       ShowToast({
         config: 'error',
         title: t('general.ups'),
-        subtitle: state.error,
+        subtitle: t(state.error),
       })
-      return
     }
   }, [state.error])
 
-  const handlePasswordReset: () => Promise<void> = async () => {
+  const handleSendCode: () => Promise<void> = async () => {
     if (await forgotPassword()) {
+      ShowToast({
+        config: 'success',
+        title: t('forgotPasswordScreen.codeSent.title'),
+        subtitle: t('forgotPasswordScreen.codeSent.message', {
+          email: state.email,
+        }),
+      })
+    }
+  }
+
+  const handleVerifyCode: () => void = () => {
+    if (state.code.length >= 4) {
+      goToPasswordStep()
+    }
+  }
+
+  const handleResetPassword: () => Promise<void> = async () => {
+    if (await resetPassword()) {
       showAlert(
         t('forgotPasswordScreen.success.title'),
-        t('forgotPasswordScreen.success.message', { email: state.email }),
+        t('forgotPasswordScreen.success.message'),
         catSuccess
       )
+    }
+  }
+
+  const renderEmailStep = () => (
+    <View style={styles.stepContainer}>
+      <Text style={styles.title}>{t('forgotPasswordScreen.instructions')}</Text>
+
+      <TextInput
+        style={styles.input}
+        placeholder={t('forgotPasswordScreen.email')}
+        placeholderTextColor={Color.black[400]}
+        keyboardType="email-address"
+        value={state.email}
+        onChangeText={setEmail}
+        autoCapitalize="none"
+        autoCorrect={false}
+        textContentType="emailAddress"
+      />
+
+      <Button.Primary
+        title={t('forgotPasswordScreen.sendCode')}
+        onPress={handleSendCode}
+      />
+    </View>
+  )
+
+  const renderCodeStep = () => (
+    <View style={styles.stepContainer}>
+      <Text style={styles.title}>
+        {t('forgotPasswordScreen.codeInstructions')}
+      </Text>
+
+      <Text style={styles.subtitle}>
+        {t('forgotPasswordScreen.codeSentTo', { email: state.email })}
+      </Text>
+
+      <TextInput
+        style={[styles.input, styles.codeInput]}
+        placeholder={t('forgotPasswordScreen.code')}
+        placeholderTextColor={Color.black[400]}
+        keyboardType="number-pad"
+        value={state.code}
+        onChangeText={setCode}
+        maxLength={6}
+        autoCapitalize="none"
+        autoCorrect={false}
+      />
+
+      <View style={styles.buttonContainer}>
+        <Button.Primary
+          title={t('forgotPasswordScreen.verifyCode')}
+          onPress={handleVerifyCode}
+        />
+        <Button.Secondary
+          title={t('forgotPasswordScreen.back')}
+          onPress={goBackToEmailStep}
+        />
+      </View>
+    </View>
+  )
+
+  const renderPasswordStep = () => (
+    <View style={styles.stepContainer}>
+      <Text style={styles.title}>
+        {t('forgotPasswordScreen.newPasswordInstructions')}
+      </Text>
+
+      <TextInput
+        style={styles.input}
+        placeholder={t('forgotPasswordScreen.newPassword')}
+        placeholderTextColor={Color.black[400]}
+        secureTextEntry
+        value={state.newPassword}
+        onChangeText={setNewPassword}
+        autoCapitalize="none"
+        autoCorrect={false}
+        textContentType="newPassword"
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder={t('forgotPasswordScreen.confirmPassword')}
+        placeholderTextColor={Color.black[400]}
+        secureTextEntry
+        value={state.confirmPassword}
+        onChangeText={setConfirmPassword}
+        autoCapitalize="none"
+        autoCorrect={false}
+        textContentType="newPassword"
+      />
+
+      <View style={styles.buttonContainer}>
+        <Button.Primary
+          title={t('forgotPasswordScreen.resetPassword')}
+          onPress={handleResetPassword}
+        />
+        <Button.Secondary
+          title={t('forgotPasswordScreen.back')}
+          onPress={goToCodeStep}
+        />
+      </View>
+    </View>
+  )
+
+  const renderCurrentStep = () => {
+    switch (state.currentStep) {
+      case 'email':
+        return renderEmailStep()
+      case 'code':
+        return renderCodeStep()
+      case 'password':
+        return renderPasswordStep()
+      default:
+        return renderEmailStep()
     }
   }
 
@@ -84,26 +222,7 @@ const ForgotPasswordScreen = ({ route }: Props): JSX.Element => {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
           <View style={styles.inner} accessible={false}>
-            <Text style={styles.title}>
-              {t('forgotPasswordScreen.instructions')}
-            </Text>
-
-            <TextInput
-              style={styles.input}
-              placeholder={t('forgotPasswordScreen.email')}
-              placeholderTextColor={Color.black[400]}
-              keyboardType="email-address"
-              value={state.email}
-              onChangeText={setEmail}
-              autoCapitalize="none"
-              autoCorrect={false}
-              textContentType="emailAddress"
-            />
-
-            <Button.Primary
-              title={t('forgotPasswordScreen.button')}
-              onPress={handlePasswordReset}
-            />
+            {renderCurrentStep()}
           </View>
         </KeyboardAvoidingView>
       </View>
@@ -132,9 +251,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
+  stepContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
   title: {
     ...LabelStyle.body2({ textAlign: 'center' }),
+    paddingBottom: 16,
+  },
+  subtitle: {
+    ...LabelStyle.caption1({ textAlign: 'center' }),
     paddingBottom: 30,
+    color: Color.black[600],
   },
   input: {
     height: 48,
@@ -143,6 +271,13 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     backgroundColor: Color.brand2[50],
     fontFamily: 'SourGummy-Regular',
+  },
+  codeInput: {
+    textAlign: 'center',
+  },
+  buttonContainer: {
+    flexDirection: 'column',
+    gap: 5,
   },
 })
 

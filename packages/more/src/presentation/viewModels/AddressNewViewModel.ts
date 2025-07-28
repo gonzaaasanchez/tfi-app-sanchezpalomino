@@ -8,8 +8,11 @@ import {
   LabelStyle,
 } from '@packages/common'
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useNavigation } from '@react-navigation/native'
 import { AddAddressUseCase } from '../../domain/usecases/AddAddressUseCase'
 import { $ } from '../../domain/di/Types'
+import { markAddressChange } from '../../domain/store/MoreSlice'
 
 type AddressNewViewModel = {
   state: AddressNewState
@@ -27,7 +30,6 @@ type AddressNewState = {
   address: AddressModel | null
   floor: string
   apartment: string
-  addressSaved: boolean
   isEditMode: boolean
   editingAddressId: string | null
 } & UIState
@@ -39,13 +41,14 @@ const initialState: AddressNewState = {
   address: null,
   floor: '',
   apartment: '',
-  addressSaved: false,
   isEditMode: false,
   editingAddressId: null,
 }
 
 const useAddressNewViewModel = (): AddressNewViewModel => {
   const { t } = useI18n()
+  const dispatch = useDispatch()
+  const navigation = useNavigation()
   const addAddressUseCase = useInjection<AddAddressUseCase>($.AddAddressUseCase)
   const [state, setState] = useState<AddressNewState>(initialState)
 
@@ -120,29 +123,35 @@ const useAddressNewViewModel = (): AddressNewViewModel => {
     }))
 
     try {
-      const addressToSave: AddressModel = {
+      const addressToSave = new AddressModel({
         _id: state.editingAddressId || null,
         name: state.name || '',
         fullAddress: state.address?.fullAddress || '',
         coords: state.address?.coords || { lat: 0, lon: 0 },
         floor: state.floor || undefined,
         apartment: state.apartment || undefined,
-      }
+      })
 
       const createdAddress = await addAddressUseCase.execute(addressToSave)
 
       setState((previous) => ({
         ...previous,
         loading: false,
-        addressSaved: true,
       }))
-
+      
+      navigation.goBack()
+      dispatch(markAddressChange())
     } catch (error) {
       setState((previous) => ({
         ...previous,
         loading: false,
-        error: 'Error al guardar la dirección',
       }))
+
+      ShowToast({
+        config: 'error',
+        title: t('general.ups'),
+        subtitle: 'Error al guardar la dirección',
+      })
     }
   }
 

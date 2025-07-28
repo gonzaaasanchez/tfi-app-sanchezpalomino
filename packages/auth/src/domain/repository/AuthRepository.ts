@@ -9,6 +9,7 @@ interface AuthRepository {
     lastName: string
   ): Promise<SessionModel>
   forgotPassword(email: string): Promise<void>
+  resetPassword(email: string, code: string, newPassword: string): Promise<void>
 }
 
 export default AuthRepository

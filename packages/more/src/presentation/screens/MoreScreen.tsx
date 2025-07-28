@@ -8,6 +8,7 @@ import {
   useBottomSheetModalRef,
   PPBottomSheet,
   HomeTabsHeight,
+  Loader,
 } from '@packages/common'
 import { StackActions, useNavigation } from '@react-navigation/native'
 import React, { FC } from 'react'
@@ -18,7 +19,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 const MoreScreen: FC = (): JSX.Element => {
   const navigation = useNavigation()
   const { t } = useI18n()
-  const { logout } = useMoreViewModel()
+  const { logout, state } = useMoreViewModel()
   const logoutModalRef = useBottomSheetModalRef()
 
   const menuItems: Array<{
@@ -96,6 +97,7 @@ const MoreScreen: FC = (): JSX.Element => {
         onSecondaryAction={logoutModalRef.current?.dismiss}
         secondaryActionTitle={t('moreScreen.logoutModal.secondaryAction')}
       />
+      {state.loading && <Loader loading={state.loading} />}
     </SafeAreaView>
   )
 }

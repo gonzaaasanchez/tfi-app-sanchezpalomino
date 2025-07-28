@@ -15,7 +15,11 @@ import { GetPetCharacteristicsUseCase } from '../usecases/GetPetCharacteristicsU
 import { SavePetUseCase } from '../usecases/SavePetUseCase'
 import { DeletePetUseCase } from '../usecases/DeletePetUseCase'
 import { DeleteAddressUseCase } from '../usecases/DeleteAddressUseCase'
+import { LogoutApi, LogoutApiImpl } from '../../data/datasource/api/LogoutApi'
+import { LogoutRepositoryImpl } from '../../data/repository/LogoutRepository'
+import { LogoutUseCase } from '../usecases/LogoutUseCase'
 import { $ } from './Types'
+import LogoutRepository from '../repository/LogoutRepository'
 
 const MoreRegister = (resolver: Resolver): void => {
   // API
@@ -29,6 +33,11 @@ const MoreRegister = (resolver: Resolver): void => {
     new PetApiImpl(resolver.resolve(Types.HttpClient))
   )
 
+  resolver.registerSingleton<LogoutApi>(
+    $.LogoutApi,
+    new LogoutApiImpl(resolver.resolve(Types.HttpClient))
+  )
+
   // Repository
   resolver.registerSingleton<UserRepository>(
     $.UserRepository,
@@ -38,6 +47,11 @@ const MoreRegister = (resolver: Resolver): void => {
   resolver.registerSingleton<PetRepository>(
     $.PetRepository,
     new PetRepositoryImpl(resolver.resolve($.PetApi))
+  )
+
+  resolver.registerSingleton<LogoutRepository>(
+    $.LogoutRepository,
+    new LogoutRepositoryImpl(resolver.resolve($.LogoutApi))
   )
 
   // Use Cases
@@ -89,6 +103,11 @@ const MoreRegister = (resolver: Resolver): void => {
   resolver.registerSingleton<DeleteAddressUseCase>(
     $.DeleteAddressUseCase,
     new DeleteAddressUseCase(resolver.resolve($.UserRepository))
+  )
+
+  resolver.registerSingleton<LogoutUseCase>(
+    $.LogoutUseCase,
+    new LogoutUseCase(resolver.resolve($.LogoutRepository))
   )
 }
 

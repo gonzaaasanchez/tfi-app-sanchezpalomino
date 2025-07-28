@@ -1,12 +1,11 @@
 import React, { FC } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { MoreScreen } from './screens/MoreScreen'
-import { useMoreViewModel } from './viewModels/MoreViewModel'
 import MaterialIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { ProfileScreen } from './screens/ProfileScreen'
 import { PetsScreen } from './screens/PetsScreen'
 import { GeneralStyle, useI18n } from '@packages/common'
-import { useNavigation, StackActions } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 import { TouchableOpacity } from 'react-native'
 import { PetsNewScreen } from './screens/PetsNewScreen'
 import { CarerPreferencesScreen } from './screens/CarerPreferencesScreen'
@@ -16,7 +15,6 @@ import { AddressNewScreen } from './screens/AddressNewScreen'
 const Stack = createNativeStackNavigator()
 
 const MoreStack: FC = (): JSX.Element => {
-  const { logout } = useMoreViewModel()
   const navigation = useNavigation()
   const { t } = useI18n()
 

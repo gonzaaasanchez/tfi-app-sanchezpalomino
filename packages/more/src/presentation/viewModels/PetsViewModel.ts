@@ -9,12 +9,18 @@ import {
   LoadFunction,
 } from '@packages/common'
 import { useState, useEffect, useCallback } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { GetMyPetsUseCase } from '../../domain/usecases/GetMyPetsUseCase'
 import { DeletePetUseCase } from '../../domain/usecases/DeletePetUseCase'
 import { $ } from '../../domain/di/Types'
+import {
+  MoreAppState,
+  clearPetChange,
+  markPetChange,
+} from '../../domain/store/MoreSlice'
 
 type PetsState = {
-  petDeleted: boolean
+  petUpdated: boolean
   pagination: {
     items: PetModel[]
     pagination: PaginationModel
@@ -32,7 +38,7 @@ type PetsViewModel = {
 const initialState: PetsState = {
   loading: false,
   error: null,
-  petDeleted: false,
+  petUpdated: false,
   pagination: {
     items: [],
     pagination: { page: 1, limit: 10, total: 0, totalPages: 0 },
@@ -44,8 +50,14 @@ const initialState: PetsState = {
 const usePetsViewModel = (): PetsViewModel => {
   const [state, setState] = useState<PetsState>(initialState)
   const { t } = useI18n()
+  const dispatch = useDispatch()
   const getMyPetsUseCase = useInjection<GetMyPetsUseCase>($.GetMyPetsUseCase)
   const deletePetUseCase = useInjection<DeletePetUseCase>($.DeletePetUseCase)
+
+  // Listen to more slice changes
+  const lastPetChange = useSelector(
+    (state: MoreAppState) => state.more.lastPetChange
+  )
 
   // Create load function for pagination hook
   const loadPetsFunction: LoadFunction<PetModel> = useCallback(
@@ -66,6 +78,15 @@ const usePetsViewModel = (): PetsViewModel => {
     loadPets({ reset: true })
   }, [])
 
+  // Refresh pets when any pet change occurs
+  useEffect(() => {
+    if (lastPetChange) {
+      loadPets({ reset: true }).then(() => {
+        dispatch(clearPetChange())
+      })
+    }
+  }, [lastPetChange, dispatch])
+
   const loadPets = async ({ reset }: { reset: boolean }): Promise<void> => {
     try {
       await pagination.loadItems(reset)
@@ -85,14 +106,11 @@ const usePetsViewModel = (): PetsViewModel => {
       await deletePetUseCase.execute(petId)
       setState((previous) => ({
         ...previous,
+        petUpdated: true,
         loading: false,
-        petDeleted: true,
       }))
-      ShowToast({
-        config: 'success',
-        title: t('petsNewScreen.success.deleteTitle'),
-        subtitle: t('petsNewScreen.success.deleteSubtitle'),
-      })
+
+      dispatch(markPetChange())
     } catch (error) {
       setState((previous) => ({
         ...previous,

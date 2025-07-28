@@ -61,6 +61,7 @@ export const PaginatedScrollView = <T,>({
       <ScrollView
         {...scrollViewProps}
         onScroll={handleScroll}
+        showsVerticalScrollIndicator={true}
         refreshControl={
           onRefresh ? (
             <RefreshControl

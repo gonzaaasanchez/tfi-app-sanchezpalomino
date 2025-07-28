@@ -1,60 +1,66 @@
-# React Native Architecture Blueprint
+# TFI App - Sanchez Palomino
 
-This Architecture blueprint for a React Native project provides a solid kick-start for a cross-platform mobile app.
+This is a React Native mobile application for pet care services, built with a modern architecture that provides a solid foundation for cross-platform development.
 
-It consists of a Package-by-Feature (PBF) Architecture. Each package follows a CLEAN architecture, featuring an MVVM approach for the presentation layer. It uses Dependency Injection and Interfaces to facilitate communication between packages and testing.
+The app follows a Package-by-Feature (PBF) Architecture where each feature is self-contained. Each package implements CLEAN architecture principles with an MVVM approach for the presentation layer. It uses Dependency Injection and Interfaces to facilitate communication between packages and enable comprehensive testing.
 
-The blueprint is intended for your team to save time on setup and focus on building features while effortlessly following best practices and coding standards.
+This project demonstrates best practices in React Native development, featuring a scalable architecture that allows the team to focus on building features while maintaining high code quality and testing standards.
 
 ## Features
 
-- 🚀 **Pre-configured project architecture and structure** for easy scalability.
-- 🛠 **Essential packages and libraries** pre-installed and configured out of the box.
-- 🧩 **Reusable components** for faster development.
-- 📱 **iOS and Android** development support out of the box.
-- 🐞 **Integrated Testing** Pre-configured frameworks for Unit Test (Jest), Snapshot Test (Jest) and E2E Test (Maestro).
-- 🌎 **Internationalization Support** Pre-configured Multi-language support (i18n).
-- ⛳ **Pre-configured Expo Go and Customm Dev Client** allows for seamless development requiring native code run.
-- ✈️ **Pre-configured Expo Update** allows for seamless Over The Air (OTA) updates.
-- 🪓 **Pre-configured CI/CD with Expo Application Services (EAS)** allows for remote unit testing and creating development & production builds.
+- 🐾 **Pet Care Services** - Complete platform for pet owners and caregivers
+- 👤 **User Authentication** - Secure login, registration, and password recovery
+- 📱 **Feed System** - Social feed for sharing pet photos and stories
+- 🔍 **Service Discovery** - Find and book pet care services
+- 📅 **Reservation Management** - Book and manage pet care appointments
+- 💳 **Payment Integration** - Secure payment processing for services
+- 📍 **Location Services** - Find nearby pet care providers
+- 🌎 **Multi-language Support** - Internationalization (i18n) for global reach
+- 🧪 **Comprehensive Testing** - Unit tests, snapshot tests, and E2E testing
+- 📱 **Cross-platform** - iOS and Android support with React Native + Expo
+- 🚀 **Modern Architecture** - Clean Architecture with MVVM pattern
+- 🔧 **Dependency Injection** - Scalable and testable code structure
 
 ## Prerequisites
 
 Before you begin, please ensure you have the following tools installed:
 
-To run the sample:
+### Development Environment
 
 - **Node.js** (v20.x or higher)
 - **Yarn** (v1.22.x or higher)
 - **Xcode** (for iOS development)
 - **Android Studio** (for Android development)
 
-To use the blueprint:
+### Production Setup
 
 - **Expo Application Services (EAS)** (v11.4.x or higher)
 - [An Expo account](https://expo.dev)
-- Replace EnvVars and Application Configs (See app.json file, App Name and Icons)
 
-- values to be updated in `app/app.json` file:
-  - `expo.ios.bundleIdentifier`
-  - `expo.ios.associatedDomains`
-  - `expo.android.package`
-  - `expo.android.intentFilters.data.host`
-  - `expo.owner`
-  - `expo.extra.eas.projectId`
-  - `expo.update.url`
-- for deeplinking this values should be updated:
-  - `prefixes` in the file `app/src/presentation/screens/Linking.ts`
-- for E2E testing this values should be updated:
-  - `appId` in the files `e2e/*.yml`
+### Configuration Required
+
+The following values need to be updated in `app/app.json`:
+- `expo.ios.bundleIdentifier`
+- `expo.ios.associatedDomains`
+- `expo.android.package`
+- `expo.android.intentFilters.data.host`
+- `expo.owner`
+- `expo.extra.eas.projectId`
+- `expo.update.url`
+
+For deep linking, update:
+- `prefixes` in `app/src/presentation/screens/Linking.ts`
+
+For E2E testing, update:
+- `appId` in the files `e2e/*.yml`
 
 ## Getting Started
 
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/gonzaaasanchez/tfi-app-sanchezpalomino my-awesome-project
-   cd my-awesome-project
+   git clone https://github.com/gonzaaasanchez/tfi-app-sanchezpalomino
+   cd tfi-app-sanchezpalomino
    ```
 
 2. **Install dependencies**
@@ -77,13 +83,34 @@ To use the blueprint:
    yarn android
    ```
 
+## Project Structure
+
+The app is organized into feature-based packages:
+
+- **`packages/auth`** - User authentication (login, register, forgot password)
+- **`packages/feed`** - Social feed for sharing pet content
+- **`packages/reserves`** - Reservation and booking system
+- **`packages/services`** - Pet care service discovery
+- **`packages/more`** - User profile and settings
+- **`packages/common`** - Shared components and utilities
+
 ## Technologies Used
 
-- **React Native + Expo (for cross-platform development)**: React Native allows the building of mobile apps using JavaScript and React. Expo extends React Native by providing a framework that simplifies development, with tools for building, running, and testing apps.
-- **React Navigation (for routing and app navigation)**: React Navigation is a popular library for navigating between screens in React Native apps. It was chosen because it supports stack, tab, and drawer navigation and is flexible for customizing navigation flows.
-- **Inversify (for dependency injection)**: Inversify is a powerful library for Dependency Injection (DI) in JavaScript/TypeScript applications. It allows the decoupling of classes by injecting dependencies rather than creating them directly.
-- **Redux (for State management)**: Redux is a predictable state container for JavaScript apps, often used to manage complex application states across different screens and components.
-- **Axios (for HTTP requests)**: Axios is a promise-based HTTP client for making network requests from the browser and Node.js.
-- **React-i18next (for internationalization)**: is a robust internationalization framework that allows apps to easily support multiple languages and translations.
-- **Jest (for Unit and Snapshot testing)**: Jest is a complete JavaScript testing framework with a focus on simplicity. In this architecture, it is used for both unit testing and snapshot testing.
-- **Maestro (for E2E testing)**: Maestro is a lightweight tool for writing end-to-end tests in mobile apps. It interacts with the app as an actual user would, allowing for automation of the entire user experience.
+- **React Native + Expo** - Cross-platform mobile development with simplified tooling
+- **React Navigation** - Navigation between screens with stack, tab, and drawer support
+- **Inversify** - Dependency injection for scalable and testable architecture
+- **Redux** - State management for complex application data
+- **Axios** - HTTP client for API communication
+- **React-i18next** - Internationalization for multi-language support
+- **Jest** - Unit and snapshot testing framework
+- **Maestro** - End-to-end testing for complete user experience validation
+
+## Architecture
+
+This project follows Clean Architecture principles with:
+
+- **Domain Layer** - Business logic and entities
+- **Data Layer** - API communication and local storage
+- **Presentation Layer** - UI components with MVVM pattern
+- **Dependency Injection** - Loose coupling between layers
+- **Package-by-Feature** - Self-contained feature modules

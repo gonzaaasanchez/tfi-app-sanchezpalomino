@@ -208,7 +208,7 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
   const DetailsCard = () => {
     const getLocationValue = () => {
       const address = state.currentReserve?.address
-      const distance = state.currentReserve?.distance?.toString() || '0'
+      const distance = state.currentReserve?.distance?.toFixed(2) || '0.00'
 
       const mainAddress = t('reserveDetailScreen.distanceFormat', {
         location: address?.fullAddress || '',

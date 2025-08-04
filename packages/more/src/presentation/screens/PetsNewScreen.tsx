@@ -31,7 +31,6 @@ import {
   Types,
 } from '@packages/common'
 import { usePetsNewViewModel } from '../viewModels/PetsNewViewModel'
-import catSuccess from '@app/assets/lottie-json/success-cat.json'
 
 type PetsNewRouteParams = {
   pet?: PetModel

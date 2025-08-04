@@ -14,28 +14,34 @@ import {
   EmptyView,
   Loader,
   useI18n,
-  ImageWithPlaceholder,
   useInjection,
   getImageFullUrl,
   Types,
   GenericToast,
   PaginatedScrollView,
+  TouchableImage,
+  FullscreenImageModal,
+  useFullscreenImage,
 } from '@packages/common'
 import { useNavigation, StackActions } from '@react-navigation/native'
 import { usePetsViewModel } from '../viewModels/PetsViewModel'
 
-const PetCard: FC<{ pet: PetModel; onPress: () => void; baseUrl: string }> = ({
+const PetCard: FC<{ pet: PetModel; onPress: () => void; baseUrl: string; onImagePress: (imageUri: string) => void }> = ({
   pet,
   onPress,
   baseUrl,
+  onImagePress,
 }) => {
+  const petAvatarUrl = getImageFullUrl(pet.avatar, baseUrl)
+  
   return (
     <TouchableOpacity activeOpacity={0.85} onPress={onPress}>
       <View style={styles.cardContainer}>
         <View style={styles.leftContainer}>
-          <ImageWithPlaceholder
-            source={getImageFullUrl(pet.avatar, baseUrl)}
+          <TouchableImage
+            source={petAvatarUrl}
             dimension={60}
+            onPress={() => petAvatarUrl && onImagePress(petAvatarUrl)}
           />
         </View>
         <View style={styles.rightContainer}>
@@ -60,6 +66,13 @@ const PetsScreen: FC = (): JSX.Element => {
   const { state, loadPets, deletePet } = usePetsViewModel()
   const { t } = useI18n()
   const baseUrl = useInjection(Types.BaseURL) as string
+  
+  const {
+    isModalVisible,
+    selectedImageUri,
+    openImageModal,
+    closeImageModal,
+  } = useFullscreenImage()
 
   useEffect(() => {
     if (petDetail) {
@@ -106,6 +119,7 @@ const PetsScreen: FC = (): JSX.Element => {
               pet={pet}
               onPress={() => setPetDetail(pet)}
               baseUrl={baseUrl}
+              onImagePress={openImageModal}
             />
           )}
           emptyComponent={
@@ -125,6 +139,7 @@ const PetsScreen: FC = (): JSX.Element => {
         <PetDetail
           pet={petDetail}
           baseUrl={baseUrl}
+          onImagePress={openImageModal}
           handlers={{
             onEdit: () => {
               petDetailModalRef.current?.dismiss()
@@ -160,6 +175,12 @@ const PetsScreen: FC = (): JSX.Element => {
       </TouchableOpacity>
       {state.loading || (state.pagination.loading && <Loader loading={true} />)}
       <GenericToast overrideOffset={10} />
+      
+      <FullscreenImageModal
+        visible={isModalVisible}
+        imageUri={selectedImageUri}
+        onClose={closeImageModal}
+      />
     </PPBottomSheetContainer>
   )
 }

@@ -5,8 +5,8 @@ import { PetModel } from '../data/models/PetModel'
 import { DetailItem } from './DetailItem'
 import { LabelStyle } from '../style/Styles'
 import { Color } from '../style/Color'
-import ImageWithPlaceholder from './ImageWithPlaceholder'
 import { getImageFullUrl } from '../utils/ImageUtils'
+import { TouchableImage } from './TouchableImage'
 
 type PetDetailSheetProps = {
   pet: PetModel
@@ -15,17 +15,20 @@ type PetDetailSheetProps = {
     onEdit: () => void
     onDelete: () => void
   }
+  onImagePress?: (imageUri: string) => void
 }
 
-const PetDetail: FC<PetDetailSheetProps> = ({ pet, baseUrl, handlers }) => {
+const PetDetail: FC<PetDetailSheetProps> = ({ pet, baseUrl, handlers, onImagePress }) => {
   const { t } = useI18n()
+  const petAvatarUrl = getImageFullUrl(pet.avatar, baseUrl)
 
   return (
     <View style={{ paddingBottom: 20 }}>
       <View style={{ alignItems: 'center', paddingBottom: 10 }}>
-        <ImageWithPlaceholder
-          source={getImageFullUrl(pet.avatar, baseUrl)}
+        <TouchableImage
+          source={petAvatarUrl}
           dimension={170}
+          onPress={() => petAvatarUrl && onImagePress?.(petAvatarUrl)}
         />
       </View>
       <Text style={styles.petName}>{pet?.name}</Text>

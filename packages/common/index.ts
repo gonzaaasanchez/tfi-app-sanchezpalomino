@@ -92,6 +92,9 @@ import {
 import { PaginatedScrollView } from './src/components/PaginatedScrollView'
 import { PaymentInfoComponent } from './src/components/PaymentInfoComponent'
 import { SelectableOption } from './src/data/models/SelectableOption'
+import { FullscreenImageModal } from './src/components/FullscreenImageModal'
+import { TouchableImage } from './src/components/TouchableImage'
+import { useFullscreenImage } from './src/hooks/useFullscreenImage'
 
 export {
   Resolver,
@@ -174,4 +177,7 @@ export {
   PaginatedScrollView,
   PaymentInfoComponent,
   SelectableOption,
+  FullscreenImageModal,
+  TouchableImage,
+  useFullscreenImage,
 }

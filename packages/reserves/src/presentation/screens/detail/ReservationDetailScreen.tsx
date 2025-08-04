@@ -10,7 +10,6 @@ import {
   GeneralStyle,
   PetDetail,
   DetailItem,
-  ImageWithPlaceholder,
   useInjection,
   Types,
   PaymentInfoComponent,
@@ -19,6 +18,9 @@ import {
   GenericToast,
   PPMaterialIcon,
   DateUtils,
+  TouchableImage,
+  FullscreenImageModal,
+  useFullscreenImage,
 } from '@packages/common'
 import {
   View,
@@ -61,6 +63,13 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
   const navigation = useNavigation()
   const reservation = route.params.reservation
   const isUserRequest = route.params.isUserRequest
+  
+  const {
+    isModalVisible,
+    selectedImageUri,
+    openImageModal,
+    closeImageModal,
+  } = useFullscreenImage()
 
   const {
     state,
@@ -150,15 +159,18 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
   }
 
   const UserCard = () => {
+    const userAvatarUrl = getImageFullUrl(
+      state.currentReserve?.placeDetailAvatar({ isUserRequest }),
+      baseUrl
+    )
+
     return (
       <View style={styles.card}>
         <View style={styles.userContainer}>
-          <ImageWithPlaceholder
-            source={getImageFullUrl(
-              state.currentReserve?.placeDetailAvatar({ isUserRequest }),
-              baseUrl
-            )}
+          <TouchableImage
+            source={userAvatarUrl}
             dimension={70}
+            onPress={() => userAvatarUrl && openImageModal(userAvatarUrl)}
           />
           <View>
             <Text style={LabelStyle.title2()}>
@@ -454,7 +466,11 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
         dismisseable={true}
         onDismiss={() => setPetDetail(null)}
       >
-        <PetDetail pet={petDetail} baseUrl={baseUrl} />
+        <PetDetail 
+          pet={petDetail} 
+          baseUrl={baseUrl} 
+          onImagePress={openImageModal}
+        />
       </PPBottomSheet.Empty>
 
       <PPBottomSheet.Dialog
@@ -483,6 +499,12 @@ const ReservationDetailScreen: FC = (): JSX.Element => {
 
       {state.loading && <Loader loading={state.loading} />}
       <GenericToast overrideOffset={10} />
+      
+      <FullscreenImageModal
+        visible={isModalVisible}
+        imageUri={selectedImageUri}
+        onClose={closeImageModal}
+      />
     </PPBottomSheetContainer>
   )
 }

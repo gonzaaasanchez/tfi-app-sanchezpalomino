@@ -25,8 +25,10 @@ import {
   PPBottomSheet,
   useBottomSheetModalRef,
   ImagePickerOptions,
-  ImageWithPlaceholder,
   getImageFullUrl,
+  TouchableImage,
+  FullscreenImageModal,
+  useFullscreenImage,
 } from '@packages/common'
 import { useProfileViewModel } from '../viewModels/ProfileViewModel'
 
@@ -35,6 +37,13 @@ const ProfileScreen: FC = (): JSX.Element => {
   const { user, baseUrl, state, updateProfile, selectImageFrom } =
     useProfileViewModel()
   const imagePickerModalRef = useBottomSheetModalRef()
+  
+  const {
+    isModalVisible,
+    selectedImageUri,
+    openImageModal,
+    closeImageModal,
+  } = useFullscreenImage()
 
   const {
     control,
@@ -79,7 +88,16 @@ const ProfileScreen: FC = (): JSX.Element => {
             keyboardShouldPersistTaps="handled"
           >
             <View style={styles.avatarContainer}>
-              <ImageWithPlaceholder source={getAvatarUrl()} dimension={140} />
+              <TouchableImage
+                source={getAvatarUrl()}
+                dimension={140}
+                onPress={() => {
+                  const avatarUrl = getAvatarUrl()
+                  if (avatarUrl) {
+                    openImageModal(avatarUrl)
+                  }
+                }}
+              />
               <TouchableOpacity
                 style={styles.editAvatarButton}
                 activeOpacity={0.85}
@@ -175,6 +193,12 @@ const ProfileScreen: FC = (): JSX.Element => {
             onDismiss={() => imagePickerModalRef.current?.dismiss()}
           />
         </PPBottomSheet.Empty>
+        
+        <FullscreenImageModal
+          visible={isModalVisible}
+          imageUri={selectedImageUri}
+          onClose={closeImageModal}
+        />
       </SafeAreaView>
     </PPBottomSheetContainer>
   )
